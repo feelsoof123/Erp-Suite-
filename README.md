@@ -1,7 +1,7 @@
 # Professional Business Document ERP Suite (5-in-1) 🚀
 
 > **Created & Maintained by:** [Shaiekh Fielsouf Ansari](https://github.com/feelsoof123) (`feelsoof123`)  
-> **Live Demo:** [feelsoof123.github.io](https://feelsoof123.github.io/)
+> **Live Demo:** [https://feelsoof123.github.io/Erp-Suite-/](https://feelsoof123.github.io/Erp-Suite-/)
 
 A complete, responsive, enterprise-grade Commercial Business Document Generation System built with pure HTML5, CSS3, and modern Vanilla JavaScript. Zero dependencies, 100% offline-ready, auto-saving with localStorage, and optimized for A4 single-page PDF printing across all devices.
 
@@ -77,7 +77,7 @@ A complete, responsive, enterprise-grade Commercial Business Document Generation
 4. **Your Live Website is Ready:**
    - Within 1–2 minutes, your website will be live at:
      ```
-     https://feelsoof123.github.io/<repository-name>/
+     https://feelsoof123.github.io/Erp-Suite-/
      ```
 
 ---
