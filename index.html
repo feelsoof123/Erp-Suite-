@@ -883,6 +883,57 @@ tbody tr:nth-child(even) { background: #f8fafc; }
   }
 }
 
+/* FIX: PRINT ONLY DOCUMENT */
+@media print {
+
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .editor,
+  .layout.view-editor .editor {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .layout,
+  .layout.view-editor {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .preview-area,
+  .layout.view-editor .preview-area {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    overflow: visible !important;
+  }
+
+  .paper {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    transform: none !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+  }
+
+  button,
+  .no-print {
+    display: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
