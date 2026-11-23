@@ -2360,18 +2360,21 @@ function applySelectedSupplier(id) {
 }
 
 
-// ASSET FALLBACK ENGINE (SUPPORTS GITHUB PAGES & LOCAL HOSTING OUT-OF-THE-BOX)
+// ASSET FALLBACK ENGINE DISABLED
 function getEffectiveLogo() {
-  return logoData || "logo.jpeg";
+  return logoData || "";
 }
+
 function getEffectiveStamp() {
-  return stampData || "Stamp.png";
+  return stampData || "";
 }
+
 function getEffectiveSignature() {
-  return signatureData || "Sing.png";
+  return signatureData || "";
 }
+
 function getEffectiveWatermark() {
-  return watermarkData || "watermark.png";
+  return watermarkData || "";
 }
 
 // MOBILE VIEWPORT TOGGLE (EDITOR vs PREVIEW)
