@@ -588,15 +588,28 @@ tbody tr:nth-child(even) { background: #f8fafc; }
 
 /* DEVELOPER ABOUT CARD */
 .about {
-  max-width: 520px;
-  margin: 30px auto;
-  background: white;
-  padding: 28px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  max-width: none;
+  margin: 0;
+  background: transparent !important;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none !important;
   line-height: 1.8;
 }
 .developer-card { text-align: center; }
+#aboutSection .developer-card {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 20px auto;
+    padding: 28px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+}
 .developer-top { margin-bottom: 20px; }
 .developer-avatar {
   width: 60px;
@@ -1434,42 +1447,52 @@ tbody tr:nth-child(even) { background: #f8fafc; }
       <h2>Shaiekh Fielsouf Ansari</h2>
       <p>Creator & Owner</p>
     </div>
+
     <div class="developer-body">
       <h3>Contact Information</h3>
+
       <div class="developer-info">
         <span>GitHub Profile</span>
         <strong><a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:none;font-weight:700;">github.com/feelsoof123</a></strong>
       </div>
+
       <div class="developer-info">
         <span>Contact Number 1</span>
         <strong>03331255512</strong>
       </div>
+
       <div class="developer-info">
         <span>Contact Number 2</span>
         <strong>03111855512</strong>
       </div>
+
       <div class="developer-info">
         <span>WhatsApp</span>
         <strong>03111855512</strong>
       </div>
+
       <div class="developer-info">
         <span>JazzCash Payment</span>
         <strong>03000210419</strong>
       </div>
+
       <div class="developer-note">
         Thank you for using this Enterprise Business ERP Suite.
         Designed for speed, precision, and professional commercial compliance.
       </div>
+
       <div class="developer-copyright">
         © 2026 Shaiekh Fielsouf Ansari.
         All Rights Reserved.
       </div>
     </div>
+
+    <button type="button" onclick="hideAbout()" class="back-button">
+      Back to Document Suite
+    </button>
   </div>
-  <button onclick="showAbout()" class="back-button">
-    Back to Document Suite
-  </button>
 </section>
+
 
 <script>
 const $ = id => document.getElementById(id);
@@ -2632,11 +2655,42 @@ $("factoryResetBtn").addEventListener("click", () => {
 });
 
 function showAbout() {
-  $("mainLayout").classList.toggle("hidden");
-  $("aboutSection").classList.toggle("hidden");
-  window.scrollTo(0,0);
-}
+  $("mainLayout").classList.add("hidden");
 
+  const about = $("aboutSection");
+  about.classList.remove("hidden");
+
+  about.style.cssText = `
+    display: flex !important;
+    position: fixed !important;
+    inset: 0;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 999999;
+    background: #ffffff;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+  `;
+
+  window.scrollTo(0, 0);
+}
+function hideAbout() {
+  const about = $("aboutSection");
+  const main = $("mainLayout");
+
+  about.classList.add("hidden");
+  about.style.display = "none";
+
+  main.classList.remove("hidden");
+  main.style.display = "";
+
+  document.body.style.overflow = "auto";
+
+  window.scrollTo(0, 0);
+}
 // INITIALIZE APP
 function init() {
   loadData();
