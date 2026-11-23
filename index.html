@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Business Document ERP Suite (5-in-1) | feelsoof123</title>
+<meta name="application-name" content="Enterprise Business Document ERP Suite">
+<meta name="application-version" content="2.1.0">
+<meta name="author" content="Shaiekh Fielsouf Ansari (feelsoof123)">
+<meta name="description" content="Comprehensive 5-in-1 Business Document ERP Suite: Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan, and Proforma Invoice Generator by feelsoof123.">
+<meta name="keywords" content="quotation maker, tax invoice generator, purchase order, delivery challan, proforma invoice, erp, feelsoof123, business tools">
+<meta property="og:title" content="Enterprise Business Document ERP Suite | feelsoof123">
+<meta property="og:description" content="Professional A4 Commercial Quotations, Tax Invoices, POs, Delivery Challans &amp; Proformas with zero cutoff printing.">
+<!-- SEARCHBAR & BROWSER TAB ICONS (FAVICON) -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23174a83'/%3E%3Cpath d='M28 24h44v14H28zm0 20h44v8H28zm0 15h28v8H28z' fill='%23ffffff'/%3E%3Ccircle cx='70' cy='67' r='14' fill='%23059669'/%3E%3Cpath d='M64 67l4 4 8-8' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+
+<!-- WHATSAPP, FACEBOOK, TWITTER & SOCIAL SHARING LINK PREVIEW (OG-IMAGE) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://feelsoof123.github.io/">
+<meta property="og:title" content="Enterprise Business Document ERP Suite (5-in-1) | feelsoof123">
+<meta property="og:description" content="Professional Commercial Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan &amp; Proforma Generator with Area Calculator &amp; A4 Print Engine by feelsoof123.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:image:secure_url" content="og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Enterprise Business Document ERP Suite by feelsoof123">
+
+<!-- TWITTER CARD -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@feelsoof123">
+<meta name="twitter:creator" content="@feelsoof123">
+<meta name="twitter:title" content="Enterprise Business Document ERP Suite (5-in-1) | feelsoof123">
+<meta name="twitter:description" content="Professional Commercial Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan &amp; Proforma Generator with Area Calculator &amp; A4 Print Engine by feelsoof123.">
+<meta name="twitter:image" content="og-image.png">
+
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root {
+  --primary: #174a83;
+  --primary-light: #f0f5fa;
+  --primary-hover: #123966;
+  --accent: #0284c7;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --background: #f1f5f9;
+  --border: #dce2ea;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--background);
+  color: var(--text-dark);
+  -webkit-user-select: none;
+  user-select: none;
+}
+input, textarea, button, select, .paper, .paper * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* TOP APP HEADER */
+header.app-header {
+  background: #0f172a;
+  color: white;
+  padding: 12px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-title h2 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: 0.3px; }
+.badge-pro {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* 5-IN-1 MODULE NAVIGATION BAR */
+nav.suite-navbar {
+  background: white;
+  border-bottom: 2px solid var(--border);
+  padding: 6px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.nav-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  color: #475569;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .18s ease;
+}
+.nav-tab-btn:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+.nav-tab-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 2px 6px rgba(23,74,131,0.25);
+}
+.nav-tab-btn .tab-icon { font-size: 15px; }
+
+/* BUTTONS & CONTROLS */
+button {
+  border: 0;
+  border-radius: 6px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  transition: all .18s;
+  font-size: 13px;
+}
+button:hover { opacity: .9; }
+.btn-secondary { background: #64748b; }
+.btn-success { background: var(--success); }
+.btn-danger { background: var(--danger); }
+.btn-convert {
+  background: linear-gradient(135deg, #059669, #0d9488);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 7px 12px;
+}
+
+/* WORKSPACE LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 410px) 1fr;
+  gap: 20px;
+  padding: 20px;
+  align-items: start;
+}
+.panel {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.panel h3 {
+  color: var(--primary);
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 10px 0 4px;
+  color: #334155;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 13px;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(23,74,131,0.15);
+}
+input[type="checkbox"] { width: auto; vertical-align: middle; }
+input[type="color"] { height: 38px; padding: 2px; }
+textarea { min-height: 55px; resize: vertical; }
+
+.preview-area { min-width: 0; }
+.preview-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+  background: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.preview-tools h3 { margin: 0; font-size: 16px; color: var(--primary); }
+.print-btn {
+  background: var(--success);
+  font-size: 14px;
+  padding: 10px 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+/* =====================================
+   A4 PAPER & DOCUMENT CANVAS
+===================================== */
+.paper {
+  width: 100%;
+  max-width: 820px;
+  min-height: 1060px;
+  margin: auto;
+  padding: 34px 40px;
+  background: white;
+  position: relative;
+  box-shadow: 0 4px 22px rgba(0,0,0,0.08);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.paper-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+.watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.watermark img {
+  width: 50%;
+  max-height: 50%;
+  object-fit: contain;
+}
+#watermarkTextPreview {
+  display: none;
+  font-size: 55px;
+  font-weight: 800;
+  color: #999999;
+  text-align: center;
+  overflow-wrap: anywhere;
+  max-width: 85%;
+  transform: rotate(-35deg);
+  user-select: none;
+}
+
+/* DOCUMENT HEADER: LOGO & NAME (LEFT) + METADATA BADGE (RIGHT) */
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2.5px solid var(--primary);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  gap: 15px;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+#previewLogo {
+  max-width: 120px;
+  max-height: 70px;
+  object-fit: contain;
+  display: none;
+}
+.brand-group h1 {
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.quote-badge-box {
+  text-align: right;
+}
+.quote-title-tag {
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 4px;
+  display: inline-block;
+  text-transform: uppercase;
+}
+.quote-meta-list {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #475569;
+  line-height: 1.45;
+}
+.quote-meta-list span { color: #64748b; }
+.quote-meta-list strong { color: #0f172a; font-weight: 700; }
+
+.status-stamp-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.status-paid { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.status-unpaid { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.status-partial { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+/* CLIENT & LOGISTICS SECTION */
+.client-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 14px;
+}
+.client-card {
+  background: var(--primary-light);
+  border: 1px solid #dbeafe;
+  border-left: 4px solid var(--primary);
+  border-radius: 5px;
+  padding: 10px 14px;
+  flex: 1;
+}
+.client-card h4 {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.client-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+.client-sub {
+  font-size: 11px;
+  color: #475569;
+  line-height: 1.4;
+  margin: 2px 0;
+}
+
+/* ITEMS TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 11.5px;
+  margin-bottom: 12px;
+  border: 1px solid #e2e8f0;
+}
+th {
+  background: var(--primary);
+  color: #ffffff;
+  padding: 8px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: 1px solid var(--primary);
+}
+td {
+  padding: 7px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #edf2f7;
+  color: #334155;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+tbody tr:nth-child(even) { background: #f8fafc; }
+
+/* SIDE-BY-SIDE: TERMS/BANK (LEFT) + TOTALS (RIGHT) */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 16px;
+}
+.terms-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 9px 12px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: #475569;
+}
+.terms-box h4 {
+  color: var(--primary);
+  font-size: 11px;
+  margin: 0 0 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.terms-box p { margin: 0; white-space: pre-line; }
+
+.bank-info-box {
+  background: #eff6ff;
+  border: 1px dashed #93c5fd;
+  border-radius: 5px;
+  padding: 8px 10px;
+  font-size: 10.5px;
+  margin-top: 8px;
+  color: #1e3a8a;
+}
+.bank-info-box strong { display: block; margin-bottom: 2px; }
+
+.totals-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: white;
+}
+.totals-box div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  font-size: 11px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.totals-box div b { text-align: right; }
+.totals-box .grand {
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 9px 10px;
+  border-bottom: none;
+}
+.totals-box .balance-row {
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* SIGNATURES & STAMPS (NEVER CUT OFF) */
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 25px;
+  margin: 12px 0 16px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.sign-block {
+  width: 45%;
+  text-align: center;
+}
+.sign-img-container {
+  height: 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.sign-img-container img {
+  max-width: 140px;
+  max-height: 55px;
+  object-fit: contain;
+}
+.sign-block p {
+  border-top: 1.5px solid #475569;
+  padding-top: 5px;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* FOOTER: ALL COMPANY DETAILS */
+.doc-footer {
+  border-top: 1.5px solid #cbd5e1;
+  padding-top: 10px;
+  margin-top: auto;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.footer-contact-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px 25px;
+  font-size: 10px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+.footer-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.footer-item span.icon { font-size: 11px; }
+.footer-bottom-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9.5px;
+  color: #94a3b8;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 5px;
+}
+
+/* AUTO-COMPACT RULES (SINGLE A4 PAGE GUARANTEE) */
+.paper.auto-compact { padding: 22px 30px; }
+.paper.auto-compact table { font-size: 10.5px; margin-bottom: 8px; }
+.paper.auto-compact th { padding: 5px 6px; font-size: 10px; }
+.paper.auto-compact td { padding: 5px 6px; }
+.paper.auto-compact .doc-header { margin-bottom: 10px; padding-bottom: 10px; }
+.paper.auto-compact .client-section { margin-bottom: 10px; }
+.paper.auto-compact .bottom-grid { margin-bottom: 10px; }
+.paper.auto-compact .sign-img-container { height: 46px; }
+.paper.auto-compact .sign-img-container img { max-height: 42px; }
+.paper.auto-compact .signatures { margin: 8px 0 10px; }
+
+/* EDITORS & CARDS */
+.item-editor {
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background: #f8fafc;
+}
+.item-editor input { padding: 7px; margin-bottom: 4px; }
+.item-editor button { margin-top: 6px; font-size: 12px; padding: 6px 12px; }
+
+/* DEVELOPER ABOUT CARD */
+.about {
+  max-width: 520px;
+  margin: 30px auto;
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  line-height: 1.8;
+}
+.developer-card { text-align: center; }
+.developer-top { margin-bottom: 20px; }
+.developer-avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 auto 10px;
+}
+.developer-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+.developer-card h2 { margin: 8px 0 2px; color: #1e293b; font-size: 22px; }
+.developer-card p { margin: 0; color: #64748b; font-size: 13px; }
+.developer-body {
+  text-align: left;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 16px;
+  margin-top: 16px;
+}
+.developer-body h3 {
+  font-size: 14px;
+  color: var(--primary);
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.developer-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+.developer-info span { color: #64748b; }
+.developer-info strong { color: #1e293b; }
+.developer-note {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 15px 0 10px;
+  font-size: 12px;
+  color: #475569;
+  text-align: center;
+}
+.developer-copyright {
+  text-align: center;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 10px;
+}
+.back-button {
+  width: 100%;
+  margin-top: 18px;
+  background: var(--primary);
+}
+.hidden { display: none !important; }
+
+@media(max-width:850px) {
+  .layout { grid-template-columns: 1fr; padding: 10px; }
+  .paper { padding: 20px; min-height: auto; }
+  .bottom-grid { grid-template-columns: 1fr; }
+}
+
+/* =====================================
+   PRINT ENGINE (A4 PERFECT)
+===================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm 8mm 10mm;
+  }
+
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  header.app-header,
+  nav.suite-navbar,
+  .editor,
+  .preview-tools,
+  #aboutSection {
+    display: none !important;
+  }
+
+  .layout {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .paper {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .paper-content {
+    min-height: calc(297mm - 24mm);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  tr, .bottom-grid, .signatures, .doc-footer, .client-section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+/* GITHUB BADGE LINK */
+.github-badge-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .2s ease;
+}
+.github-badge-link:hover {
+  background: #334155;
+  color: #ffffff;
+  border-color: #64748b;
+  transform: translateY(-1px);
+}
+.github-badge-link svg {
+  display: block;
+}
+
+/* MOBILE VIEW SWITCHER (STICKY TAB BAR FOR MOBILE/TABLETS) */
+.mobile-view-tabs {
+  display: none;
+}
+
+/* RESPONSIVE PAPER VIEWPORT WRAPPER */
+.paper-viewport {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 0 20px;
+  display: flex;
+  justify-content: center;
+  transition: transform .2s ease;
+}
+
+/* TABLET AND MOBILE OPTIMIZATIONS (< 992px) */
+@media (max-width: 991px) {
+  .mobile-view-tabs {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #0f172a;
+    padding: 8px 12px;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+  .mobile-tab-btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13.5px;
+    font-weight: 700;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background: #1e293b;
+    color: #94a3b8;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s ease;
+  }
+  .mobile-tab-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(23,74,131,0.4);
+  }
+
+  .layout {
+    display: block !important;
+    padding: 12px !important;
+  }
+  .layout.view-editor .preview-area {
+    display: none !important;
+  }
+  .layout.view-editor .editor {
+    display: block !important;
+  }
+  .layout.view-preview .editor {
+    display: none !important;
+  }
+  .layout.view-preview .preview-area {
+    display: block !important;
+  }
+
+  /* Prevent auto-zooming on iOS Safari */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  .paper {
+    min-width: 760px; /* Preserve crisp high-fidelity document formatting */
+  }
+  .paper-viewport {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 992px) {
+  .layout {
+    display: grid !important;
+    grid-template-columns: minmax(340px, 420px) 1fr !important;
+  }
+  .editor, .preview-area {
+    display: block !important;
+  }
+}
+
+@media (max-width: 600px) {
+  header.app-header {
+    padding: 10px 14px;
+  }
+  .brand-title h2 {
+    font-size: 15px;
+  }
+  .preview-tools {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .preview-tools .print-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media print {
+  .mobile-view-tabs {
+    display: none !important;
+  }
+  .paper-viewport {
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+  }
+  .paper {
+    min-width: 0 !important;
+    transform: none !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand-title">
+    <h2>Professional Business Document ERP Suite</h2>
+    <span class="badge-pro">Enterprise 5-in-1</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" class="github-badge-link" title="Visit feelsoof123 on GitHub">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>feelsoof123</span>
+    </a>
+    <button onclick="showAbout()" style="background:#1e293b;border:1px solid #334155;">About Developer</button>
+  </div>
+</header>
+
+<!-- 5-IN-1 MODULE NAVIGATION TABS -->
+<nav class="suite-navbar">
+  <button class="nav-tab-btn active" data-module="quotation" onclick="switchModule('quotation')">
+    <span class="tab-icon">📄</span> Phase 1: Quotation Maker
+  </button>
+  <button class="nav-tab-btn" data-module="invoice" onclick="switchModule('invoice')">
+    <span class="tab-icon">🧾</span> Phase 2: Tax Invoice
+  </button>
+  <button class="nav-tab-btn" data-module="purchaseOrder" onclick="switchModule('purchaseOrder')">
+    <span class="tab-icon">📦</span> Phase 3: Purchase Order
+  </button>
+  <button class="nav-tab-btn" data-module="deliveryChallan" onclick="switchModule('deliveryChallan')">
+    <span class="tab-icon">🚚</span> Phase 4: Delivery Challan
+  </button>
+  <button class="nav-tab-btn" data-module="proformaInvoice" onclick="switchModule('proformaInvoice')">
+    <span class="tab-icon">📋</span> Phase 5: Proforma Invoice
+  </button>
+</nav>
+
+<!-- MOBILE & TABLET VIEW SELECTOR TABS -->
+<div class="mobile-view-tabs" id="mobileViewTabs">
+  <button type="button" class="mobile-tab-btn active" id="btnViewEditor" onclick="setMobileView('editor')">
+    ✏️ Edit Details
+  </button>
+  <button type="button" class="mobile-tab-btn" id="btnViewPreview" onclick="setMobileView('preview')">
+    👁️ Document Preview
+  </button>
+</div>
+
+<div class="layout view-editor" id="mainLayout">
+  <!-- SIDEBAR CONTROLS -->
+  <aside class="editor">
+
+    <!-- MASTER BRANDING PANEL (SHARED ACROSS ALL 5 MODULES) -->
+    <section class="panel">
+      <h3>
+        <span>Company Master Profile</span>
+        <span style="font-size:10px;color:var(--success);font-weight:600;">Shared for all 5 documents</span>
+      </h3>
+      <label>Company Name</label>
+      <input id="companyName" placeholder="Your Business / Company Name">
+      <label>Company Address (Shows in Footer)</label>
+      <textarea id="companyAddress" placeholder="Street, Plaza, City, Pakistan"></textarea>
+      <label>Phone / UAN (Shows in Footer)</label>
+      <input id="companyPhone" placeholder="+92 300 1234567">
+      <label>Email / Web (Shows in Footer)</label>
+      <input id="companyEmail" placeholder="info@company.com">
+      <label>Company Logo (Header Left)</label>
+      <input type="file" id="logoFile" accept="image/*">
+      <label>Brand Theme Accent Color</label>
+      <input type="color" id="brandColor" value="#174a83">
+    </section>
+
+    <!-- MODULE 1: QUOTATION DETAILS -->
+    <section class="panel module-panel" id="panel-quotation">
+      <h3>
+        <span>Quotation Details</span>
+        <button type="button" class="btn-convert" onclick="convertQuotationToInvoice()">⚡ Convert to Invoice</button>
+      </h3>
+      <label>Quotation Number</label>
+      <input id="quoteNumber">
+      <label>Quote Date</label>
+      <input id="quoteDate" type="date">
+      <label>Valid Until</label>
+      <input id="validUntil" type="date">
+      
+      <label>Select Saved Customer</label>
+      <select id="quoteCustomerSelect" onchange="applySelectedCustomer(this.value)">
+        <option value="">-- Choose Customer --</option>
+      </select>
+      <label>Customer Name</label>
+      <input id="quoteCustomerName" placeholder="Client or Company Name">
+      <label>Customer Phone</label>
+      <input id="quoteCustomerPhone" placeholder="Phone / Mobile Number">
+      <label>Customer Address</label>
+      <textarea id="quoteCustomerAddress" placeholder="Client Address"></textarea>
+    </section>
+
+    <!-- MODULE 2: TAX / COMMERCIAL INVOICE DETAILS -->
+    <section class="panel module-panel hidden" id="panel-invoice">
+      <h3>
+        <span>Tax Invoice Details</span>
+        <button type="button" class="btn-convert" onclick="convertInvoiceToChallan()">⚡ Make Challan</button>
+      </h3>
+      <label>Invoice Number</label>
+      <input id="invoiceNumber">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label>Invoice Date</label>
+          <input id="invoiceDate" type="date">
+        </div>
+        <div style="flex:1;">
+          <label>Due Date</label>
+          <input id="invoiceDueDate" type="date">
+        </div>
+      </div>
+      <label>Quotation / PO Reference #</label>
+      <input id="invoiceRefNo" placeholder="e.g. QT-001 or PO-9874">
+
+      <label>Payment Status</label>
+      <select id="invoicePaymentStatus">
+        <option value="UNPAID">🔴 Unpaid</option>
+        <option value="PARTIAL">🟡 Partial Paid</option>
+        <option value="PAID">🟢 Fully Paid</option>
+      </select>
+      
+      <label>Amount Paid (Rs.)</label>
+      <input id="invoiceAmountPaid" type="number" min="0" step="any" value="0">
+
+      <label>Select Saved Customer</label>
+      <select id="invoiceCustomerSelect" onchange="applySelectedCustomer(this.value)">
+        <option value="">-- Choose Customer --</option>
+      </select>
+      <label>Billed To (Customer Name)</label>
+      <input id="invoiceCustomerName" placeholder="Customer Name">
+      <label>Customer Phone</label>
+      <input id="invoiceCustomerPhone" placeholder="Customer Contact">
+      <label>Billing Address</label>
+      <textarea id="invoiceCustomerAddress" placeholder="Full Billing Address"></textarea>
+
+      <label>Bank Wire / Payment Details</label>
+      <textarea id="invoiceBankDetails" placeholder="Bank Name: Meezan Bank&#10;Account Title: Your Business Title&#10;IBAN / A/C: PK00MEZN00001234567890"></textarea>
+    </section>
+
+    <!-- MODULE 3: PURCHASE ORDER (PO) DETAILS -->
+    <section class="panel module-panel hidden" id="panel-purchaseOrder">
+      <h3>Purchase Order (PO) Details</h3>
+      <label>PO Number</label>
+      <input id="poNumber">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label>PO Date</label>
+          <input id="poDate" type="date">
+        </div>
+        <div style="flex:1;">
+          <label>Expected Delivery</label>
+          <input id="poDeliveryDate" type="date">
+        </div>
+      </div>
+      <label>Payment Terms</label>
+      <input id="poPaymentTerms" placeholder="e.g. 30 Days Net or 50% Advance">
+
+      <label>Select Vendor / Supplier</label>
+      <select id="poSupplierSelect" onchange="applySelectedSupplier(this.value)">
+        <option value="">-- Select Supplier --</option>
+      </select>
+      <label>Vendor / Supplier Name</label>
+      <input id="poSupplierName" placeholder="Vendor / Supplier Business Name">
+      <label>Vendor Contact / Phone</label>
+      <input id="poSupplierPhone" placeholder="Supplier Contact Number">
+      <label>Vendor Address</label>
+      <textarea id="poSupplierAddress" placeholder="Supplier Business Address"></textarea>
+
+      <label>Delivery Location (Ship To)</label>
+      <textarea id="poShipTo" placeholder="Company Warehouse / Main Facility Address"></textarea>
+    </section>
+
+    <!-- MODULE 4: DELIVERY CHALLAN DETAILS -->
+    <section class="panel module-panel hidden" id="panel-deliveryChallan">
+      <h3>Delivery Challan Details</h3>
+      <label>Challan Number</label>
+      <input id="challanNumber">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label>Dispatch Date</label>
+          <input id="challanDate" type="date">
+        </div>
+        <div style="flex:1;">
+          <label>Ref Invoice / PO #</label>
+          <input id="challanRefNo" placeholder="INV-001">
+        </div>
+      </div>
+
+      <label>Select Customer / Consignee</label>
+      <select id="challanCustomerSelect" onchange="applySelectedCustomer(this.value)">
+        <option value="">-- Choose Customer --</option>
+      </select>
+      <label>Deliver To (Customer Name)</label>
+      <input id="challanCustomerName" placeholder="Customer / Consignee Name">
+      <label>Customer Contact</label>
+      <input id="challanCustomerPhone" placeholder="Contact Person & Phone">
+      <label>Delivery Address (Destination)</label>
+      <textarea id="challanCustomerAddress" placeholder="Drop-off Site / Office Address"></textarea>
+
+      <label>Transport / Vehicle Number</label>
+      <input id="challanVehicleNo" placeholder="e.g. LES-24-9840">
+      <label>Driver Name & Mobile</label>
+      <input id="challanDriverInfo" placeholder="e.g. Muhammad Aslam (0300-1122334)">
+      <label>Bilty / Carrier Tracking #</label>
+      <input id="challanBiltyNo" placeholder="e.g. TCS / Leopard Bilty # 984512">
+
+      <label>
+        <input type="checkbox" id="challanShowPrices"> Show Rates & Values on Delivery Challan
+      </label>
+    </section>
+
+    <!-- MODULE 5: PROFORMA INVOICE DETAILS -->
+    <section class="panel module-panel hidden" id="panel-proformaInvoice">
+      <h3>
+        <span>Proforma Invoice Details</span>
+        <button type="button" class="btn-convert" onclick="convertProformaToInvoice()">⚡ Make Final Invoice</button>
+      </h3>
+      <label>Proforma Number</label>
+      <input id="proformaNumber">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label>Proforma Date</label>
+          <input id="proformaDate" type="date">
+        </div>
+        <div style="flex:1;">
+          <label>Valid Until / Expiry</label>
+          <input id="proformaExpiryDate" type="date">
+        </div>
+      </div>
+
+      <label>Trade / Delivery Terms</label>
+      <input id="proformaTradeTerms" placeholder="e.g. Ex-Works / FOB Karachi / 100% Advance">
+      <label>Country of Origin</label>
+      <input id="proformaOrigin" value="Pakistan">
+
+      <label>Select Saved Customer</label>
+      <select id="proformaCustomerSelect" onchange="applySelectedCustomer(this.value)">
+        <option value="">-- Choose Customer --</option>
+      </select>
+      <label>Proforma To (Customer Name)</label>
+      <input id="proformaCustomerName" placeholder="Buyer / Client Name">
+      <label>Customer Phone</label>
+      <input id="proformaCustomerPhone" placeholder="Buyer Phone Number">
+      <label>Customer Address</label>
+      <textarea id="proformaCustomerAddress" placeholder="Buyer Company Address"></textarea>
+
+      <label>Bank Wire Transfer Instructions (IBAN/SWIFT)</label>
+      <textarea id="proformaBankDetails" placeholder="Bank: Standard Chartered / Meezan Bank&#10;SWIFT Code: SCBLPKKA&#10;IBAN: PK36SCBL0000001234567801&#10;Beneficiary: Your Business Name"></textarea>
+    </section>
+
+    <!-- DOCUMENT LINE ITEMS -->
+    <section class="panel">
+      <h3>
+        <span>Document Items</span>
+        <span id="itemCountBadge" style="font-size:11px;color:#64748b;">(1 Item)</span>
+      </h3>
+      <div id="itemEditors"></div>
+      <button id="addItem" style="width:100%;background:#0284c7;margin-top:6px;">+ Add Line Item</button>
+    </section>
+
+    <!-- DISCOUNT, TAX & TERMS -->
+    <section class="panel" id="panel-financials">
+      <h3>Financial Adjustments & Terms</h3>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label>Discount (%)</label>
+          <input id="discount" type="number" value="0" min="0" max="100">
+        </div>
+        <div style="flex:1;">
+          <label>Tax (%)</label>
+          <input id="tax" type="number" value="0" min="0">
+        </div>
+      </div>
+      <label>Terms & Conditions / Special Notes</label>
+      <textarea id="terms">1. Prices are valid as per standard commercial terms.
+2. Payment terms mutually agreed upon.
+3. Goods once dispatched adhere to standard warranty.</textarea>
+    </section>
+
+    <!-- STAMP & SIGNATURE (SHARED) -->
+    <section class="panel">
+      <h3>Official Stamp & Signature</h3>
+      <label>Upload Official Stamp</label>
+      <input type="file" id="stampFile" accept="image/*">
+      <label>
+        <input type="checkbox" id="stampOn" checked> Show Stamp
+      </label>
+      <label>Upload Authorized Signature</label>
+      <input type="file" id="signatureFile" accept="image/*">
+      <label>
+        <input type="checkbox" id="signatureOn" checked> Show Signature
+      </label>
+    </section>
+
+    <!-- WATERMARK SETTINGS (SHARED) -->
+    <section class="panel">
+      <h3>Watermark Settings</h3>
+      <label>
+        <input type="checkbox" id="watermarkOn" checked> Show Watermark
+      </label>
+      <label>Watermark Type</label>
+      <select id="watermarkMode">
+        <option value="image">Image Watermark</option>
+        <option value="text">Text Watermark</option>
+      </select>
+      <div id="watermarkImageSettings">
+        <label>Upload Watermark Image</label>
+        <input type="file" id="watermarkFile" accept="image/*">
+      </div>
+      <div id="watermarkTextSettings">
+        <label>Watermark Text</label>
+        <input type="text" id="watermarkText" placeholder="Company Name">
+        <label>Text Color</label>
+        <input type="color" id="watermarkTextColor" value="#999999">
+        <label>Text Size</label>
+        <input type="number" id="watermarkTextSize" value="55" min="10" max="150">
+      </div>
+      <label>Transparency</label>
+      <input type="range" id="watermarkOpacity" min="1" max="30" value="7">
+    </section>
+
+    <!-- MASTER CUSTOMER & SUPPLIER DIRECTORY -->
+    <section class="panel">
+      <h3>Master Contact Directory</h3>
+      <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <button type="button" id="tabCustomerBtn" onclick="toggleDirectory('customer')" style="flex:1;">Customers</button>
+        <button type="button" id="tabSupplierBtn" onclick="toggleDirectory('supplier')" style="flex:1;background:#64748b;">Suppliers</button>
+      </div>
+
+      <input type="hidden" id="editingContactId">
+      <label id="contactTypeLabel">Customer Name</label>
+      <input id="recordContactName" placeholder="Contact / Company Name">
+      <label>Phone Number</label>
+      <input id="recordContactPhone" placeholder="03XXXXXXXXX">
+      <label>Email Address</label>
+      <input id="recordContactEmail" type="email" placeholder="contact@email.com">
+      <label>Address</label>
+      <textarea id="recordContactAddress" placeholder="Complete Address"></textarea>
+      <button type="button" id="saveContactBtn">+ Save to Directory</button>
+      <button type="button" id="cancelContactEdit" class="hidden btn-secondary">Cancel</button>
+
+      <hr style="margin:16px 0;border:0;border-top:1px solid #e2e8f0;">
+      <label>Search Directory</label>
+      <input id="directorySearch" placeholder="Type to filter list...">
+      <div id="directoryList" style="margin-top:10px;max-height:220px;overflow-y:auto;"></div>
+    </section>
+
+    <!-- SYSTEM DATA & BACKUPS -->
+    <section class="panel">
+      <h3>Suite Backups & Resets</h3>
+      <button id="backupBtn">Download Complete ERP Backup</button>
+      <button id="restoreBtn" class="btn-secondary">Restore Backup</button>
+      <input type="file" id="restoreFile" accept=".json" hidden>
+      <button type="button" id="resetCurrentDocBtn" class="btn-secondary">Reset Active Document</button>
+      <button type="button" id="factoryResetBtn" class="btn-danger">Factory Reset</button>
+      <p id="saveStatus" style="font-size:11px;color:#059669;margin-top:10px;font-weight:600;">Auto-save active</p>
+    </section>
+
+  </aside>
+
+  <!-- LIVE DOCUMENT PREVIEW CANVAS -->
+  <main class="preview-area">
+    <div class="preview-tools">
+      <div>
+        <h3 id="previewTitle">Live Quotation Preview</h3>
+        <span style="font-size:12px;color:#64748b;">A4 Print Ready • Auto Page Adjust • Never Chops Signatures</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button type="button" id="btnFitToggle" onclick="togglePaperFit()" class="btn-secondary" style="font-size:12px;padding:8px 12px;">
+          📱 Fit to Screen
+        </button>
+        <button class="print-btn" onclick="window.print()">
+          <span>🖨️</span> Print / Save PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- RESPONSIVE A4 CANVAS WRAPPER -->
+    <div class="paper-viewport" id="paperViewport">
+      <div class="paper" id="paper">
+      <div class="watermark" id="watermark">
+        <img id="watermarkImage" alt="">
+        <div id="watermarkTextPreview"></div>
+      </div>
+
+      <div class="paper-content">
+        <!-- HEADER: LOGO & NAME ON LEFT, BADGE & METADATA ON RIGHT -->
+        <div class="doc-header">
+          <div class="brand-group">
+            <img id="previewLogo" alt="Logo">
+            <div>
+              <h1 id="pCompanyName">YOUR COMPANY NAME</h1>
+            </div>
+          </div>
+          <div class="quote-badge-box">
+            <div class="quote-title-tag" id="pDocBadge">QUOTATION</div>
+            <div class="quote-meta-list" id="pDocMetaList">
+              <!-- Dynamically populated per module -->
+            </div>
+            <div id="pStatusContainer"></div>
+          </div>
+        </div>
+
+        <!-- CLIENT / CONSIGNEE / VENDOR SECTION -->
+        <div class="client-section">
+          <div class="client-card">
+            <h4 id="pClientHeader">Quotation Prepared For</h4>
+            <div class="client-name" id="pCustomerName">Customer Name</div>
+            <div class="client-sub" id="pCustomerPhone"></div>
+            <div class="client-sub" id="pCustomerAddress"></div>
+          </div>
+        </div>
+
+        <!-- ITEMS TABLE (DYNAMIC HEADERS PER MODULE) -->
+        <table>
+          <thead id="previewTableHead">
+            <!-- Dynamically populated based on active module -->
+          </thead>
+          <tbody id="previewItems"></tbody>
+        </table>
+
+        <!-- SIDE-BY-SIDE: TERMS/BANK/LOGISTICS (LEFT) + TOTALS (RIGHT) -->
+        <div class="bottom-grid">
+          <div class="terms-box">
+            <h4 id="pTermsTitle">Terms & Conditions</h4>
+            <p id="pTerms"></p>
+            <div id="pExtraInfoBox"></div>
+          </div>
+          
+          <div class="totals-box" id="pTotalsContainer">
+            <div><span>Subtotal</span><b id="pSubtotal">Rs. 0.00</b></div>
+            <div><span>Discount</span><b id="pDiscount">Rs. 0.00</b></div>
+            <div><span>Tax</span><b id="pTax">Rs. 0.00</b></div>
+            <div class="grand">
+              <span>Grand Total</span>
+              <b id="pGrandTotal">Rs. 0.00</b>
+            </div>
+            <div id="pInvoiceBalanceRows" class="hidden">
+              <div><span>Amount Paid</span><b id="pAmountPaid">Rs. 0.00</b></div>
+              <div class="balance-row"><span>Balance Due</span><b id="pBalanceDue">Rs. 0.00</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIGNATURE & STAMP BLOCK (NEVER CUT OFF) -->
+        <div class="signatures">
+          <div class="sign-block" id="stampBlock">
+            <div class="sign-img-container">
+              <img id="pStamp" alt="Stamp">
+            </div>
+            <p id="pStampLabel">Company Stamp</p>
+          </div>
+          <div class="sign-block" id="signatureBlock">
+            <div class="sign-img-container">
+              <img id="pSignature" alt="Signature">
+            </div>
+            <p id="pSignatureLabel">Authorized Signature</p>
+          </div>
+        </div>
+
+        <!-- FOOTER: COMPLETE ADDRESS, PHONE, EMAIL -->
+        <div class="doc-footer">
+          <div class="footer-contact-row">
+            <div class="footer-item" id="fAddrWrap">
+              <span class="icon">📍</span>
+              <span id="pAddress"></span>
+            </div>
+            <div class="footer-item" id="fPhoneWrap">
+              <span class="icon">📞</span>
+              <span id="pContact"></span>
+            </div>
+            <div class="footer-item" id="fEmailWrap">
+              <span class="icon">✉️</span>
+              <span id="pEmail"></span>
+            </div>
+          </div>
+          <div class="footer-bottom-line">
+            <span>Thank you for your business!</span>
+            <span id="pDocBottomType">Computer Generated Official Document</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div> <!-- /paper-viewport -->
+  </main>
+</div>
+
+<!-- DEVELOPER ABOUT MODAL / SECTION -->
+<section id="aboutSection" class="about hidden">
+  <div class="developer-card">
+    <div class="developer-top">
+      <div class="developer-avatar">SA</div>
+      <span class="developer-badge">SOFTWARE DEVELOPER</span>
+      <h2>Shaiekh Fielsouf Ansari</h2>
+      <p>Creator & Owner</p>
+    </div>
+    <div class="developer-body">
+      <h3>Contact Information</h3>
+      <div class="developer-info">
+        <span>GitHub Profile</span>
+        <strong><a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:none;font-weight:700;">github.com/feelsoof123</a></strong>
+      </div>
+      <div class="developer-info">
+        <span>Contact Number 1</span>
+        <strong>03331255512</strong>
+      </div>
+      <div class="developer-info">
+        <span>Contact Number 2</span>
+        <strong>03111855512</strong>
+      </div>
+      <div class="developer-info">
+        <span>WhatsApp</span>
+        <strong>03111855512</strong>
+      </div>
+      <div class="developer-info">
+        <span>JazzCash Payment</span>
+        <strong>03000210419</strong>
+      </div>
+      <div class="developer-note">
+        Thank you for using this Enterprise Business ERP Suite.
+        Designed for speed, precision, and professional commercial compliance.
+      </div>
+      <div class="developer-copyright">
+        © 2026 Shaiekh Fielsouf Ansari.
+        All Rights Reserved.
+      </div>
+    </div>
+  </div>
+  <button onclick="showAbout()" class="back-button">
+    Back to Document Suite
+  </button>
+</section>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// CONFIG & CENTRAL STORAGE ARCHITECTURE
+const APP_CONFIG = {
+  name: "Enterprise Business Document ERP Suite",
+  version: "2.0.0",
+  storage: {
+    company: "biz_company_profile_v2",
+    customers: "biz_customers_v2",
+    suppliers: "biz_suppliers_v2",
+    counters: "biz_counters_v2",
+    quotation: "biz_doc_quotation_v2",
+    invoice: "biz_doc_invoice_v2",
+    purchaseOrder: "biz_doc_po_v2",
+    deliveryChallan: "biz_doc_challan_v2",
+    proformaInvoice: "biz_doc_proforma_v2"
+  }
+};
+
+let currentModule = "quotation";
+let activeDirectoryType = "customer";
+
+// SHARED ASSETS
+let logoData = "";
+let watermarkData = "";
+let stampData = "";
+let signatureData = "";
+
+// MASTER DIRECTORIES
+let customers = [];
+let suppliers = [];
+
+// PER-MODULE ITEMS & DETAILS REPOSITORY
+const moduleData = {
+  quotation: {
+    number: "",
+    date: "",
+    validUntil: "",
+    clientName: "Valued Customer",
+    clientPhone: "",
+    clientAddress: "",
+    items: [{ description: "High Quality Business Solution / Service", qty: 1, unit: "Pcs", rate: 15000 }],
+    discount: 0,
+    tax: 0,
+    terms: "1. Prices are valid for 15 days from quote date.\n2. 50% advance payment upon confirmation.\n3. Delivery within agreed timeline."
+  },
+  invoice: {
+    number: "",
+    date: "",
+    dueDate: "",
+    refNo: "",
+    status: "UNPAID",
+    amountPaid: 0,
+    clientName: "Valued Customer",
+    clientPhone: "",
+    clientAddress: "",
+    bankDetails: "Bank: Meezan Bank Ltd\nAccount Title: Your Business Name\nIBAN / A/C: PK00MEZN00001234567890",
+    items: [{ description: "Commercial Products / Delivery Services", qty: 1, unit: "Pcs", rate: 25000 }],
+    discount: 0,
+    tax: 0,
+    terms: "1. Payment is due within 15 days of invoice date.\n2. Please mention invoice number in wire transfer.\n3. Thank you for your business!"
+  },
+  purchaseOrder: {
+    number: "",
+    date: "",
+    deliveryDate: "",
+    paymentTerms: "Net 30 Days",
+    supplierName: "Vendor / Supplier Partner",
+    supplierPhone: "",
+    supplierAddress: "",
+    shipTo: "Company Main Warehouse / Office Address",
+    items: [{ description: "Raw Material / Office Supplies / Equipment", qty: 5, unit: "Units", rate: 4500 }],
+    discount: 0,
+    tax: 0,
+    terms: "1. Goods must be delivered in pristine condition.\n2. Packing slip & PO reference required with delivery.\n3. Defective items will be returned immediately."
+  },
+  deliveryChallan: {
+    number: "",
+    date: "",
+    refNo: "INV-001",
+    clientName: "Consignee / Customer Name",
+    clientPhone: "",
+    clientAddress: "Delivery Destination / Site Address",
+    vehicleNo: "LES-24-9840",
+    driverInfo: "Muhammad Aslam (0300-1122334)",
+    biltyNo: "TCS / Leopard # 984512",
+    showPrices: false,
+    items: [{ description: "Dispatched Commercial Consignment", qty: 10, unit: "Cartons", rate: 2500 }],
+    terms: "1. Goods received in sound condition and exact quantity.\n2. Any discrepancy must be reported within 24 hours of receipt."
+  },
+  proformaInvoice: {
+    number: "",
+    date: "",
+    expiryDate: "",
+    tradeTerms: "Ex-Works / 100% Advance",
+    origin: "Pakistan",
+    clientName: "International / Corporate Buyer",
+    clientPhone: "",
+    clientAddress: "",
+    bankDetails: "Bank: Standard Chartered / Meezan Bank\nSWIFT: SCBLPKKA\nIBAN: PK36SCBL0000001234567801\nBeneficiary: Your Business Name",
+    items: [{ description: "Export / Wholesale Consignment", qty: 1, unit: "Lot", rate: 50000 }],
+    discount: 0,
+    tax: 0,
+    terms: "1. This proforma invoice is valid for 20 days.\n2. Production will commence upon confirmation of wire transfer.\n3. Freight & customs duties as per trade terms."
+  }
+};
+
+function money(value) {
+  return Number(value || 0).toLocaleString("en-PK", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function safeText(value) {
+  return String(value || "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+// NUMBER SEQUENCING
+function getSequenceNumber(prefix) {
+  let counters = {};
+  try {
+    counters = JSON.parse(localStorage.getItem(APP_CONFIG.storage.counters) || "{}");
+  } catch(e) { counters = {}; }
+  let val = (Number(counters[prefix]) || 0) + 1;
+  counters[prefix] = val;
+  localStorage.setItem(APP_CONFIG.storage.counters, JSON.stringify(counters));
+  return prefix + "-" + String(val).padStart(3, "0");
+}
+
+function initCounters() {
+  if (!moduleData.quotation.number) moduleData.quotation.number = getSequenceNumber("QT");
+  if (!moduleData.invoice.number) moduleData.invoice.number = getSequenceNumber("INV");
+  if (!moduleData.purchaseOrder.number) moduleData.purchaseOrder.number = getSequenceNumber("PO");
+  if (!moduleData.deliveryChallan.number) moduleData.deliveryChallan.number = getSequenceNumber("DC");
+  if (!moduleData.proformaInvoice.number) moduleData.proformaInvoice.number = getSequenceNumber("PI");
+}
+
+// MODULE SWITCHER
+function switchModule(mod) {
+  currentModule = mod;
+
+  // Update tabs visual
+  document.querySelectorAll(".nav-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.module === mod);
+  });
+
+  // Show/Hide sidebar panel for active module
+  document.querySelectorAll(".module-panel").forEach(p => p.classList.add("hidden"));
+  const activePanel = $("panel-" + mod);
+  if (activePanel) activePanel.classList.remove("hidden");
+
+  // Show/Hide financials panel (Delivery challan hides tax/discount usually)
+  $("panel-financials").style.display = (mod === "deliveryChallan") ? "none" : "block";
+
+  syncModuleInputsToState();
+  renderItems();
+  updatePreview();
+  saveData();
+}
+
+// SYNC FORM INPUTS WITH ACTIVE MODULE
+function syncModuleInputsToState() {
+  const m = moduleData[currentModule];
+  if (!m) return;
+
+  if (currentModule === "quotation") {
+    $("quoteNumber").value = m.number || "";
+    $("quoteDate").value = m.date || new Date().toISOString().slice(0, 10);
+    $("validUntil").value = m.validUntil || "";
+    $("quoteCustomerName").value = m.clientName || "";
+    $("quoteCustomerPhone").value = m.clientPhone || "";
+    $("quoteCustomerAddress").value = m.clientAddress || "";
+  } else if (currentModule === "invoice") {
+    $("invoiceNumber").value = m.number || "";
+    $("invoiceDate").value = m.date || new Date().toISOString().slice(0, 10);
+    $("invoiceDueDate").value = m.dueDate || "";
+    $("invoiceRefNo").value = m.refNo || "";
+    $("invoicePaymentStatus").value = m.status || "UNPAID";
+    $("invoiceAmountPaid").value = m.amountPaid || 0;
+    $("invoiceCustomerName").value = m.clientName || "";
+    $("invoiceCustomerPhone").value = m.clientPhone || "";
+    $("invoiceCustomerAddress").value = m.clientAddress || "";
+    $("invoiceBankDetails").value = m.bankDetails || "";
+  } else if (currentModule === "purchaseOrder") {
+    $("poNumber").value = m.number || "";
+    $("poDate").value = m.date || new Date().toISOString().slice(0, 10);
+    $("poDeliveryDate").value = m.deliveryDate || "";
+    $("poPaymentTerms").value = m.paymentTerms || "";
+    $("poSupplierName").value = m.supplierName || "";
+    $("poSupplierPhone").value = m.supplierPhone || "";
+    $("poSupplierAddress").value = m.supplierAddress || "";
+    $("poShipTo").value = m.shipTo || "";
+  } else if (currentModule === "deliveryChallan") {
+    $("challanNumber").value = m.number || "";
+    $("challanDate").value = m.date || new Date().toISOString().slice(0, 10);
+    $("challanRefNo").value = m.refNo || "";
+    $("challanCustomerName").value = m.clientName || "";
+    $("challanCustomerPhone").value = m.clientPhone || "";
+    $("challanCustomerAddress").value = m.clientAddress || "";
+    $("challanVehicleNo").value = m.vehicleNo || "";
+    $("challanDriverInfo").value = m.driverInfo || "";
+    $("challanBiltyNo").value = m.biltyNo || "";
+    $("challanShowPrices").checked = Boolean(m.showPrices);
+  } else if (currentModule === "proformaInvoice") {
+    $("proformaNumber").value = m.number || "";
+    $("proformaDate").value = m.date || new Date().toISOString().slice(0, 10);
+    $("proformaExpiryDate").value = m.expiryDate || "";
+    $("proformaTradeTerms").value = m.tradeTerms || "";
+    $("proformaOrigin").value = m.origin || "Pakistan";
+    $("proformaCustomerName").value = m.clientName || "";
+    $("proformaCustomerPhone").value = m.clientPhone || "";
+    $("proformaCustomerAddress").value = m.clientAddress || "";
+    $("proformaBankDetails").value = m.bankDetails || "";
+  }
+
+  $("discount").value = m.discount || 0;
+  $("tax").value = m.tax || 0;
+  $("terms").value = m.terms || "";
+}
+
+// SYNC ACTIVE INPUTS BACK TO MEMORY
+function syncStateFromInputs() {
+  const m = moduleData[currentModule];
+  if (!m) return;
+
+  if (currentModule === "quotation") {
+    m.number = $("quoteNumber").value;
+    m.date = $("quoteDate").value;
+    m.validUntil = $("validUntil").value;
+    m.clientName = $("quoteCustomerName").value;
+    m.clientPhone = $("quoteCustomerPhone").value;
+    m.clientAddress = $("quoteCustomerAddress").value;
+  } else if (currentModule === "invoice") {
+    m.number = $("invoiceNumber").value;
+    m.date = $("invoiceDate").value;
+    m.dueDate = $("invoiceDueDate").value;
+    m.refNo = $("invoiceRefNo").value;
+    m.status = $("invoicePaymentStatus").value;
+    m.amountPaid = Number($("invoiceAmountPaid").value) || 0;
+    m.clientName = $("invoiceCustomerName").value;
+    m.clientPhone = $("invoiceCustomerPhone").value;
+    m.clientAddress = $("invoiceCustomerAddress").value;
+    m.bankDetails = $("invoiceBankDetails").value;
+  } else if (currentModule === "purchaseOrder") {
+    m.number = $("poNumber").value;
+    m.date = $("poDate").value;
+    m.deliveryDate = $("poDeliveryDate").value;
+    m.paymentTerms = $("poPaymentTerms").value;
+    m.supplierName = $("poSupplierName").value;
+    m.supplierPhone = $("poSupplierPhone").value;
+    m.supplierAddress = $("poSupplierAddress").value;
+    m.shipTo = $("poShipTo").value;
+  } else if (currentModule === "deliveryChallan") {
+    m.number = $("challanNumber").value;
+    m.date = $("challanDate").value;
+    m.refNo = $("challanRefNo").value;
+    m.clientName = $("challanCustomerName").value;
+    m.clientPhone = $("challanCustomerPhone").value;
+    m.clientAddress = $("challanCustomerAddress").value;
+    m.vehicleNo = $("challanVehicleNo").value;
+    m.driverInfo = $("challanDriverInfo").value;
+    m.biltyNo = $("challanBiltyNo").value;
+    m.showPrices = $("challanShowPrices").checked;
+  } else if (currentModule === "proformaInvoice") {
+    m.number = $("proformaNumber").value;
+    m.date = $("proformaDate").value;
+    m.expiryDate = $("proformaExpiryDate").value;
+    m.tradeTerms = $("proformaTradeTerms").value;
+    m.origin = $("proformaOrigin").value;
+    m.clientName = $("proformaCustomerName").value;
+    m.clientPhone = $("proformaCustomerPhone").value;
+    m.clientAddress = $("proformaCustomerAddress").value;
+    m.bankDetails = $("proformaBankDetails").value;
+  }
+
+  m.discount = Number($("discount").value) || 0;
+  m.tax = Number($("tax").value) || 0;
+  m.terms = $("terms").value;
+}
+
+// ITEMS RENDERING FOR CURRENT MODULE
+const UNIT_OPTIONS = ["Sq. Ft.", "Sq. M.", "Rft", "Cft", "Nos", "Pcs", "Set", "Pair", "Kg", "Ton", "Ltr", "Carton", "Box", "Bag", "Lot", "Lump Sum", "Units"];
+
+function fmtQty(n) {
+  return Number(n || 0).toLocaleString("en-PK", { maximumFractionDigits: 2 });
+}
+
+// Purane saved items (qty field) ko naye format (unitQty + itemQty) mein badal deta hai
+function normalizeItem(item) {
+  if (item.itemQty === undefined) item.itemQty = Number(item.qty ?? 1);
+  if (item.unitQty === undefined) item.unitQty = 1;
+  if (!item.unit) item.unit = "Nos";
+  if (!item.calcMode) item.calcMode = "manual";
+  delete item.qty;
+  return item;
+}
+
+function normalizeAllItems() {
+  Object.values(moduleData).forEach(m => {
+    if (m && Array.isArray(m.items)) m.items.forEach(normalizeItem);
+  });
+}
+
+function unitOptionsHtml(selected) {
+  const list = UNIT_OPTIONS.includes(selected) ? UNIT_OPTIONS : [selected, ...UNIT_OPTIONS];
+  return list.map(u => `<option value="${safeText(u)}" ${u === selected ? "selected" : ""}>${safeText(u)}</option>`).join("");
+}
+
+function renderItems() {
+  const m = moduleData[currentModule];
+  if (!m || !Array.isArray(m.items)) return;
+
+  $("itemCountBadge").textContent = `(${m.items.length} ${m.items.length === 1 ? 'Item' : 'Items'})`;
+
+  $("itemEditors").innerHTML = m.items.map((item, i) => {
+    normalizeItem(item);
+    const areaMode = item.calcMode === "area";
+    const c = getItemCalculation(item);
+    return `
+    <div class="item-editor">
+      <label>Item ${i+1} Description</label>
+      <input data-i="${i}" data-key="description" value="${safeText(item.description)}">
+      <label>Unit Qty Calculation</label>
+      <select data-i="${i}" data-key="calcMode">
+        <option value="manual" ${!areaMode ? "selected" : ""}>Manual Unit Qty</option>
+        <option value="area" ${areaMode ? "selected" : ""}>Calculate Area (Width × Height)</option>
+      </select>
+      ${areaMode ? `
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;"><label>Width</label><input type="number" min="0" step="any" data-i="${i}" data-key="width" value="${Number(item.width) || 0}"></div>
+          <div style="flex:1;"><label>Height</label><input type="number" min="0" step="any" data-i="${i}" data-key="height" value="${Number(item.height) || 0}"></div>
+          <div style="flex:1;"><label>Dimension Unit</label>
+            <select data-i="${i}" data-key="dimensionUnit">
+              <option value="in" ${(item.dimensionUnit || "in") === "in" ? "selected" : ""}>Inches</option>
+              <option value="ft" ${item.dimensionUnit === "ft" ? "selected" : ""}>Feet</option>
+              <option value="mm" ${item.dimensionUnit === "mm" ? "selected" : ""}>Millimetres</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;"><label>Unit Qty (1 piece ka Sq. Ft.)</label><input data-role="unitQtyView" value="${c.unitQty.toFixed(2)} Sq. Ft." readonly></div>
+          <div style="flex:1;"><label>Item Qty (Darwazey / Pieces)</label><input type="number" min="0" step="any" data-i="${i}" data-key="itemQty" value="${item.itemQty}"></div>
+        </div>
+      ` : `
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;"><label>Unit</label>
+            <select data-i="${i}" data-key="unit">${unitOptionsHtml(item.unit)}</select>
+          </div>
+          <div style="flex:1;"><label>Unit Qty</label><input type="number" min="0" step="any" data-i="${i}" data-key="unitQty" value="${item.unitQty}"></div>
+          <div style="flex:1;"><label>Item Qty</label><input type="number" min="0" step="any" data-i="${i}" data-key="itemQty" value="${item.itemQty}"></div>
+        </div>
+      `}
+      <label>Total Qty (Unit Qty × Item Qty)</label>
+      <input data-role="totalQtyView" value="${fmtQty(c.qty)} ${safeText(c.unit)}" readonly>
+      <label>Rate (Rs.) per ${safeText(c.unit)}</label>
+      <input type="number" min="0" step="any" data-i="${i}" data-key="rate" value="${item.rate}">
+      <button class="removeItem btn-danger" data-remove="${i}">Remove Item</button>
+    </div>`;
+  }).join("");
+}
+
+// unitQty = 1 item ki miqdar (jaise 1 darwaza = 21 sq ft), itemQty = items ki tadaad (jaise 10 darwazey)
+function getItemCalculation(item) {
+  const itemQty = Math.max(0, Number(item.itemQty ?? item.qty ?? 1) || 0);
+  let unitQty, unit;
+  if (item.calcMode === "area") {
+    const width = Math.max(0, Number(item.width) || 0);
+    const height = Math.max(0, Number(item.height) || 0);
+    const dimensionUnit = item.dimensionUnit || "in";
+    const toFeet = dimensionUnit === "ft" ? 1 : (dimensionUnit === "mm" ? 1 / 304.8 : 1 / 12);
+    unitQty = width * toFeet * height * toFeet;
+    unit = "Sq. Ft.";
+  } else {
+    unitQty = Math.max(0, Number(item.unitQty ?? 1) || 0);
+    unit = item.unit || "Nos";
+  }
+  return { unitQty, itemQty, qty: unitQty * itemQty, unit };
+}
+
+function refreshItemViews(editor, item) {
+  if (!editor) return;
+  const c = getItemCalculation(item);
+  const u = editor.querySelector('[data-role="unitQtyView"]');
+  if (u) u.value = c.unitQty.toFixed(2) + " " + c.unit;
+  const t = editor.querySelector('[data-role="totalQtyView"]');
+  if (t) t.value = fmtQty(c.qty) + " " + c.unit;
+}
+
+// UPDATE DOCUMENT PREVIEW CANVAS (ALL 5 MODULES)
+function updatePreview() {
+  syncStateFromInputs();
+  const m = moduleData[currentModule];
+  const primaryColor = $("brandColor").value || "#174a83";
+  document.documentElement.style.setProperty("--primary", primaryColor);
+
+  // Auto-compact if items are 6 or more (Never cut off stamp/signature)
+  const paper = $("paper");
+  if (m.items.length >= 6) {
+    paper.classList.add("auto-compact");
+  } else {
+    paper.classList.remove("auto-compact");
+  }
+
+  // Header: Company Name & Logo
+  $("pCompanyName").textContent = $("companyName").value.trim() || "YOUR COMPANY NAME";
+  const effectiveLogo = getEffectiveLogo();
+  $("previewLogo").src = effectiveLogo;
+  $("previewLogo").onerror = () => { $("previewLogo").style.display = "none"; };
+  $("previewLogo").onload = () => { $("previewLogo").style.display = "block"; };
+  $("previewLogo").style.display = effectiveLogo ? "block" : "none";
+
+  // Footer: Address, Phone, Email
+  const addr = $("companyAddress").value.trim();
+  const phone = $("companyPhone").value.trim();
+  const email = $("companyEmail").value.trim();
+  $("pAddress").textContent = addr;
+  $("fAddrWrap").style.display = addr ? "inline-flex" : "none";
+  $("pContact").textContent = phone;
+  $("fPhoneWrap").style.display = phone ? "inline-flex" : "none";
+  $("pEmail").textContent = email;
+  $("fEmailWrap").style.display = email ? "inline-flex" : "none";
+
+  // Document Badge & Metadata
+  let badgeText = "QUOTATION";
+  let metaHtml = "";
+  let statusHtml = "";
+  let clientHeader = "Quotation Prepared For";
+  let clientName = m.clientName || "Valued Customer";
+  let clientPhone = m.clientPhone ? "Contact: " + m.clientPhone : "";
+  let clientAddress = m.clientAddress ? "Address: " + m.clientAddress : "";
+  let bottomType = "Computer Generated Official Quotation";
+  let stampLabel = "Company Stamp";
+  let signatureLabel = "Authorized Signature";
+  let extraInfoHtml = "";
+
+  // Dynamic modules configuration
+  if (currentModule === "quotation") {
+    badgeText = "QUOTATION";
+    metaHtml = `
+      <div><span>Quote #:</span> <strong>${safeText(m.number || "QT-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      <div><span>Valid Until:</span> <strong>${safeText(m.validUntil || "")}</strong></div>
+    `;
+    clientHeader = "Quotation Prepared For";
+    bottomType = "Official Quotation Document";
+  } else if (currentModule === "invoice") {
+    badgeText = "TAX INVOICE";
+    metaHtml = `
+      <div><span>Invoice #:</span> <strong>${safeText(m.number || "INV-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      <div><span>Due Date:</span> <strong>${safeText(m.dueDate || "")}</strong></div>
+      ${m.refNo ? `<div><span>Ref #:</span> <strong>${safeText(m.refNo)}</strong></div>` : ''}
+    `;
+    let statusClass = m.status === "PAID" ? "status-paid" : (m.status === "PARTIAL" ? "status-partial" : "status-unpaid");
+    statusHtml = `<span class="status-stamp-tag ${statusClass}">STATUS: ${safeText(m.status)}</span>`;
+    clientHeader = "Invoice Billed To";
+    bottomType = "Commercial Sales & Tax Invoice";
+
+    if (m.bankDetails) {
+      extraInfoHtml = `
+        <div class="bank-info-box">
+          <strong>Wire Transfer / Bank Payment Details:</strong>
+          ${safeText(m.bankDetails).replace(/\n/g, '<br>')}
+        </div>
+      `;
+    }
+  } else if (currentModule === "purchaseOrder") {
+    badgeText = "PURCHASE ORDER";
+    metaHtml = `
+      <div><span>PO #:</span> <strong>${safeText(m.number || "PO-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      <div><span>Delivery:</span> <strong>${safeText(m.deliveryDate || "")}</strong></div>
+      ${m.paymentTerms ? `<div><span>Terms:</span> <strong>${safeText(m.paymentTerms)}</strong></div>` : ''}
+    `;
+    clientHeader = "Vendor / Supplier Partner";
+    clientName = m.supplierName || "Supplier Name";
+    clientPhone = m.supplierPhone ? "Phone: " + m.supplierPhone : "";
+    clientAddress = m.supplierAddress ? "Address: " + m.supplierAddress : "";
+    if (m.shipTo) {
+      clientAddress += `<br><span style="font-weight:700;color:var(--primary);">Ship To:</span> ${safeText(m.shipTo)}`;
+    }
+    bottomType = "Official Commercial Purchase Order";
+    stampLabel = "Prepared By";
+    signatureLabel = "Approved / Authorized By";
+  } else if (currentModule === "deliveryChallan") {
+    badgeText = "DELIVERY CHALLAN";
+    metaHtml = `
+      <div><span>Challan #:</span> <strong>${safeText(m.number || "DC-001")}</strong></div>
+      <div><span>Dispatch Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      ${m.refNo ? `<div><span>Ref Inv/PO:</span> <strong>${safeText(m.refNo)}</strong></div>` : ''}
+    `;
+    clientHeader = "Consignee / Deliver To";
+    bottomType = "Goods Delivery & Dispatch Note";
+    stampLabel = "Dispatched By (Warehouse)";
+    signatureLabel = "Received In Good Condition";
+
+    let transportDetails = [];
+    if (m.vehicleNo) transportDetails.push(`Vehicle: <b>${safeText(m.vehicleNo)}</b>`);
+    if (m.driverInfo) transportDetails.push(`Driver: <b>${safeText(m.driverInfo)}</b>`);
+    if (m.biltyNo) transportDetails.push(`Bilty/Tracking: <b>${safeText(m.biltyNo)}</b>`);
+    if (transportDetails.length) {
+      extraInfoHtml = `
+        <div class="bank-info-box" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;">
+          <strong>Logistics & Carrier Details:</strong>
+          ${transportDetails.join(' | ')}
+        </div>
+      `;
+    }
+  } else if (currentModule === "proformaInvoice") {
+    badgeText = "PROFORMA INVOICE";
+    metaHtml = `
+      <div><span>Proforma #:</span> <strong>${safeText(m.number || "PI-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      <div><span>Valid Until:</span> <strong>${safeText(m.expiryDate || "")}</strong></div>
+      ${m.tradeTerms ? `<div><span>Terms:</span> <strong>${safeText(m.tradeTerms)}</strong></div>` : ''}
+      ${m.origin ? `<div><span>Origin:</span> <strong>${safeText(m.origin)}</strong></div>` : ''}
+    `;
+    clientHeader = "Proforma Billed To";
+    bottomType = "Preliminary Proforma Invoice";
+    if (m.bankDetails) {
+      extraInfoHtml = `
+        <div class="bank-info-box">
+          <strong>International Wire Transfer (SWIFT / IBAN):</strong>
+          ${safeText(m.bankDetails).replace(/\n/g, '<br>')}
+        </div>
+      `;
+    }
+  }
+
+  $("previewTitle").textContent = "Live " + badgeText.toLowerCase().replace(/\b\w/g, c=>c.toUpperCase()) + " Preview";
+  $("pDocBadge").textContent = badgeText;
+  $("pDocMetaList").innerHTML = metaHtml;
+  $("pStatusContainer").innerHTML = statusHtml;
+  $("pClientHeader").textContent = clientHeader;
+  $("pCustomerName").textContent = clientName;
+  $("pCustomerPhone").innerHTML = clientPhone;
+  $("pCustomerAddress").innerHTML = clientAddress;
+  $("pDocBottomType").textContent = bottomType;
+  $("pStampLabel").textContent = stampLabel;
+  $("pSignatureLabel").textContent = signatureLabel;
+  $("pExtraInfoBox").innerHTML = extraInfoHtml;
+  $("pTerms").textContent = m.terms || "";
+
+  // Watermark
+  const watermarkMode = $("watermarkMode").value;
+  const watermarkEnabled = $("watermarkOn").checked;
+  const watermarkOpacity = Number($("watermarkOpacity").value) / 100;
+  const effectiveWatermark = getEffectiveWatermark();
+  $("watermarkImage").src = effectiveWatermark;
+  $("watermarkImage").onerror = () => { $("watermarkImage").style.display = "none"; };
+  $("watermarkImage").style.display = (watermarkMode === "image" && effectiveWatermark) ? "block" : "none";
+  $("watermarkTextPreview").textContent = $("watermarkText").value;
+  $("watermarkTextPreview").style.display = (watermarkMode === "text" && $("watermarkText").value.trim()) ? "block" : "none";
+  $("watermarkTextPreview").style.color = $("watermarkTextColor").value;
+  $("watermarkTextPreview").style.fontSize = (Number($("watermarkTextSize").value) || 55) + "px";
+  $("watermarkImage").style.opacity = watermarkOpacity;
+  $("watermarkTextPreview").style.opacity = watermarkOpacity;
+  const hasWatermark = watermarkMode === "image" ? Boolean(watermarkData) : Boolean($("watermarkText").value.trim());
+  $("watermark").style.display = (watermarkEnabled && hasWatermark) ? "flex" : "none";
+  $("watermarkImageSettings").style.display = watermarkMode === "image" ? "block" : "none";
+  $("watermarkTextSettings").style.display = watermarkMode === "text" ? "block" : "none";
+
+  // Stamp & Signature Display
+  const effectiveStamp = getEffectiveStamp();
+  const showStamp = Boolean(effectiveStamp && $("stampOn").checked);
+  $("pStamp").src = effectiveStamp;
+  $("pStamp").onerror = () => { $("stampBlock").style.visibility = "hidden"; };
+  $("stampBlock").style.visibility = showStamp ? "visible" : "hidden";
+
+  const effectiveSig = getEffectiveSignature();
+  const showSig = Boolean(effectiveSig && $("signatureOn").checked);
+  $("pSignature").src = effectiveSig;
+  $("pSignature").onerror = () => { $("signatureBlock").style.visibility = "hidden"; };
+  $("signatureBlock").style.visibility = showSig ? "visible" : "hidden";
+
+  // Render Table Columns (Special Handling for Delivery Challan without prices)
+  let subtotal = 0;
+  const isChallanNoPrices = (currentModule === "deliveryChallan" && !m.showPrices);
+
+  if (isChallanNoPrices) {
+    $("previewTableHead").innerHTML = `
+      <tr>
+        <th style="width: 32px; text-align: center;">#</th>
+        <th>Item Description & Specifications</th>
+        <th style="width: 62px; text-align: center;">Unit</th>
+        <th style="width: 78px; text-align: center;">Unit Qty</th>
+        <th style="width: 78px; text-align: center;">Item Qty</th>
+        <th style="width: 90px; text-align: center;">Total Qty</th>
+      </tr>
+    `;
+    $("previewItems").innerHTML = m.items.map((item, i) => {
+      const c = getItemCalculation(item);
+      return `
+      <tr>
+        <td style="text-align:center;font-weight:600;">${i+1}</td>
+        <td>${safeText(item.description)}</td>
+        <td style="text-align:center;font-size:10px;color:#64748b;">${safeText(c.unit)}</td>
+        <td style="text-align:center;">${fmtQty(c.unitQty)}</td>
+        <td style="text-align:center;">${fmtQty(c.itemQty)}</td>
+        <td style="text-align:center;font-weight:700;">${fmtQty(c.qty)}</td>
+      </tr>`;
+    }).join("");
+    $("pTotalsContainer").style.display = "none";
+  } else {
+    $("previewTableHead").innerHTML = `
+      <tr>
+        <th style="width: 32px; text-align: center;">#</th>
+        <th>Description</th>
+        <th style="width: 62px; text-align: center;">Unit</th>
+        <th style="width: 72px; text-align: center;">Unit Qty</th>
+        <th style="width: 70px; text-align: center;">Item Qty</th>
+        <th style="width: 88px; text-align: right;">Rate (Rs.)</th>
+        <th style="width: 105px; text-align: right;">Amount (Rs.)</th>
+      </tr>
+    `;
+    $("previewItems").innerHTML = m.items.map((item, i) => {
+      const c = getItemCalculation(item);
+      const rate = Math.max(0, Number(item.rate) || 0);
+      const amount = c.qty * rate;   // Unit Qty x Item Qty x Rate
+      subtotal += amount;
+      return `
+        <tr>
+          <td style="text-align:center;font-weight:600;">${i+1}</td>
+          <td>${safeText(item.description)}</td>
+          <td style="text-align:center;font-size:10px;color:#64748b;">${safeText(c.unit)}</td>
+          <td style="text-align:center;">${fmtQty(c.unitQty)}</td>
+          <td style="text-align:center;">${fmtQty(c.itemQty)}</td>
+          <td style="text-align:right;">${money(rate)}</td>
+          <td style="text-align:right;font-weight:600;">${money(amount)}</td>
+        </tr>
+      `;
+    }).join("");
+    $("pTotalsContainer").style.display = "block";
+  }
+
+  // Financial Calculations
+  const discountInput = Number(m.discount) || 0;
+  const discountPercent = Math.min(100, Math.max(0, discountInput));
+  const discount = subtotal * discountPercent / 100;
+  const taxable = Math.max(0, subtotal - discount);
+
+  const taxInput = Number(m.tax) || 0;
+  const taxPercent = Math.max(0, taxInput);
+  const tax = taxable * taxPercent / 100;
+  const grandTotal = taxable + tax;
+
+  $("pSubtotal").textContent = "Rs. " + money(subtotal);
+  $("pDiscount").textContent = "Rs. " + money(discount) + (discountPercent ? ` (${discountPercent}%)` : "");
+  $("pTax").textContent = "Rs. " + money(tax) + (taxPercent ? ` (${taxPercent}%)` : "");
+  $("pGrandTotal").textContent = "Rs. " + money(grandTotal);
+
+  // Invoice Balance Due Row
+  if (currentModule === "invoice") {
+    $("pInvoiceBalanceRows").classList.remove("hidden");
+    const amountPaid = Number(m.amountPaid) || 0;
+    const balanceDue = Math.max(0, grandTotal - amountPaid);
+    $("pAmountPaid").textContent = "Rs. " + money(amountPaid);
+    $("pBalanceDue").textContent = "Rs. " + money(balanceDue);
+  } else {
+    $("pInvoiceBalanceRows").classList.add("hidden");
+  }
+}
+
+// ⚡ 1-CLICK PRO CONVERSIONS
+function convertQuotationToInvoice() {
+  const q = moduleData.quotation;
+  const inv = moduleData.invoice;
+  inv.refNo = q.number || "QT-001";
+  inv.clientName = q.clientName;
+  inv.clientPhone = q.clientPhone;
+  inv.clientAddress = q.clientAddress;
+  inv.items = JSON.parse(JSON.stringify(q.items));
+  inv.discount = q.discount;
+  inv.tax = q.tax;
+  switchModule("invoice");
+  alert("✓ Quotation successfully converted to Tax Invoice!");
+}
+
+function convertInvoiceToChallan() {
+  const inv = moduleData.invoice;
+  const dc = moduleData.deliveryChallan;
+  dc.refNo = inv.number || "INV-001";
+  dc.clientName = inv.clientName;
+  dc.clientPhone = inv.clientPhone;
+  dc.clientAddress = inv.clientAddress;
+  dc.items = JSON.parse(JSON.stringify(inv.items));
+  switchModule("deliveryChallan");
+  alert("✓ Invoice converted into Delivery Challan!");
+}
+
+function convertProformaToInvoice() {
+  const pi = moduleData.proformaInvoice;
+  const inv = moduleData.invoice;
+  inv.refNo = pi.number || "PI-001";
+  inv.clientName = pi.clientName;
+  inv.clientPhone = pi.clientPhone;
+  inv.clientAddress = pi.clientAddress;
+  inv.items = JSON.parse(JSON.stringify(pi.items));
+  inv.discount = pi.discount;
+  inv.tax = pi.tax;
+  switchModule("invoice");
+  alert("✓ Proforma converted into Final Tax Invoice!");
+}
+
+// DIRECTORY (CUSTOMERS & SUPPLIERS)
+function toggleDirectory(type) {
+  activeDirectoryType = type;
+  if (type === "customer") {
+    $("tabCustomerBtn").style.background = "var(--primary)";
+    $("tabSupplierBtn").style.background = "#64748b";
+    $("contactTypeLabel").textContent = "Customer Name";
+  } else {
+    $("tabCustomerBtn").style.background = "#64748b";
+    $("tabSupplierBtn").style.background = "var(--primary)";
+    $("contactTypeLabel").textContent = "Supplier / Vendor Name";
+  }
+  clearContactForm();
+  renderDirectory();
+}
+
+function saveContact() {
+  const name = $("recordContactName").value.trim();
+  if (!name) {
+    alert("Please enter a name.");
+    $("recordContactName").focus();
+    return;
+  }
+  const editId = $("editingContactId").value;
+  const list = activeDirectoryType === "customer" ? customers : suppliers;
+  const contactObj = {
+    id: editId || Date.now().toString(),
+    name,
+    phone: $("recordContactPhone").value.trim(),
+    email: $("recordContactEmail").value.trim(),
+    address: $("recordContactAddress").value.trim()
+  };
+
+  if (editId) {
+    const idx = list.findIndex(c => c.id === editId);
+    if (idx !== -1) list[idx] = contactObj;
+  } else {
+    list.push(contactObj);
+  }
+
+  saveData();
+  renderDirectory();
+  populateDropdowns();
+  clearContactForm();
+}
+
+function clearContactForm() {
+  $("editingContactId").value = "";
+  $("recordContactName").value = "";
+  $("recordContactPhone").value = "";
+  $("recordContactEmail").value = "";
+  $("recordContactAddress").value = "";
+  $("saveContactBtn").textContent = "+ Save to Directory";
+  $("cancelContactEdit").classList.add("hidden");
+}
+
+function editContact(id) {
+  const list = activeDirectoryType === "customer" ? customers : suppliers;
+  const c = list.find(x => x.id === id);
+  if (!c) return;
+  $("editingContactId").value = c.id;
+  $("recordContactName").value = c.name || "";
+  $("recordContactPhone").value = c.phone || "";
+  $("recordContactEmail").value = c.email || "";
+  $("recordContactAddress").value = c.address || "";
+  $("saveContactBtn").textContent = "Update Contact";
+  $("cancelContactEdit").classList.remove("hidden");
+  $("recordContactName").focus();
+}
+
+function deleteContact(id) {
+  const list = activeDirectoryType === "customer" ? customers : suppliers;
+  const c = list.find(x => x.id === id);
+  if (!c || !confirm("Delete " + c.name + "?")) return;
+  if (activeDirectoryType === "customer") {
+    customers = customers.filter(x => x.id !== id);
+  } else {
+    suppliers = suppliers.filter(x => x.id !== id);
+  }
+  saveData();
+  renderDirectory();
+  populateDropdowns();
+  if ($("editingContactId").value === id) clearContactForm();
+}
+
+function renderDirectory() {
+  const search = $("directorySearch").value.toLowerCase().trim();
+  const list = activeDirectoryType === "customer" ? customers : suppliers;
+  const filtered = list.filter(c =>
+    [c.name, c.phone, c.email, c.address].some(v => String(v || "").toLowerCase().includes(search))
+  );
+
+  $("directoryList").innerHTML = filtered.length
+    ? filtered.map(c => `
+        <div class="item-editor" style="margin-bottom:6px;">
+          <div style="font-weight:700;color:#1e293b;">${safeText(c.name)}</div>
+          <div style="font-size:11px;color:#64748b;">${safeText(c.phone || "")} ${c.email ? '| ' + safeText(c.email) : ''}</div>
+          <div style="font-size:11px;color:#64748b;">${safeText(c.address || "")}</div>
+          <div style="margin-top:6px;display:flex;gap:6px;">
+            <button type="button" onclick="editContact('${safeText(c.id)}')">Edit</button>
+            <button type="button" class="btn-danger" onclick="deleteContact('${safeText(c.id)}')">Delete</button>
+          </div>
+        </div>
+      `).join("")
+    : "<p style='font-size:12px;color:#94a3b8;'>No contacts found.</p>";
+}
+
+function populateDropdowns() {
+  const custOptions = '<option value="">-- Choose Customer --</option>' +
+    customers.map(c => `<option value="${safeText(c.id)}">${safeText(c.name)}</option>`).join("");
+  const suppOptions = '<option value="">-- Select Supplier --</option>' +
+    suppliers.map(c => `<option value="${safeText(c.id)}">${safeText(c.name)}</option>`).join("");
+
+  ["quoteCustomerSelect", "invoiceCustomerSelect", "challanCustomerSelect", "proformaCustomerSelect"].forEach(id => {
+    if ($(id)) $(id).innerHTML = custOptions;
+  });
+  if ($("poSupplierSelect")) $("poSupplierSelect").innerHTML = suppOptions;
+}
+
+function applySelectedCustomer(id) {
+  if (!id) return;
+  const c = customers.find(x => x.id === id);
+  if (!c) return;
+
+  if (currentModule === "quotation") {
+    $("quoteCustomerName").value = c.name || "";
+    $("quoteCustomerPhone").value = c.phone || "";
+    $("quoteCustomerAddress").value = c.address || "";
+  } else if (currentModule === "invoice") {
+    $("invoiceCustomerName").value = c.name || "";
+    $("invoiceCustomerPhone").value = c.phone || "";
+    $("invoiceCustomerAddress").value = c.address || "";
+  } else if (currentModule === "deliveryChallan") {
+    $("challanCustomerName").value = c.name || "";
+    $("challanCustomerPhone").value = c.phone || "";
+    $("challanCustomerAddress").value = c.address || "";
+  } else if (currentModule === "proformaInvoice") {
+    $("proformaCustomerName").value = c.name || "";
+    $("proformaCustomerPhone").value = c.phone || "";
+    $("proformaCustomerAddress").value = c.address || "";
+  }
+  updatePreview();
+  saveData();
+}
+
+function applySelectedSupplier(id) {
+  if (!id) return;
+  const s = suppliers.find(x => x.id === id);
+  if (!s) return;
+  $("poSupplierName").value = s.name || "";
+  $("poSupplierPhone").value = s.phone || "";
+  $("poSupplierAddress").value = s.address || "";
+  updatePreview();
+  saveData();
+}
+
+
+// ASSET FALLBACK ENGINE (SUPPORTS GITHUB PAGES & LOCAL HOSTING OUT-OF-THE-BOX)
+function getEffectiveLogo() {
+  return logoData || "logo.jpeg";
+}
+function getEffectiveStamp() {
+  return stampData || "Stamp.png";
+}
+function getEffectiveSignature() {
+  return signatureData || "Sing.png";
+}
+function getEffectiveWatermark() {
+  return watermarkData || "watermark.png";
+}
+
+// MOBILE VIEWPORT TOGGLE (EDITOR vs PREVIEW)
+function setMobileView(view) {
+  const layout = $("mainLayout");
+  const btnEdit = $("btnViewEditor");
+  const btnPrev = $("btnViewPreview");
+  if (view === "editor") {
+    layout.classList.add("view-editor");
+    layout.classList.remove("view-preview");
+    if (btnEdit) btnEdit.classList.add("active");
+    if (btnPrev) btnPrev.classList.remove("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    layout.classList.remove("view-editor");
+    layout.classList.add("view-preview");
+    if (btnEdit) btnEdit.classList.remove("active");
+    if (btnPrev) btnPrev.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+// MOBILE / TABLET FIT-TO-SCREEN ZOOM ENGINE
+let isFitWidth = false;
+function togglePaperFit() {
+  const vp = $("paperViewport");
+  const paper = $("paper");
+  const btn = $("btnFitToggle");
+  isFitWidth = !isFitWidth;
+  if (isFitWidth) {
+    const screenW = vp.clientWidth - 24;
+    const paperW = 820;
+    const scale = Math.min(1, Math.max(0.4, screenW / paperW));
+    paper.style.transform = `scale(${scale})`;
+    paper.style.transformOrigin = "top center";
+    paper.style.marginBottom = `-${Math.round((1 - scale) * paper.offsetHeight)}px`;
+    if (btn) btn.textContent = "🔍 100% Size";
+  } else {
+    paper.style.transform = "none";
+    paper.style.marginBottom = "0px";
+    if (btn) btn.textContent = "📱 Fit to Screen";
+  }
+}
+
+window.addEventListener("resize", () => {
+  if (isFitWidth) {
+    isFitWidth = false;
+    togglePaperFit();
+  }
+});
+
+// PERSISTENCE (LOCALSTORAGE)
+function saveData() {
+  try {
+    syncStateFromInputs();
+    const dataToSave = {
+      company: {
+        name: $("companyName").value,
+        address: $("companyAddress").value,
+        phone: $("companyPhone").value,
+        email: $("companyEmail").value,
+        brandColor: $("brandColor").value,
+        logoData,
+        stampData,
+        signatureData,
+        watermarkData,
+        watermarkOn: $("watermarkOn").checked,
+        watermarkMode: $("watermarkMode").value,
+        watermarkText: $("watermarkText").value,
+        watermarkTextColor: $("watermarkTextColor").value,
+        watermarkTextSize: $("watermarkTextSize").value,
+        watermarkOpacity: $("watermarkOpacity").value,
+        stampOn: $("stampOn").checked,
+        signatureOn: $("signatureOn").checked
+      },
+      customers,
+      suppliers,
+      moduleData,
+      currentModule
+    };
+
+    localStorage.setItem("business_document_suite_v2", JSON.stringify(dataToSave));
+    $("saveStatus").textContent = "✓ Automatically saved";
+  } catch(e) {
+    $("saveStatus").textContent = "Storage limit reached. Download backup.";
+  }
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem("business_document_suite_v2");
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+
+    if (parsed.company) {
+      $("companyName").value = parsed.company.name || "";
+      $("companyAddress").value = parsed.company.address || "";
+      $("companyPhone").value = parsed.company.phone || "";
+      $("companyEmail").value = parsed.company.email || "";
+      if (parsed.company.brandColor) $("brandColor").value = parsed.company.brandColor;
+      logoData = parsed.company.logoData || "";
+      stampData = parsed.company.stampData || "";
+      signatureData = parsed.company.signatureData || "";
+      watermarkData = parsed.company.watermarkData || "";
+      $("watermarkOn").checked = parsed.company.watermarkOn ?? true;
+      $("watermarkMode").value = parsed.company.watermarkMode || "image";
+      $("watermarkText").value = parsed.company.watermarkText || "";
+      $("watermarkTextColor").value = parsed.company.watermarkTextColor || "#999999";
+      $("watermarkTextSize").value = parsed.company.watermarkTextSize || 55;
+      $("watermarkOpacity").value = parsed.company.watermarkOpacity || 7;
+      $("stampOn").checked = parsed.company.stampOn ?? true;
+      $("signatureOn").checked = parsed.company.signatureOn ?? true;
+    }
+
+    if (Array.isArray(parsed.customers)) customers = parsed.customers;
+    if (Array.isArray(parsed.suppliers)) suppliers = parsed.suppliers;
+    if (parsed.moduleData) Object.assign(moduleData, parsed.moduleData);
+    if (parsed.currentModule) currentModule = parsed.currentModule;
+  } catch(e) {
+    console.warn("Could not load previous session data.");
+  }
+}
+
+// IMAGE UPLOAD HANDLER
+function handleImage(input, setter) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    alert("Please select an image file.");
+    input.value = "";
+    return;
+  }
+  if (file.size > 800 * 1024) {
+    alert("Please select an image under 800 KB.");
+    input.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    setter(reader.result);
+    updatePreview();
+    saveData();
+  };
+  reader.readAsDataURL(file);
+}
+
+// EVENT LISTENERS
+$("logoFile").addEventListener("change", e => handleImage(e.target, v => logoData = v));
+$("stampFile").addEventListener("change", e => handleImage(e.target, v => stampData = v));
+$("signatureFile").addEventListener("change", e => handleImage(e.target, v => signatureData = v));
+$("watermarkFile").addEventListener("change", e => handleImage(e.target, v => watermarkData = v));
+
+$("saveContactBtn").addEventListener("click", saveContact);
+$("cancelContactEdit").addEventListener("click", clearContactForm);
+$("directorySearch").addEventListener("input", renderDirectory);
+
+// Line item editor events
+$("itemEditors").addEventListener("input", event => {
+  const i = event.target.dataset.i;
+  const key = event.target.dataset.key;
+  if (i === undefined || !key) return;
+  const item = moduleData[currentModule].items[Number(i)];
+  if (["description", "unit", "calcMode", "dimensionUnit"].includes(key)) {
+    item[key] = event.target.value;
+  } else {
+    item[key] = Math.max(0, Number(event.target.value) || 0);
+  }
+  refreshItemViews(event.target.closest(".item-editor"), item);
+  updatePreview();
+  saveData();
+});
+
+$("itemEditors").addEventListener("change", event => {
+  if (["calcMode", "unit"].includes(event.target.dataset.key)) {
+    renderItems();
+    updatePreview();
+    saveData();
+  }
+});
+
+$("itemEditors").addEventListener("click", event => {
+  const i = event.target.dataset.remove;
+  if (i === undefined) return;
+  moduleData[currentModule].items.splice(Number(i), 1);
+  renderItems();
+  updatePreview();
+  saveData();
+});
+
+$("addItem").addEventListener("click", () => {
+  moduleData[currentModule].items.push({
+    description: "New Product / Line Item",
+    unit: "Nos",
+    unitQty: 1,
+    itemQty: 1,
+    calcMode: "manual",
+    width: 0,
+    height: 0,
+    dimensionUnit: "in",
+    rate: 0
+  });
+  renderItems();
+  updatePreview();
+  saveData();
+});
+
+// Inputs auto-trigger preview
+document.querySelectorAll("input, textarea, select").forEach(el => {
+  el.addEventListener("input", () => { updatePreview(); saveData(); });
+  el.addEventListener("change", () => { updatePreview(); saveData(); });
+});
+
+// BACKUP & RESTORE
+$("backupBtn").addEventListener("click", () => {
+  try {
+    syncStateFromInputs();
+    const backup = {
+      app: APP_CONFIG.name,
+      version: APP_CONFIG.version,
+      date: new Date().toISOString(),
+      company: {
+        name: $("companyName").value,
+        address: $("companyAddress").value,
+        phone: $("companyPhone").value,
+        email: $("companyEmail").value,
+        brandColor: $("brandColor").value,
+        logoData, stampData, signatureData, watermarkData
+      },
+      customers,
+      suppliers,
+      moduleData
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `erp-suite-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    alert("Backup creation failed.");
+  }
+});
+
+$("restoreBtn").addEventListener("click", () => $("restoreFile").click());
+$("restoreFile").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (parsed.moduleData) Object.assign(moduleData, parsed.moduleData);
+      if (Array.isArray(parsed.customers)) customers = parsed.customers;
+      if (Array.isArray(parsed.suppliers)) suppliers = parsed.suppliers;
+      alert("Backup successfully restored! Reloading application...");
+      saveData();
+      location.reload();
+    } catch(err) {
+      alert("Invalid backup file.");
+    }
+  };
+  reader.readAsText(file);
+});
+
+$("resetCurrentDocBtn").addEventListener("click", () => {
+  if (confirm(`Reset active ${currentModule} document data?`)) {
+    moduleData[currentModule].items = [{ description: "Sample Product / Service", unit: "Nos", unitQty: 1, itemQty: 1, calcMode: "manual", rate: 1000 }];
+    syncModuleInputsToState();
+    renderItems();
+    updatePreview();
+    saveData();
+  }
+});
+
+$("factoryResetBtn").addEventListener("click", () => {
+  if (prompt("Type RESET to wipe all data:") === "RESET") {
+    localStorage.clear();
+    location.reload();
+  }
+});
+
+function showAbout() {
+  $("mainLayout").classList.toggle("hidden");
+  $("aboutSection").classList.toggle("hidden");
+  window.scrollTo(0,0);
+}
+
+// INITIALIZE APP
+function init() {
+  loadData();
+  normalizeAllItems();
+  initCounters();
+  populateDropdowns();
+  renderDirectory();
+  switchModule(currentModule);
+}
+
+init();
+</script>
+</body>
+</html>
