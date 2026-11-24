@@ -7,7 +7,7 @@
 <meta name="application-name" content="Enterprise Business Document ERP Suite">
 <meta name="application-version" content="2.1.0">
 <meta name="author" content="Shaiekh Fielsouf Ansari (feelsoof123)">
-<meta name="description" content="Comprehensive 5-in-1 Business Document ERP Suite: Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan, and Proforma Invoice Generator by feelsoof123.">
+<meta name="description" content="Comprehensive 10 Modules Business Document ERP Suite: Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan, and Proforma Invoice Generator by feelsoof123.">
 <meta name="keywords" content="quotation maker, tax invoice generator, purchase order, delivery challan, proforma invoice, erp, feelsoof123, business tools">
 <meta property="og:title" content="Enterprise Business Document ERP Suite | feelsoof123">
 <meta property="og:description" content="Professional A4 Commercial Quotations, Tax Invoices, POs, Delivery Challans &amp; Proformas with zero cutoff printing.">
@@ -21,12 +21,12 @@
 <!-- WHATSAPP & SOCIAL MEDIA METADATA ENHANCEMENT -->
 <link rel="canonical" href="https://feelsoof123.github.io/Erp-Suite-/">
 <link rel="image_src" href="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
-<meta itemprop="name" content="Enterprise Business Document ERP Suite (5-in-1) | feelsoof123">
+<meta itemprop="name" content="Enterprise Business Document ERP Suite (10 Modules) | feelsoof123">
 <meta itemprop="description" content="Professional Commercial Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan &amp; Proforma Generator with Area Calculator &amp; A4 Print Engine by feelsoof123.">
 <meta itemprop="image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://feelsoof123.github.io/Erp-Suite-/">
-<meta property="og:title" content="Enterprise Business Document ERP Suite (5-in-1) | feelsoof123">
+<meta property="og:title" content="Enterprise Business Document ERP Suite (10 Modules) | feelsoof123">
 <meta property="og:description" content="Professional Commercial Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan &amp; Proforma Generator with Area Calculator &amp; A4 Print Engine by feelsoof123.">
 <meta property="og:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
 <meta property="og:image:secure_url" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
@@ -39,7 +39,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@feelsoof123">
 <meta name="twitter:creator" content="@feelsoof123">
-<meta name="twitter:title" content="Enterprise Business Document ERP Suite (5-in-1) | feelsoof123">
+<meta name="twitter:title" content="Enterprise Business Document ERP Suite (10 Modules) | feelsoof123">
 <meta name="twitter:description" content="Professional Commercial Quotation Maker, Tax Invoice, Purchase Order, Delivery Challan &amp; Proforma Generator with Area Calculator &amp; A4 Print Engine by feelsoof123.">
 <meta name="twitter:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
 
@@ -104,7 +104,7 @@ header.app-header {
   text-transform: uppercase;
 }
 
-/* 5-IN-1 MODULE NAVIGATION BAR */
+/* 10 Modules MODULE NAVIGATION BAR */
 nav.suite-navbar {
   background: white;
   border-bottom: 2px solid var(--border);
@@ -947,6 +947,132 @@ tbody tr:nth-child(even) { background: #f8fafc; }
   }
 }
 
+/* ERP SUITE - 10 MODULE NAVIGATION */
+.suite-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 0 10px;
+  padding: 10px 14px;
+  border-left: 4px solid #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 7px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.management-heading {
+  border-left-color: #0d9488;
+  margin-top: 24px;
+}
+
+.management-heading small {
+  font-size: 10px;
+  color: #0d9488;
+  letter-spacing: 1px;
+}
+
+.management-navbar {
+  border-color: rgba(13, 148, 136, 0.25);
+}
+
+.future-module-btn {
+  position: relative;
+  opacity: 0.85;
+}
+
+.coming-soon {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 7px;
+  border-radius: 10px;
+  background: #e5e7eb;
+  color: #374151;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* ERP DASHBOARD - RESPONSIVE MODULE BUTTONS */
+nav.suite-navbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  overflow-x: visible;
+}
+
+nav.suite-navbar .nav-tab-btn {
+  flex: 1 1 190px;
+  min-width: 170px;
+  width: auto;
+  justify-content: center;
+  white-space: normal;
+  text-align: center;
+}
+
+nav.suite-navbar .coming-soon {
+  display: block;
+  margin: 5px auto 0;
+}
+
+@media (max-width: 600px) {
+  nav.suite-navbar .nav-tab-btn {
+    flex: 1 1 140px;
+    min-width: 130px;
+  }
+}
+
+/* PROFESSIONAL ACCORDION CATEGORY BUTTONS */
+
+.suite-accordion {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  margin: 14px 20px;
+  overflow: visible;
+}
+
+.suite-accordion-title {
+  min-height: 58px;
+  padding: 16px 22px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #174a83, #2563eb);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(23,74,131,.18);
+}
+
+.suite-accordion-title::after {
+  color: #ffffff;
+  font-size: 23px;
+}
+
+.management-accordion > .suite-accordion-title {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #ffffff;
+}
+
+.management-accordion > .suite-accordion-title::after {
+  color: #ffffff;
+}
+
+.suite-accordion-title:hover {
+  filter: brightness(1.08);
+}
+
+.accordion-count {
+  color: #ffffff;
+  font-size: 11px;
+}
+@media print {
+  .suite-accordion {
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -954,7 +1080,7 @@ tbody tr:nth-child(even) { background: #f8fafc; }
 <header class="app-header">
   <div class="brand-title">
     <h2>Professional Business Document ERP Suite</h2>
-    <span class="badge-pro">Enterprise 5-in-1</span>
+    <span class="badge-pro">Enterprise</span>
   </div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
     <a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" class="github-badge-link" title="Visit feelsoof123 on GitHub">
@@ -965,24 +1091,77 @@ tbody tr:nth-child(even) { background: #f8fafc; }
   </div>
 </header>
 
-<!-- 5-IN-1 MODULE NAVIGATION TABS -->
-<nav class="suite-navbar">
-  <button class="nav-tab-btn active" data-module="quotation" onclick="switchModule('quotation')">
-    <span class="tab-icon">📄</span> Phase 1: Quotation Maker
-  </button>
-  <button class="nav-tab-btn" data-module="invoice" onclick="switchModule('invoice')">
-    <span class="tab-icon">🧾</span> Phase 2: Tax Invoice
-  </button>
-  <button class="nav-tab-btn" data-module="purchaseOrder" onclick="switchModule('purchaseOrder')">
-    <span class="tab-icon">📦</span> Phase 3: Purchase Order
-  </button>
-  <button class="nav-tab-btn" data-module="deliveryChallan" onclick="switchModule('deliveryChallan')">
-    <span class="tab-icon">🚚</span> Phase 4: Delivery Challan
-  </button>
-  <button class="nav-tab-btn" data-module="proformaInvoice" onclick="switchModule('proformaInvoice')">
-    <span class="tab-icon">📋</span> Phase 5: Proforma Invoice
-  </button>
-</nav>
+<!-- ERP SUITE: 10 MODULE NAVIGATION TABS -->
+
+<details class="suite-accordion" id="businessDocuments" open
+  ontoggle="closeOtherSuiteCategory(this)">
+
+  <summary class="suite-accordion-title">
+    <span>📁 BUSINESS DOCUMENTS</span>
+    <span class="accordion-count">5 MODULES　⌄</span>
+  </summary>
+
+  <nav class="suite-navbar">
+    <button class="nav-tab-btn active" data-module="quotation" onclick="switchModule('quotation')">
+      <span class="tab-icon">📄</span> Quotation Maker
+    </button>
+
+    <button class="nav-tab-btn" data-module="invoice" onclick="switchModule('invoice')">
+      <span class="tab-icon">🧾</span> Tax Invoice
+    </button>
+
+    <button class="nav-tab-btn" data-module="purchaseOrder" onclick="switchModule('purchaseOrder')">
+      <span class="tab-icon">📦</span> Purchase Order
+    </button>
+
+    <button class="nav-tab-btn" data-module="deliveryChallan" onclick="switchModule('deliveryChallan')">
+      <span class="tab-icon">🚚</span> Delivery Challan
+    </button>
+
+    <button class="nav-tab-btn" data-module="proformaInvoice" onclick="switchModule('proformaInvoice')">
+      <span class="tab-icon">📋</span> Proforma Invoice
+    </button>
+  </nav>
+</details>
+
+
+<details class="suite-accordion management-accordion" id="businessManagement"
+  ontoggle="closeOtherSuiteCategory(this)">
+
+  <summary class="suite-accordion-title">
+    <span>⚙️ BUSINESS MANAGEMENT</span>
+    <span class="accordion-count">5 MODULES　⌄</span>
+  </summary>
+
+  <nav class="suite-navbar management-navbar">
+    <button class="nav-tab-btn future-module-btn" type="button" onclick="showComingSoon('Inventory & Stock')">
+      <span class="tab-icon">📊</span> Inventory & Stock
+      <span class="coming-soon">Coming Soon</span>
+    </button>
+
+    <button class="nav-tab-btn future-module-btn" type="button" onclick="showComingSoon('Accounts & Payments')">
+      <span class="tab-icon">💰</span> Accounts & Payments
+      <span class="coming-soon">Coming Soon</span>
+    </button>
+
+    <button class="nav-tab-btn future-module-btn" type="button" onclick="showComingSoon('FBR Digital Invoice')">
+      <span class="tab-icon">🇵🇰</span> FBR Digital Invoice
+      <span class="coming-soon">Coming Soon</span>
+    </button>
+
+    <button class="nav-tab-btn future-module-btn" type="button" onclick="showComingSoon('CRM')">
+      <span class="tab-icon">👥</span> Customer Relationship Management
+      <span class="coming-soon">Coming Soon</span>
+    </button>
+
+    <button class="nav-tab-btn future-module-btn" type="button" onclick="showComingSoon('Production & Job Card')">
+      <span class="tab-icon">🏭</span> Production & Job Card
+      <span class="coming-soon">Coming Soon</span>
+    </button>
+  </nav>
+</details>
+
+
 
 <!-- MOBILE & TABLET VIEW SELECTOR TABS -->
 <div class="mobile-view-tabs" id="mobileViewTabs">
@@ -2705,6 +2884,21 @@ function init() {
 }
 
 init();
+
+function showComingSoon(moduleName) {
+  alert(moduleName + " module is coming soon!");
+}
+
+window.closeOtherSuiteCategory = function(openCategory) {
+  if (!openCategory.open) return;
+
+  document.querySelectorAll('.suite-accordion').forEach(function(category) {
+    if (category !== openCategory) {
+      category.open = false;
+    }
+  });
+};
+
 </script>
 </body>
 </html>
