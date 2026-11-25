@@ -425,7 +425,7 @@ td {
   overflow-wrap: anywhere;
   vertical-align: middle;
 }
-tbody tr:nth-child(even) { background: #f8fafc; }
+tbody tr:nth-child(even) { background-color: transparent !important; }
 
 /* SIDE-BY-SIDE: TERMS/BANK (LEFT) + TOTALS (RIGHT) */
 .bottom-grid {
@@ -436,7 +436,7 @@ tbody tr:nth-child(even) { background: #f8fafc; }
   margin-bottom: 16px;
 }
 .terms-box {
-  background: #f8fafc;
+  background: transparent !important;
   border: 1px solid #e2e8f0;
   border-radius: 5px;
   padding: 9px 12px;
@@ -468,7 +468,7 @@ tbody tr:nth-child(even) { background: #f8fafc; }
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   overflow: hidden;
-  background: white;
+  background-color: transparent !important;
 }
 .totals-box div {
   display: flex;
@@ -480,15 +480,15 @@ tbody tr:nth-child(even) { background: #f8fafc; }
 }
 .totals-box div b { text-align: right; }
 .totals-box .grand {
-  background: var(--primary);
-  color: #ffffff;
+  background: var(--primary) !important;
+  color: #ffffff !important;
   font-size: 13.5px;
   font-weight: 700;
   padding: 9px 10px;
   border-bottom: none;
 }
 .totals-box .balance-row {
-  background: #fee2e2;
+  background-color: transparent !important;
   color: #991b1b;
   font-weight: 700;
   font-size: 12px;
@@ -1981,9 +1981,15 @@ function normalizeAllItems() {
   });
 }
 
-function unitOptionsHtml(selected) {
-  const list = UNIT_OPTIONS.includes(selected) ? UNIT_OPTIONS : [selected, ...UNIT_OPTIONS];
-  return list.map(u => `<option value="${safeText(u)}" ${u === selected ? "selected" : ""}>${safeText(u)}</option>`).join("");
+function unitOptionsHtml(selected, customMode) {
+  const isCustom = customMode || !UNIT_OPTIONS.includes(selected);
+
+  const options = UNIT_OPTIONS.map(u =>
+    `<option value="${safeText(u)}" ${!isCustom && u === selected ? "selected" : ""}>${safeText(u)}</option>`
+  ).join("");
+
+  return options +
+    `<option value="__custom__" ${isCustom ? "selected" : ""}>Custom</option>`;
 }
 
 function renderItems() {
@@ -1994,12 +2000,13 @@ function renderItems() {
 
   $("itemEditors").innerHTML = m.items.map((item, i) => {
     normalizeItem(item);
+const customUnitMode = item.customUnitMode || !UNIT_OPTIONS.includes(item.unit);
     const areaMode = item.calcMode === "area";
     const c = getItemCalculation(item);
     return `
     <div class="item-editor">
       <label>Item ${i+1} Description</label>
-      <input data-i="${i}" data-key="description" value="${safeText(item.description)}">
+      <textarea data-i="${i}" data-key="description" rows="2">${safeText(item.description)}</textarea>
       <label>Unit Qty Calculation</label>
       <select data-i="${i}" data-key="calcMode">
         <option value="manual" ${!areaMode ? "selected" : ""}>Manual Unit Qty</option>
@@ -2023,9 +2030,18 @@ function renderItems() {
         </div>
       ` : `
         <div style="display:flex;gap:8px;">
-          <div style="flex:1;"><label>Unit</label>
-            <select data-i="${i}" data-key="unit">${unitOptionsHtml(item.unit)}</select>
-          </div>
+          <div style="flex:1;min-width:0;">
+  <label>Unit</label>
+  <div style="display:flex;gap:5px;">
+    <select style="flex:1;min-width:0;" data-i="${i}" data-key="unit">
+      ${unitOptionsHtml(item.unit, customUnitMode)}
+    </select>
+    ${customUnitMode ? `
+      <input style="flex:1;min-width:0;" data-i="${i}" data-key="customUnit"
+      value="${safeText(item.unit)}" placeholder="Enter unit">
+    ` : ""}
+  </div>
+</div>
           <div style="flex:1;"><label>Unit Qty</label><input type="number" min="0" step="any" data-i="${i}" data-key="unitQty" value="${item.unitQty}"></div>
           <div style="flex:1;"><label>Item Qty</label><input type="number" min="0" step="any" data-i="${i}" data-key="itemQty" value="${item.itemQty}"></div>
         </div>
@@ -2273,7 +2289,7 @@ function updatePreview() {
       return `
       <tr>
         <td style="text-align:center;font-weight:600;">${i+1}</td>
-        <td>${safeText(item.description)}</td>
+        <td style="white-space: pre-line;">${safeText(item.description)}</td>
         <td style="text-align:center;font-size:10px;color:#64748b;">${safeText(c.unit)}</td>
         <td style="text-align:center;">${fmtQty(c.unitQty)}</td>
         <td style="text-align:center;">${fmtQty(c.itemQty)}</td>
@@ -2301,7 +2317,7 @@ function updatePreview() {
       return `
         <tr>
           <td style="text-align:center;font-weight:600;">${i+1}</td>
-          <td>${safeText(item.description)}</td>
+          <td style="white-space: pre-line;">${safeText(item.description)}</td>
           <td style="text-align:center;font-size:10px;color:#64748b;">${safeText(c.unit)}</td>
           <td style="text-align:center;">${fmtQty(c.unitQty)}</td>
           <td style="text-align:center;">${fmtQty(c.itemQty)}</td>
@@ -2711,12 +2727,23 @@ $("cancelContactEdit").addEventListener("click", clearContactForm);
 $("directorySearch").addEventListener("input", renderDirectory);
 
 // Line item editor events
+// SHIFT + ENTER FOR MANUAL LINE BREAK IN DESCRIPTION
+$("itemEditors").addEventListener("keydown", event => {
+    if (event.target.dataset.key === "description" && event.key === "Enter") {
+        if (!event.shiftKey) {
+            event.preventDefault();
+        }
+    }
+});
 $("itemEditors").addEventListener("input", event => {
   const i = event.target.dataset.i;
   const key = event.target.dataset.key;
   if (i === undefined || !key) return;
   const item = moduleData[currentModule].items[Number(i)];
-  if (["description", "unit", "calcMode", "dimensionUnit"].includes(key)) {
+  if (key === "customUnit") {
+    item.unit = event.target.value;
+    item.customUnitMode = true;
+} else if (["description", "unit", "calcMode", "dimensionUnit"].includes(key)) {
     item[key] = event.target.value;
   } else {
     item[key] = Math.max(0, Number(event.target.value) || 0);
@@ -2727,7 +2754,25 @@ $("itemEditors").addEventListener("input", event => {
 });
 
 $("itemEditors").addEventListener("change", event => {
-  if (["calcMode", "unit"].includes(event.target.dataset.key)) {
+  const key = event.target.dataset.key;
+
+  if (key === "unit") {
+    const i = Number(event.target.dataset.i);
+    const item = moduleData[currentModule].items[i];
+
+    if (event.target.value === "__custom__") {
+      item.customUnitMode = true;
+      item.unit = "";
+    } else {
+      item.unit = event.target.value;
+      item.customUnitMode = false;
+    }
+
+    renderItems();
+    updatePreview();
+    saveData();
+
+  } else if (key === "calcMode") {
     renderItems();
     updatePreview();
     saveData();
