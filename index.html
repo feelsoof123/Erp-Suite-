@@ -1189,8 +1189,11 @@ nav.suite-navbar .coming-soon {
       <textarea id="companyAddress" placeholder="Street, Plaza, City, Pakistan"></textarea>
       <label>Phone / UAN (Shows in Footer)</label>
       <input id="companyPhone" placeholder="+92 300 1234567">
-      <label>Email / Web (Shows in Footer)</label>
-      <input id="companyEmail" placeholder="info@company.com">
+      <label>Email (Shows in Footer)</label>
+<input id="companyEmail" placeholder="info@company.com">
+
+<label>Website (Shows in Footer)</label>
+<input id="companyWebsite" placeholder="www.company.com">
       <label>Company Logo (Header Left)</label>
       <input type="file" id="logoFile" accept="image/*">
       <label>Brand Theme Accent Color</label>
@@ -1604,6 +1607,10 @@ nav.suite-navbar .coming-soon {
               <span class="icon">✉️</span>
               <span id="pEmail"></span>
             </div>
+<div class="footer-item" id="fWebsiteWrap">
+  <span class="icon">🌐</span>
+  <span id="pWebsite"></span>
+</div>
           </div>
           <div class="footer-bottom-line">
             <span>Thank you for your business!</span>
@@ -2109,12 +2116,19 @@ function updatePreview() {
   const addr = $("companyAddress").value.trim();
   const phone = $("companyPhone").value.trim();
   const email = $("companyEmail").value.trim();
-  $("pAddress").textContent = addr;
-  $("fAddrWrap").style.display = addr ? "inline-flex" : "none";
-  $("pContact").textContent = phone;
-  $("fPhoneWrap").style.display = phone ? "inline-flex" : "none";
-  $("pEmail").textContent = email;
-  $("fEmailWrap").style.display = email ? "inline-flex" : "none";
+const website = $("companyWebsite").value.trim();
+
+$("pAddress").textContent = addr;
+$("fAddrWrap").style.display = addr ? "inline-flex" : "none";
+
+$("pContact").textContent = phone;
+$("fPhoneWrap").style.display = phone ? "inline-flex" : "none";
+
+$("pEmail").textContent = email;
+$("fEmailWrap").style.display = email ? "inline-flex" : "none";
+
+$("pWebsite").textContent = website;
+$("fWebsiteWrap").style.display = website ? "inline-flex" : "none";
 
   // Document Badge & Metadata
   let badgeText = "QUOTATION";
@@ -2631,6 +2645,7 @@ function saveData() {
         address: $("companyAddress").value,
         phone: $("companyPhone").value,
         email: $("companyEmail").value,
+        website: $("companyWebsite").value,
         brandColor: $("brandColor").value,
         logoData,
         stampData,
@@ -2669,6 +2684,7 @@ function loadData() {
       $("companyAddress").value = parsed.company.address || "";
       $("companyPhone").value = parsed.company.phone || "";
       $("companyEmail").value = parsed.company.email || "";
+      $("companyWebsite").value = parsed.company.website || "";
       if (parsed.company.brandColor) $("brandColor").value = parsed.company.brandColor;
       logoData = parsed.company.logoData || "";
       stampData = parsed.company.stampData || "";
