@@ -1,95 +1,224 @@
-# Professional Business Document ERP Suite (5-in-1) 🚀
+<div align="center">
 
-> **Created & Maintained by:** [Shaiekh Fielsouf Ansari](https://github.com/feelsoof123) (`feelsoof123`)  
-> **Live Demo:** [https://feelsoof123.github.io/Erp-Suite-/](https://feelsoof123.github.io/Erp-Suite-/)
+# 🏢 Enterprise Business Document ERP Suite
 
-A complete, responsive, enterprise-grade Commercial Business Document Generation System built with pure HTML5, CSS3, and modern Vanilla JavaScript. Zero dependencies, 100% offline-ready, auto-saving with localStorage, and optimized for A4 single-page PDF printing across all devices.
+**A complete, offline-first, A4-perfect Business Document Generation System**
+
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-feelsoof123.github.io-174a83?style=for-the-badge)](https://feelsoof123.github.io/Erp-Suite-/)
+[![Version](https://img.shields.io/badge/Version-2.2.0--multipage-059669?style=for-the-badge)](#)
+[![License](https://img.shields.io/badge/License-All_Rights_Reserved-dc2626?style=for-the-badge)](#)
+[![No Dependencies](https://img.shields.io/badge/Dependencies-Zero_(Vanilla_JS)-f59e0b?style=for-the-badge)](#)
+
+> **Created & Maintained by:** [Shaiekh Fielsouf Ansari](https://github.com/feelsoof123) · `feelsoof123`
+
+</div>
+
+---
+
+## 📋 Overview
+
+A complete, responsive, enterprise-grade **8-in-1 Commercial Business Document System** built with pure HTML5, CSS3, and modern Vanilla JavaScript — zero frameworks, zero dependencies.
+
+| ✅ Feature | Detail |
+|---|---|
+| 🖥️ Works Offline | 100% client-side, no server required |
+| 💾 Auto-Save | All data saved in `localStorage` automatically |
+| 🖨️ A4 Print Perfect | Single-page guaranteed, no cutoffs |
+| 📱 Fully Responsive | Desktop, Tablet & Mobile optimized |
+| 🔒 Private | No data ever sent to any server |
+| ⚡ Fast | Instant load, no build step needed |
+
+---
+
+## 📁 Project File Tree
+
+```
+Erp-Suite-/
+│
+├── 📄 index.html               ← Dashboard / Main Hub (all modules linked here)
+├── 📄 quotation.html           ← Quotation / Price Estimate Maker
+├── 📄 invoice.html             ← Tax / Sales Invoice Generator
+├── 📄 proforma-invoice.html    ← Proforma Invoice (International Trade)
+├── 📄 purchase-order.html      ← Purchase Order (PO) for Vendors
+├── 📄 delivery-challan.html    ← Delivery Challan / Dispatch Note
+├── 📄 fbr-invoice.html         ← FBR Tax Invoice (Pakistan NTN/STRN)
+│
+├── 📄 production.html          ← Production / Job Card Management
+├── 📄 inventory.html           ← Inventory / Stock Management
+├── 📄 crm.html                 ← CRM / Leads & Customer Pipeline
+├── 📄 accounts.html            ← Accounts / Payment Ledger
+│
+├── 🎨 erp-style.css            ← Global Stylesheet (A4, Print, Responsive)
+├── ⚙️  erp-core.js              ← Core Engine (all logic, rendering, state)
+│
+├── 🖼️  favicon.ico              ← Browser Tab Icon (ICO format, all sizes)
+├── 🖼️  favicon.png              ← High-res PNG Favicon (64×64)
+├── 🖼️  apple-touch-icon.png     ← iOS Home Screen Icon (180×180)
+├── 🖼️  og-image.png             ← Open Graph / Social Share Preview (1200×630)
+│
+├── 📄 404.html                 ← GitHub Pages Custom 404 Error Page
+├── 📄 .nojekyll                ← Disables Jekyll (required for GitHub Pages)
+└── 📄 README.md                ← This file
+```
 
 ---
 
 ## 🌟 Modules & Features
 
-### 📄 Phase 1: Quotation Maker
-- Commercial estimate generation with auto-numbering (`QT-001`).
-- Validity tracking, client contact details, and itemized quotations.
-- **⚡ 1-Click Convert to Tax Invoice:** Instantly promotes approved quotations into tax invoices without re-typing.
+### 📄 1. Quotation Maker (`quotation.html`)
+- Commercial estimate generation with auto-numbering (`QT-001`, `QT-002` …)
+- Validity date tracking, client contact directory, and itemized line items
+- **📎 Attachment Engine:** Attach images, drawings, and spec sheets — prints as a professional Annexure page (only when attachments exist — no blank extra page)
+- **⚡ 1-Click Convert to Tax Invoice** — promotes approved quotation instantly
 
-### 🧾 Phase 2: Tax / Sales Invoice
-- Official Tax / Commercial invoice generation with auto-numbering (`INV-001`).
-- **Payment Status Badges:** `UNPAID` (Red), `PARTIAL` (Yellow), and `PAID` (Green).
-- **Payment Tracking:** Automatic calculation of Subtotal, Discount, Tax, Paid Amount, and Balance Due.
-- **Bank Wire Instructions:** Bank Name, Account Title, and IBAN automatically formatted in the document.
-- **⚡ 1-Click Convert to Delivery Challan.**
+### 🧾 2. Tax / Sales Invoice (`invoice.html`)
+- Official Tax / Commercial invoice with auto-numbering (`INV-001`)
+- **Payment Badges:** `UNPAID` 🔴 · `PARTIAL` 🟡 · `PAID` 🟢
+- Advance tracking, balance due auto-calculation, bank wire instructions (IBAN)
+- **⚡ 1-Click Convert to Delivery Challan**
 
-### 📦 Phase 3: Purchase Order (PO)
-- Vendor / Supplier ordering system with auto-numbering (`PO-001`).
-- Delivery deadline tracking, payment terms, and Ship-To warehouse routing.
-- Dual approval signatures: "Prepared By" and "Approved / Authorized By".
+### 📋 3. Proforma Invoice (`proforma-invoice.html`)
+- International trade / pre-shipment invoice (`PI-001`)
+- Expiry date, country of origin, trade terms (FOB / CIF / Ex-Works)
+- SWIFT code + IBAN for international wire payments
+- **⚡ 1-Click Convert to Final Tax Invoice**
 
-### 🚚 Phase 4: Delivery Challan / Dispatch Note
-- Dispatch management with auto-numbering (`DC-001`).
-- Transport and logistics logging: Vehicle Number, Driver Contact, Carrier / Bilty tracking number.
-- Toggle to show or hide monetary prices on delivery notes.
-- Dual dispatch signatures: "Dispatched By (Warehouse)" and "Received In Good Condition (Consignee)".
+### 📦 4. Purchase Order (`purchase-order.html`)
+- Formal vendor PO with auto-numbering (`PO-001`)
+- Supplier directory integration, delivery deadline, ship-to warehouse routing
+- Dual approval signatures: *Prepared By* & *Approved / Authorized By*
 
-### 📋 Phase 5: Proforma Invoice
-- International trade & pre-shipment invoice generation (`PI-001`).
-- Expiry date, country of origin, and trade terms (FOB, Ex-Works, CIF).
-- Bank SWIFT code and IBAN wire instructions for international trade.
-- **⚡ 1-Click Convert to Final Tax Invoice.**
+### 🚚 5. Delivery Challan / Dispatch Note (`delivery-challan.html`)
+- Dispatch management with auto-numbering (`DC-001`)
+- Vehicle number, driver contact, carrier / bilty tracking number
+- Toggle to show/hide monetary values on dispatch copies
+- Dual signatures: *Dispatched By (Warehouse)* & *Received In Good Condition (Consignee)*
 
----
+### 🧾 6. FBR Tax Invoice (`fbr-invoice.html`)
+- Pakistan Federal Board of Revenue compliant invoice
+- NTN / STRN fields, Sales Tax (17%) auto-calculation
+- FBR QR placeholder for POS integration
 
-## 📐 Advanced Area & Quantity Calculation Engine
-- **Manual Mode:** Standard Unit Qty × Item Qty = Total Qty.
-- **Area Calculation Mode (Width × Height):**
-  - Calculate exact area for doors, windows, glass, woodwork, marble, and construction materials.
-  - Supports Inches (`in`), Feet (`ft`), and Millimeters (`mm`) with automatic conversion to Square Feet (`Sq. Ft.`).
-  - Automatically calculates 1 piece area × number of pieces = Total Sq. Ft. × Rate.
+### 🏭 7. Production / Job Card (`production.html`)
+- Job Card management with Kanban-style stage tracking
+- Stages: Queued → Material Prep → In Production → Quality Check → Completed
+- Bill of Materials (BOM), supervisor assignment, priority levels
 
----
-
-## 📱 Fully Responsive on All Devices
-- **Desktop & Laptops:** Side-by-side editing panel and real-time live A4 canvas.
-- **Tablets & Mobile Phones:**
-  - Sticky **Mobile View Switcher** (`[ ✏️ Edit Details ]` / `[ 👁️ Document Preview ]`).
-  - **Fit-to-Screen Zoom Engine (`📱 Fit to Screen` / `🔍 100% Size`)**: Allows mobile users to inspect the entire document or zoom in crisply.
-  - iOS Safari auto-zoom prevention (inputs configured with 16px font-size).
-- **🖨️ A4 Print Perfection:**
-  - Zero cutoff: Official stamps, authorized signatures, and footers are guaranteed to never be chopped off.
-  - Auto-compact mode activates dynamically when item count increases to ensure single-page fit.
+### 📊 8. Management Modules
+| Module | File | Description |
+|---|---|---|
+| 📦 Inventory | `inventory.html` | Stock levels, SKU, reorder alerts, in/out logs |
+| 👥 CRM | `crm.html` | Leads pipeline, follow-up dates, deal values, stage tracking |
+| 💰 Accounts | `accounts.html` | Payment receipts, payment ledger, party-wise history |
 
 ---
 
-## 🌐 How to Host on GitHub Pages (Step-by-Step)
+## 🔧 Advanced Calculation Engines
 
-1. **Create Repository:**
-   - Go to [github.com/new](https://github.com/new) on your account **`feelsoof123`**.
-   - Name your repository (e.g. `business-erp-suite` or `feelsoof123.github.io`).
-   - Set to **Public**.
-2. **Upload Files:**
-   - Upload all files from this directory (`index.html`, `README.md`, `.nojekyll`, `logo.jpeg`, `Stamp.png`, `Sing.png`, `watermark.png`).
-   - Commit the changes.
-3. **Enable GitHub Pages:**
-   - In your repository, click **Settings** ➔ **Pages** (under Code and automation in sidebar).
-   - Under **Build and deployment** ➔ **Source**, select **Deploy from a branch**.
-   - Under **Branch**, select `main` (or `master`) and folder `/ (root)`, then click **Save**.
-4. **Your Live Website is Ready:**
-   - Within 1–2 minutes, your website will be live at:
-     ```
-     https://feelsoof123.github.io/Erp-Suite-/
-     ```
+### 📐 Area Calculation Mode (Width × Height)
+Perfect for glass, marble, woodwork, doors, windows, construction:
+- **Units Supported:** Inches (`in`) · Feet (`ft`) · Millimeters (`mm`)
+- Auto-converts to **Square Feet (Sq. Ft.)**
+- Formula: `1-piece area × number of pieces × rate = line total`
+
+### 🏷️ Dual Pricing Mode
+- **Manual Mode:** `Unit Qty × Item Qty = Total Qty`
+- **Auto-calculate:** Subtotal → Discount → Tax → Total
 
 ---
 
-## 👤 Developer & Contact Information
+## 🖨️ Print System — Technical Notes
 
-**Shaiekh Fielsouf Ansari**  
-Creator & Owner  
-- **GitHub:** [@feelsoof123](https://github.com/feelsoof123)  
-- **Contact Number 1:** `03331255512`  
-- **Contact Number 2 & WhatsApp:** `03111855512`  
-- **JazzCash Payment:** `03000210419`  
+| Feature | Detail |
+|---|---|
+| Page Size | A4 Portrait — `@page { size: A4 portrait; margin: 8mm 10mm; }` |
+| Color Accuracy | `-webkit-print-color-adjust: exact` — colors print true |
+| Single Page Fit | Auto-compact mode triggers when items overflow |
+| Attachment Page | Only prints when attachments exist (blank 2nd page bug fixed ✅) |
+| FBR / Multi-copy | Specific modules support multi-copy print layouts |
 
 ---
+
+## 🌐 How to Deploy on GitHub Pages
+
+> This project is designed for GitHub Pages — zero build step, upload and go.
+
+### Step 1 — Create Repository
+1. Go to [github.com/new](https://github.com/new)
+2. Name it `Erp-Suite-` (to match the live URL)
+3. Set visibility to **Public**
+4. **Do NOT** initialize with README (you already have one)
+
+### Step 2 — Upload All Files
+Upload every file from this folder. **Critical files that must be present:**
+
+| File | Why It's Required |
+|---|---|
+| `.nojekyll` | Without this, GitHub Pages ignores files starting with `_` |
+| `favicon.ico` | Browser tab icon — must be in root |
+| `favicon.png` | High-res PNG fallback favicon |
+| `apple-touch-icon.png` | iPhone/iPad home screen icon |
+| `og-image.png` | WhatsApp / social media share preview image |
+| `404.html` | Custom error page for broken links |
+| `erp-core.js` | The entire application logic lives here |
+| `erp-style.css` | All styling — missing this = broken layout |
+
+### Step 3 — Enable GitHub Pages
+1. Go to **Settings** → **Pages** (left sidebar under *Code and automation*)
+2. Under **Build and deployment** → **Source** → select **Deploy from a branch**
+3. Under **Branch** → select `main` → folder `/ (root)` → click **Save**
+
+### Step 4 — Live! 🎉
+Within **1–2 minutes** your site is live at:
+```
+https://feelsoof123.github.io/Erp-Suite-/
+```
+
+---
+
+## 📱 Responsive Design
+
+| Device | Behavior |
+|---|---|
+| 🖥️ Desktop / Laptop | Side-by-side: Editor Panel (left) + Live A4 Preview (right) |
+| 📱 Mobile / Tablet | Sticky switcher: `✏️ Edit Details` / `👁️ Document Preview` |
+| 📱 Fit-to-Screen | `📱 Fit to Screen` button zooms document to screen width |
+| 🍎 iOS Safari | Font-size 16px on inputs — prevents auto-zoom on focus |
+
+---
+
+## 🔐 Data Privacy & Security
+
+- **Zero Server Communication** — All data stays in your browser's `localStorage`
+- **No Analytics, No Trackers** — Pure static HTML, no external requests
+- **Backup / Restore** — Export your data as a JSON backup file anytime
+- **Share Link** — Encode your document state in URL for one-click sharing
+
+---
+
+## 👤 Developer & Contact
+
+<div align="center">
+
+**Shaiekh Fielsouf Ansari**
+Creator & Owner
+
+[![GitHub](https://img.shields.io/badge/GitHub-feelsoof123-181717?style=flat-square&logo=github)](https://github.com/feelsoof123)
+
+| Contact | Detail |
+|---|---|
+| 📞 Phone 1 | `0333-1255512` |
+| 📞 Phone 2 / WhatsApp | `0311-1855512` |
+| 💚 JazzCash | `0300-0210419` |
+
+</div>
+
+---
+
+<div align="center">
+
 *© 2026 Shaiekh Fielsouf Ansari (feelsoof123). All Rights Reserved.*
+
+**🌐 [Live Demo](https://feelsoof123.github.io/Erp-Suite-/) · 👤 [GitHub Profile](https://github.com/feelsoof123)**
+
+</div>

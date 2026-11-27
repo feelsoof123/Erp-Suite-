@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accounts & Payments | Enterprise Business Document ERP Suite</title>
+<meta name="description" content="Manage customer ledgers, supplier payables, payment receipts, business expenses, and cash flow reports.">
+<meta name="author" content="Shaiekh Fielsouf Ansari (feelsoof123)">
+<meta name="theme-color" content="#0f172a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Enterprise Business Document ERP Suite">
+<meta property="og:title" content="Accounts & Payments | Enterprise Business Document ERP Suite">
+<meta property="og:description" content="Manage customer ledgers, supplier payables, payment receipts, expenses, and cash flow.">
+<meta property="og:url" content="https://feelsoof123.github.io/Erp-Suite-/accounts.html">
+<meta property="og:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Accounts & Payments | Enterprise Business Document ERP Suite">
+<meta name="twitter:description" content="Manage customer ledgers, supplier payables, payment receipts, expenses, and cash flow.">
+<meta name="twitter:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
+<link rel="icon" type="image/x-icon" href="./favicon.ico?v=2">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=2">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23174a83'/%3E%3Cpath d='M28 24h44v14H28zm0 20h44v8H28zm0 15h28v8H28z' fill='%23ffffff'/%3E%3Ccircle cx='70' cy='67' r='14' fill='%23059669'/%3E%3Cpath d='M64 67l4 4 8-8' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="erp-style.css">
+</head>
+<body>
+<header class="app-header">
+  <div class="brand-title">
+    <h2><a href="index.html">Professional Business Document ERP Suite</a></h2>
+    <span class="badge-pro">Enterprise</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <a href="index.html" class="github-badge-link" title="Back to Main Dashboard">🏠 Dashboard</a>
+    <a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" class="github-badge-link" title="Visit feelsoof123 on GitHub">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>feelsoof123</span>
+    </a>
+    <button type="button" onclick="showAbout()" style="background:#1e293b;border:1px solid #334155;">About Developer</button>
+  </div>
+</header>
+
+<main id="dashboardMain" class="mgmt-container">
+  <div class="mgmt-header-bar">
+    <div>
+      <h1>💰 Accounts, Ledgers & Cash Flow</h1>
+      <p>Record customer receipts, supplier payments, expenses, receivables & payables synced with your contacts.</p>
+    </div>
+    <div class="no-print-mgmt" style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button type="button" id="mgmtBackupBtn" class="btn-secondary">💾 Export Backup</button>
+      <button type="button" id="mgmtRestoreBtn" class="btn-secondary">📂 Restore</button>
+      <input type="file" id="mgmtRestoreFile" accept=".json" hidden>
+      <button type="button" class="print-btn" onclick="window.print()">🖨️ Print Ledger Statement</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">Total Receipts (Cash In)</div>
+      <div class="kpi-value" id="accKpiReceipts">Rs. 0.00</div>
+      <div class="kpi-sub">Customer payments received</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Payments & Expenses (Out)</div>
+      <div class="kpi-value" id="accKpiOut">Rs. 0.00</div>
+      <div class="kpi-sub">Supplier payouts + expenses</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Recorded Receivables</div>
+      <div class="kpi-value" id="accKpiReceivable">Rs. 0.00</div>
+      <div class="kpi-sub">Pending customer dues</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Recorded Payables</div>
+      <div class="kpi-value" id="accKpiPayable">Rs. 0.00</div>
+      <div class="kpi-sub">Pending vendor bills</div>
+    </div>
+    <div class="kpi-card teal">
+      <div class="kpi-label">Net Cash Flow</div>
+      <div class="kpi-value" id="accKpiNet">Rs. 0.00</div>
+      <div class="kpi-sub">Receipts − Outflows</div>
+    </div>
+  </div>
+
+  <div class="mgmt-split">
+    <section class="mgmt-card mgmt-form-panel">
+      <h3>
+        <span>New Accounting Entry</span>
+      </h3>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+        <button type="button" id="accPullInvoiceBtn" class="btn-convert" style="flex:1;justify-content:center;">⚡ Pull Tax Invoice</button>
+        <button type="button" id="accPullPoBtn" class="btn-secondary btn-xs" style="flex:1;">⚡ Pull Active PO</button>
+      </div>
+      <label>Date</label>
+      <input id="accDate" type="date">
+      <label>Entry Type</label>
+      <select id="accType">
+        <option value="receipt">🟢 Payment Receipt (Cash / Bank In)</option>
+        <option value="payment">🟡 Supplier Payment (Cash / Bank Out)</option>
+        <option value="expense">🔴 Business Expense (Out)</option>
+        <option value="receivable">🔵 Customer Receivable Note</option>
+        <option value="payable">⚪ Supplier Payable Note</option>
+      </select>
+      <label>Account / Party Category</label>
+      <select id="accPartyType">
+        <option value="customer">Customer</option>
+        <option value="supplier">Supplier / Vendor</option>
+        <option value="expense">Expense / Utility / Staff</option>
+      </select>
+      <label>Pick from Directory (Optional)</label>
+      <select id="accPartySelect"><option value="">-- Optional: Pick Saved Contact --</option></select>
+      <label>Party Name / Expense Head</label>
+      <input id="accPartyName" placeholder="e.g. Client Name / Office Rent">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label>Payment Mode</label>
+          <select id="accMethod">
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cash">Cash</option>
+            <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
+            <option value="Cheque">Cheque</option>
+          </select>
+        </div>
+        <div style="flex:1;"><label>Ref # (Inv / PO)</label><input id="accRef" placeholder="e.g. INV-001"></div>
+      </div>
+      <label>Amount (Rs.)</label>
+      <input id="accAmount" type="number" min="0" step="any" placeholder="0.00">
+      <label>Notes / Narration</label>
+      <textarea id="accNotes" placeholder="Payment details or remarks..."></textarea>
+      <button type="button" id="accSaveBtn" style="width:100%;margin-top:12px;">+ Record Transaction</button>
+    </section>
+
+    <section class="mgmt-card">
+      <h3>Ledger & Cash Flow Register</h3>
+      <div class="mgmt-toolbar">
+        <input id="accSearch" placeholder="Search party, ref #, method, or notes...">
+        <select id="accFilter">
+          <option value="all">All Entries</option>
+          <option value="receipt">Receipts (In)</option>
+          <option value="payment">Supplier Payments</option>
+          <option value="expense">Business Expenses</option>
+          <option value="receivable">Customer Receivables</option>
+          <option value="payable">Supplier Payables</option>
+        </select>
+      </div>
+      <div class="mgmt-table-wrap">
+        <table class="mgmt-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Party & Narration</th>
+              <th>Mode</th>
+              <th>Ref #</th>
+              <th style="text-align:right;">Amount</th>
+              <th class="no-print-mgmt">Action</th>
+            </tr>
+          </thead>
+          <tbody id="accTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<section id="aboutSection" class="about hidden">
+  <div class="developer-card">
+    <div class="developer-top">
+      <div class="developer-avatar">SA</div>
+      <span class="developer-badge">SOFTWARE DEVELOPER</span>
+      <h2>Shaiekh Fielsouf Ansari</h2>
+      <p>Creator & Owner</p>
+    </div>
+    <div class="developer-body">
+      <h3>Contact Information</h3>
+      <div class="developer-info"><span>GitHub Profile</span><strong><a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:none;font-weight:700;">github.com/feelsoof123</a></strong></div>
+      <div class="developer-info"><span>Contact Number 1</span><strong>03331255512</strong></div>
+      <div class="developer-info"><span>Contact Number 2</span><strong>03111855512</strong></div>
+      <div class="developer-info"><span>WhatsApp</span><strong>03111855512</strong></div>
+      <div class="developer-info"><span>JazzCash Payment</span><strong>03000210419</strong></div>
+      <div class="developer-note">Thank you for using this Enterprise Business ERP Suite. Designed for speed, precision, and professional commercial compliance.</div>
+      <div class="developer-copyright">© 2026 Shaiekh Fielsouf Ansari. All Rights Reserved.</div>
+    </div>
+    <button type="button" onclick="hideAbout()" class="back-button">Back to Document Suite</button>
+  </div>
+</section>
+<script>window.ACTIVE_MODULE = "accounts";</script>
+<script src="erp-core.js"></script>
+</body>
+</html>

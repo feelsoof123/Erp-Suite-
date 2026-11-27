@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation Maker | Enterprise Business Document ERP Suite</title>
+<meta name="description" content="Create commercial price quotations with area calculator, attachments, discounts, taxes, and 1-click invoice conversion.">
+<meta name="author" content="Shaiekh Fielsouf Ansari (feelsoof123)">
+<meta name="theme-color" content="#0f172a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Enterprise Business Document ERP Suite">
+<meta property="og:title" content="Quotation Maker | Enterprise Business Document ERP Suite">
+<meta property="og:description" content="Create commercial price quotations with area calculator, attachments, and 1-click invoice conversion.">
+<meta property="og:url" content="https://feelsoof123.github.io/Erp-Suite-/quotation.html">
+<meta property="og:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quotation Maker | Enterprise Business Document ERP Suite">
+<meta name="twitter:description" content="Create commercial price quotations with area calculator, attachments, and 1-click invoice conversion.">
+<meta name="twitter:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
+<link rel="icon" type="image/x-icon" href="./favicon.ico?v=2">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=2">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23174a83'/%3E%3Cpath d='M28 24h44v14H28zm0 20h44v8H28zm0 15h28v8H28z' fill='%23ffffff'/%3E%3Ccircle cx='70' cy='67' r='14' fill='%23059669'/%3E%3Cpath d='M64 67l4 4 8-8' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="erp-style.css">
+</head>
+<body>
+<header class="app-header">
+  <div class="brand-title">
+    <h2><a href="index.html">Professional Business Document ERP Suite</a></h2>
+    <span class="badge-pro">Enterprise</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <a href="index.html" class="github-badge-link" title="Back to Main Dashboard">🏠 Dashboard</a>
+    <a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" class="github-badge-link" title="Visit feelsoof123 on GitHub">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>feelsoof123</span>
+    </a>
+    <button type="button" onclick="showAbout()" style="background:#1e293b;border:1px solid #334155;">About Developer</button>
+  </div>
+</header>
+
+<div class="mobile-view-tabs" id="mobileViewTabs">
+  <button type="button" class="mobile-tab-btn active" id="btnViewEditor" onclick="setMobileView('editor')">✏️ Edit Details</button>
+  <button type="button" class="mobile-tab-btn" id="btnViewPreview" onclick="setMobileView('preview')">👁️ Document Preview</button>
+</div>
+
+<div class="layout view-editor" id="mainLayout">
+  <aside class="editor">
+    <section class="panel">
+      <h3>
+        <span>Company Master Profile</span>
+        <span style="font-size:10px;color:var(--success);font-weight:600;">Shared across all pages</span>
+      </h3>
+      <label>Company Name</label>
+      <input id="companyName" placeholder="Your Business / Company Name">
+      <label>Company Address (Shows in Footer)</label>
+      <textarea id="companyAddress" placeholder="Street, Plaza, City, Pakistan"></textarea>
+      <label>Phone / UAN (Shows in Footer)</label>
+      <input id="companyPhone" placeholder="+92 300 1234567">
+      <label>Email (Shows in Footer)</label>
+      <input id="companyEmail" placeholder="info@company.com">
+      <label>Website (Shows in Footer)</label>
+      <input id="companyWebsite" placeholder="www.company.com">
+      <label>Company Logo (Header Left)</label>
+      <input type="file" id="logoFile" accept="image/*">
+      <label>Brand Theme Accent Color</label>
+      <input type="color" id="brandColor" value="#174a83">
+    </section>
+
+    
+    <section class="panel module-panel" id="panel-quotation">
+      <h3>
+        <span>Quotation Details</span>
+        <button type="button" class="btn-convert" onclick="convertQuotationToInvoice()">⚡ Convert to Invoice</button>
+      </h3>
+      <label>Quotation Number</label>
+      <input id="quoteNumber">
+      <label>Quote Date</label>
+      <input id="quoteDate" type="date">
+      <label>Valid Until</label>
+      <input id="validUntil" type="date">
+      <label>Select Saved Customer</label>
+      <select id="quoteCustomerSelect" onchange="applySelectedCustomer(this.value)"><option value="">-- Choose Customer --</option></select>
+      <label>Customer Name</label>
+      <input id="quoteCustomerName" placeholder="Client or Company Name">
+      <label>Customer Phone</label>
+      <input id="quoteCustomerPhone" placeholder="Phone / Mobile Number">
+      <label>Customer Address</label>
+      <textarea id="quoteCustomerAddress" placeholder="Client Address"></textarea>
+    </section>
+
+    <section class="panel">
+      <h3>
+        <span>Document Items</span>
+        <span id="itemCountBadge" style="font-size:11px;color:#64748b;">(1 Item)</span>
+      </h3>
+      <div id="itemEditors"></div>
+      <button type="button" id="addItem" style="width:100%;background:#0284c7;margin-top:6px;">+ Add Line Item</button>
+    </section>
+
+    <section class="panel" id="panel-financials" >
+      <h3>Financial Adjustments & Terms</h3>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label>Discount (%)</label><input id="discount" type="number" value="0" min="0" max="100"></div>
+        <div style="flex:1;"><label>Tax (%)</label><input id="tax" type="number" value="0" min="0"></div>
+      </div>
+      <label>Terms & Conditions / Special Notes</label>
+      <textarea id="terms"></textarea>
+    </section>
+
+    <section class="panel">
+      <h3>Official Stamp & Signature</h3>
+      <label>Upload Official Stamp</label>
+      <input type="file" id="stampFile" accept="image/*">
+      <label><input type="checkbox" id="stampOn" checked> Show Stamp</label>
+      <label>Upload Authorized Signature</label>
+      <input type="file" id="signatureFile" accept="image/*">
+      <label><input type="checkbox" id="signatureOn" checked> Show Signature</label>
+    </section>
+
+    <section class="panel">
+      <h3>Watermark Settings</h3>
+      <label><input type="checkbox" id="watermarkOn" checked> Show Watermark</label>
+      <label>Watermark Type</label>
+      <select id="watermarkMode">
+        <option value="image">Image Watermark</option>
+        <option value="text">Text Watermark</option>
+      </select>
+      <div id="watermarkImageSettings">
+        <label>Upload Watermark Image</label>
+        <input type="file" id="watermarkFile" accept="image/*">
+      </div>
+      <div id="watermarkTextSettings">
+        <label>Watermark Text</label>
+        <input type="text" id="watermarkText" placeholder="Company Name">
+        <label>Text Color</label>
+        <input type="color" id="watermarkTextColor" value="#999999">
+        <label>Text Size</label>
+        <input type="number" id="watermarkTextSize" value="55" min="10" max="150">
+      </div>
+      <label>Transparency</label>
+      <input type="range" id="watermarkOpacity" min="1" max="30" value="7">
+    </section>
+
+    <section class="panel">
+      <h3>Master Contact Directory</h3>
+      <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <button type="button" id="tabCustomerBtn" onclick="toggleDirectory('customer')" style="flex:1;">Customers</button>
+        <button type="button" id="tabSupplierBtn" onclick="toggleDirectory('supplier')" style="flex:1;background:#64748b;">Suppliers</button>
+      </div>
+      <input type="hidden" id="editingContactId">
+      <label id="contactTypeLabel">Customer Name</label>
+      <input id="recordContactName" placeholder="Contact / Company Name">
+      <label>Phone Number</label>
+      <input id="recordContactPhone" placeholder="03XXXXXXXXX">
+      <label>Email Address</label>
+      <input id="recordContactEmail" type="email" placeholder="contact@email.com">
+      <label>Address</label>
+      <textarea id="recordContactAddress" placeholder="Complete Address"></textarea>
+      <button type="button" id="saveContactBtn">+ Save to Directory</button>
+      <button type="button" id="cancelContactEdit" class="hidden btn-secondary">Cancel</button>
+      <hr style="margin:16px 0;border:0;border-top:1px solid #e2e8f0;">
+      <label>Search Directory</label>
+      <input id="directorySearch" placeholder="Type to filter list...">
+      <div id="directoryList" style="margin-top:10px;max-height:220px;overflow-y:auto;"></div>
+    </section>
+
+    <section class="panel">
+      <h3>Suite Backups & Resets</h3>
+      <button type="button" id="backupBtn">Download Complete ERP Backup</button>
+      <button type="button" id="restoreBtn" class="btn-secondary">Restore Backup</button>
+      <input type="file" id="restoreFile" accept=".json" hidden>
+      <button type="button" id="resetCurrentDocBtn" class="btn-secondary">Reset Active Document</button>
+      <button type="button" id="factoryResetBtn" class="btn-danger">Factory Reset</button>
+      <p id="saveStatus" style="font-size:11px;color:#059669;margin-top:10px;font-weight:600;">Auto-save active</p>
+    </section>
+  </aside>
+
+  <main class="preview-area">
+    <div class="preview-tools">
+      <div>
+        <h3 id="previewTitle">Live Document Preview</h3>
+        <span style="font-size:12px;color:#64748b;">A4 Print Ready • Auto Page Adjust • Never Chops Signatures</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button type="button" id="btnFitToggle" onclick="togglePaperFit()" class="btn-secondary" style="font-size:12px;padding:8px 12px;">📱 Fit to Screen</button>
+        <button type="button" class="print-btn" onclick="window.print()"><span>🖨️</span> Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div class="paper-viewport" id="paperViewport">
+      <div class="paper" id="paper">
+        <div class="watermark" id="watermark">
+          <img id="watermarkImage" alt="">
+          <div id="watermarkTextPreview"></div>
+        </div>
+        <div class="paper-content">
+          <div class="doc-header">
+            <div class="brand-group">
+              <img id="previewLogo" alt="Logo">
+              <div><h1 id="pCompanyName">YOUR COMPANY NAME</h1></div>
+            </div>
+            <div class="quote-badge-box">
+              <div class="quote-title-tag" id="pDocBadge">DOCUMENT</div>
+              <div class="quote-meta-list" id="pDocMetaList"></div>
+              <div id="pStatusContainer"></div>
+            </div>
+          </div>
+
+          <div class="client-section">
+            <div class="client-card">
+              <h4 id="pClientHeader">Prepared For</h4>
+              <div class="client-name" id="pCustomerName">Customer Name</div>
+              <div class="client-sub" id="pCustomerPhone"></div>
+              <div class="client-sub" id="pCustomerAddress"></div>
+            </div>
+          </div>
+
+          <table>
+            <thead id="previewTableHead"></thead>
+            <tbody id="previewItems"></tbody>
+          </table>
+
+          <div class="bottom-grid">
+            <div class="terms-box">
+              <h4 id="pTermsTitle">Terms & Conditions</h4>
+              <p id="pTerms"></p>
+              <div id="pExtraInfoBox"></div>
+            </div>
+            <div class="totals-box" id="pTotalsContainer">
+              <div><span>Subtotal</span><b id="pSubtotal">Rs. 0.00</b></div>
+              <div><span>Discount</span><b id="pDiscount">Rs. 0.00</b></div>
+              <div><span>Tax</span><b id="pTax">Rs. 0.00</b></div>
+              <div class="grand"><span>Grand Total</span><b id="pGrandTotal">Rs. 0.00</b></div>
+              <div id="pInvoiceBalanceRows" class="hidden">
+                <div><span>Amount Paid</span><b id="pAmountPaid">Rs. 0.00</b></div>
+                <div class="balance-row"><span>Balance Due</span><b id="pBalanceDue">Rs. 0.00</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="signatures">
+            <div class="sign-block" id="stampBlock">
+              <div class="sign-img-container"><img id="pStamp" alt="Stamp"></div>
+              <p id="pStampLabel">Company Stamp</p>
+            </div>
+            <div class="sign-block" id="signatureBlock">
+              <div class="sign-img-container"><img id="pSignature" alt="Signature"></div>
+              <p id="pSignatureLabel">Authorized Signature</p>
+            </div>
+          </div>
+
+          <div class="doc-footer">
+            <div class="footer-contact-row">
+              <div class="footer-item" id="fAddrWrap"><span class="icon">📍</span><span id="pAddress"></span></div>
+              <div class="footer-item" id="fPhoneWrap"><span class="icon">📞</span><span id="pContact"></span></div>
+              <div class="footer-item" id="fEmailWrap"><span class="icon">✉️</span><span id="pEmail"></span></div>
+              <div class="footer-item" id="fWebsiteWrap"><span class="icon">🌐</span><span id="pWebsite"></span></div>
+            </div>
+            <div class="footer-bottom-line">
+              <span>Thank you for your business!</span>
+              <span id="pDocBottomType">Computer Generated Official Document</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<section id="aboutSection" class="about hidden">
+  <div class="developer-card">
+    <div class="developer-top">
+      <div class="developer-avatar">SA</div>
+      <span class="developer-badge">SOFTWARE DEVELOPER</span>
+      <h2>Shaiekh Fielsouf Ansari</h2>
+      <p>Creator & Owner</p>
+    </div>
+    <div class="developer-body">
+      <h3>Contact Information</h3>
+      <div class="developer-info"><span>GitHub Profile</span><strong><a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:none;font-weight:700;">github.com/feelsoof123</a></strong></div>
+      <div class="developer-info"><span>Contact Number 1</span><strong>03331255512</strong></div>
+      <div class="developer-info"><span>Contact Number 2</span><strong>03111855512</strong></div>
+      <div class="developer-info"><span>WhatsApp</span><strong>03111855512</strong></div>
+      <div class="developer-info"><span>JazzCash Payment</span><strong>03000210419</strong></div>
+      <div class="developer-note">Thank you for using this Enterprise Business ERP Suite. Designed for speed, precision, and professional commercial compliance.</div>
+      <div class="developer-copyright">© 2026 Shaiekh Fielsouf Ansari. All Rights Reserved.</div>
+    </div>
+    <button type="button" onclick="hideAbout()" class="back-button">Back to Document Suite</button>
+  </div>
+</section>
+<script>window.ACTIVE_MODULE = "quotation";</script>
+<script src="erp-core.js"></script>
+</body>
+</html>
