@@ -2,10 +2,18 @@ const $ = id => document.getElementById(id);
 
 const APP_CONFIG = {
   name: "Enterprise Business Document ERP Suite",
-  version: "2.2.0-multipage",
+  version: "2.3.0-pwa-idb",
   storageKey: "business_document_suite_v2",
-  countersKey: "biz_counters_v2"
+  countersKey: "biz_counters_v2",
+  dbName: "ErpSuiteDB",
+  storeName: "kv",
+  recycleKey: "erp_recycle_bin_v1",
+  lastBackupKey: "erp_last_backup_at",
+  saveCountKey: "erp_save_count_v1"
 };
+
+let recycleBin = [];
+let deferredInstallPrompt = null;
 
 // Active page module is set via window.ACTIVE_MODULE (e.g., "quotation", "invoice", etc.)
 const currentModule = window.ACTIVE_MODULE || "quotation";
@@ -54,6 +62,7 @@ function createDefaultManagementData() {
       { id: "inv_2", sku: "SKU-002", name: "Heavy Duty Packaging Carton", category: "Supplies", unit: "Carton", qty: 6, reorderLevel: 10, costPrice: 350, sellPrice: 500, warehouse: "Store Room" }
     ],
     inventoryLogs: [],
+    docHistory: [],
     accounts: [
       { id: "acc_1", date: today, type: "receipt", partyType: "customer", partyName: "Valued Customer", method: "Bank Transfer", refNo: "INV-001", amount: 25000, notes: "Sample advance payment receipt" }
     ],
@@ -1030,6 +1039,7 @@ function refreshItemViews(editor, item) {
 function updatePreview() {
   if (!$("paper")) return;
   syncStateFromInputs();
+  if (typeof checkDuplicateDocNumber === "function") checkDuplicateDocNumber();
   const m = moduleData[currentModule];
   const primaryColor = $("brandColor").value || "#174a83";
   document.documentElement.style.setProperty("--primary", primaryColor);
@@ -1661,12 +1671,112 @@ function updatePreview() {
   }
 }
 
-// CROSS-PAGE 1-CLICK CONVERSIONS
+// CROSS-PAGE 1-CLICK CONVERSIONS & DOCUMENT HISTORY
+function calcDocGrandTotal(m) {
+  if (!m) return 0;
+  if (Array.isArray(m.items) && m.items.length) {
+    let sub = 0;
+    m.items.forEach(it => {
+      if (typeof getItemCalculation === "function") sub += getItemCalculation(it).total;
+    });
+    const disc = Number(m.discount || 0);
+    const afterDisc = Math.max(0, sub - disc);
+    const taxAmt = (afterDisc * Number(m.tax || 0)) / 100;
+    return afterDisc + taxAmt;
+  }
+  return Number(m.amount || 0);
+}
+
+function recordDocumentHistory(modName) {
+  const targetMod = typeof modName === "string" ? modName : currentModule;
+  const m = moduleData[targetMod];
+  if (!m || !m.number) return;
+  if (!Array.isArray(managementData.docHistory)) managementData.docHistory = [];
+  const num = String(m.number).trim();
+  if (!num) return;
+  const date = m.date || m.payDate || getTodayIso();
+  const party = m.clientName || m.supplierName || m.empName || m.from || m.payee || m.dept || "";
+  const total = calcDocGrandTotal(m);
+  const existing = managementData.docHistory.find(d => d.module === targetMod && d.number.toLowerCase() === num.toLowerCase());
+  if (existing) {
+    existing.date = date;
+    existing.party = party;
+    existing.total = total;
+    existing.updatedAt = Date.now();
+  } else {
+    managementData.docHistory.unshift({
+      id: "doc_" + Date.now(),
+      module: targetMod,
+      number: num,
+      date,
+      party,
+      total,
+      updatedAt: Date.now()
+    });
+    if (managementData.docHistory.length > 250) managementData.docHistory.length = 250;
+  }
+  writeStorageState();
+}
+
+function checkDuplicateDocNumber() {
+  const m = moduleData[currentModule];
+  const existingWarn = $("erpDupDocWarn");
+  if (!m || !m.number) {
+    if (existingWarn) existingWarn.remove();
+    return;
+  }
+  const num = String(m.number).trim().toLowerCase();
+  const party = String(m.clientName || m.supplierName || m.empName || m.from || m.payee || "").trim().toLowerCase();
+  const date = m.date || m.payDate || "";
+  const hist = Array.isArray(managementData.docHistory) ? managementData.docHistory : [];
+  const dup = hist.find(d =>
+    d.module === currentModule &&
+    String(d.number || "").trim().toLowerCase() === num &&
+    (String(d.party || "").trim().toLowerCase() !== party || (d.date && date && d.date !== date))
+  );
+  const tools = document.querySelector(".preview-tools");
+  if (!dup) {
+    if (existingWarn) existingWarn.remove();
+    return;
+  }
+  if (!existingWarn && tools) {
+    const warn = document.createElement("div");
+    warn.id = "erpDupDocWarn";
+    warn.className = "no-print";
+    warn.style.cssText = "background:#fef3c7;border:1px solid #f59e0b;color:#92400e;padding:8px 12px;border-radius:8px;margin-bottom:10px;font-size:12px;font-weight:700;";
+    warn.textContent = `⚠️ Duplicate Document # "${m.number}" already exists in history (${dup.party || "Previous record"}, ${dup.date || ""}). Consider using the next sequence number.`;
+    tools.insertAdjacentElement("afterend", warn);
+  } else if (existingWarn) {
+    existingWarn.textContent = `⚠️ Duplicate Document # "${m.number}" already exists in history (${dup.party || "Previous record"}, ${dup.date || ""}). Consider using the next sequence number.`;
+  }
+}
+
+function convertQuotationToProforma() {
+  syncStateFromInputs();
+  recordDocumentHistory("quotation");
+  const q = moduleData.quotation;
+  const pi = moduleData.proformaInvoice;
+  if (!pi.number) pi.number = getSequenceNumber("PI");
+  pi.refNo = q.number || "QT-001";
+  pi.date = getTodayIso();
+  pi.clientName = q.clientName;
+  pi.clientPhone = q.clientPhone;
+  pi.clientAddress = q.clientAddress;
+  pi.items = JSON.parse(JSON.stringify(q.items));
+  pi.discount = q.discount;
+  pi.tax = q.tax;
+  saveData();
+  window.location.href = "proforma-invoice.html";
+}
+
 function convertQuotationToInvoice() {
   syncStateFromInputs();
+  recordDocumentHistory("quotation");
   const q = moduleData.quotation;
   const inv = moduleData.invoice;
+  if (!inv.number) inv.number = getSequenceNumber("INV");
   inv.refNo = q.number || "QT-001";
+  inv.date = getTodayIso();
   inv.clientName = q.clientName;
   inv.clientPhone = q.clientPhone;
   inv.clientAddress = q.clientAddress;
@@ -1679,9 +1789,12 @@ function convertQuotationToInvoice() {
 
 function convertInvoiceToChallan() {
   syncStateFromInputs();
+  recordDocumentHistory("invoice");
   const inv = moduleData.invoice;
   const dc = moduleData.deliveryChallan;
+  if (!dc.number) dc.number = getSequenceNumber("DC");
   dc.refNo = inv.number || "INV-001";
+  dc.date = getTodayIso();
   dc.clientName = inv.clientName;
   dc.clientPhone = inv.clientPhone;
   dc.clientAddress = inv.clientAddress;
@@ -1690,11 +1803,37 @@ function convertInvoiceToChallan() {
   window.location.href = "delivery-challan.html";
 }
 
+function convertInvoiceToReceipt() {
+  syncStateFromInputs();
+  recordDocumentHistory("invoice");
+  const inv = moduleData.invoice;
+  const rec = moduleData.receipt;
+  const grandTotal = calcDocGrandTotal(inv);
+  const paid = Number(inv.amountPaid || 0);
+  const payNow = paid > 0 ? paid : grandTotal;
+  const bal = Math.max(0, grandTotal - payNow);
+
+  rec.number = getSequenceNumber("REC");
+  rec.date = getTodayIso();
+  rec.ref = inv.number || "INV-001";
+  rec.from = inv.clientName || "Customer";
+  rec.phone = inv.clientPhone || "";
+  rec.address = inv.clientAddress || "";
+  rec.amount = payNow;
+  rec.balance = bal;
+  rec.purpose = `Payment received against Tax Invoice # ${inv.number || "INV-001"}`;
+  saveData();
+  window.location.href = "cash-receipt.html";
+}
+
 function convertProformaToInvoice() {
   syncStateFromInputs();
+  recordDocumentHistory("proformaInvoice");
   const pi = moduleData.proformaInvoice;
   const inv = moduleData.invoice;
+  if (!inv.number) inv.number = getSequenceNumber("INV");
   inv.refNo = pi.number || "PI-001";
+  inv.date = getTodayIso();
   inv.clientName = pi.clientName;
   inv.clientPhone = pi.clientPhone;
   inv.clientAddress = pi.clientAddress;
@@ -1954,15 +2093,59 @@ function applyCompanyStateToDom() {
   $("signatureOn").checked = companyState.signatureOn ?? true;
 }
 
+function openErpDb() {
+  return new Promise((resolve, reject) => {
+    if (typeof indexedDB === "undefined") return reject(new Error("No IndexedDB"));
+    const req = indexedDB.open(APP_CONFIG.dbName, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(APP_CONFIG.storeName)) {
+        db.createObjectStore(APP_CONFIG.storeName);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbGet(key) {
+  try {
+    const db = await openErpDb();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(APP_CONFIG.storeName, "readonly");
+      const req = tx.objectStore(APP_CONFIG.storeName).get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { return undefined; }
+}
+
+async function idbSet(key, value) {
+  try {
+    const db = await openErpDb();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(APP_CONFIG.storeName, "readwrite");
+      const req = tx.objectStore(APP_CONFIG.storeName).put(value, key);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { return false; }
+}
+
 function writeStorageState() {
   const dataToSave = {
     company: companyState,
     customers,
     suppliers,
     moduleData,
-    managementData
+    managementData,
+    recycleBin,
+    updatedAt: Date.now()
   };
-  localStorage.setItem(APP_CONFIG.storageKey, JSON.stringify(dataToSave));
+  try {
+    localStorage.setItem(APP_CONFIG.storageKey, JSON.stringify(dataToSave));
+  } catch (e) { /* IndexedDB handles large payloads beyond 5MB */ }
+  idbSet(APP_CONFIG.storageKey, dataToSave);
 }
 
 function saveData() {
@@ -1972,7 +2155,9 @@ function saveData() {
       syncCompanyStateFromDom();
     }
     writeStorageState();
-    if ($("saveStatus")) $("saveStatus").textContent = "✓ Automatically saved across all modules";
+    const sc = (Number(localStorage.getItem(APP_CONFIG.saveCountKey)) || 0) + 1;
+    localStorage.setItem(APP_CONFIG.saveCountKey, String(sc));
+    if ($("saveStatus")) $("saveStatus").textContent = "✓ Saved to IndexedDB & Local Backup";
   } catch(e) {
     if ($("saveStatus")) $("saveStatus").textContent = "Storage limit reached. Download backup.";
   }
@@ -1982,39 +2167,43 @@ function mergeManagementData(incoming) {
   if (!incoming || typeof incoming !== "object") return;
   if (Array.isArray(incoming.inventory)) managementData.inventory = incoming.inventory;
   if (Array.isArray(incoming.inventoryLogs)) managementData.inventoryLogs = incoming.inventoryLogs;
+  if (Array.isArray(incoming.docHistory)) managementData.docHistory = incoming.docHistory;
   if (Array.isArray(incoming.accounts)) managementData.accounts = incoming.accounts;
   if (Array.isArray(incoming.crmLeads)) managementData.crmLeads = incoming.crmLeads;
   if (Array.isArray(incoming.productionJobs)) managementData.productionJobs = incoming.productionJobs;
   if (typeof incoming.activeProductionId === "string") managementData.activeProductionId = incoming.activeProductionId;
 }
 
+function applyParsedState(parsed) {
+  if (!parsed || typeof parsed !== "object") return;
+  if (parsed.company && typeof parsed.company === "object") {
+    companyState = Object.assign({}, companyState, parsed.company);
+    logoData = companyState.logoData || "";
+    stampData = companyState.stampData || "";
+    signatureData = companyState.signatureData || "";
+    watermarkData = companyState.watermarkData || "";
+    applyCompanyStateToDom();
+  }
+  if (Array.isArray(parsed.customers)) customers = parsed.customers;
+  if (Array.isArray(parsed.suppliers)) suppliers = parsed.suppliers;
+  if (parsed.moduleData) {
+    Object.keys(parsed.moduleData).forEach(k => {
+      if (moduleData[k] && parsed.moduleData[k]) {
+        moduleData[k] = Object.assign({}, moduleData[k], parsed.moduleData[k]);
+      } else {
+        moduleData[k] = parsed.moduleData[k];
+      }
+    });
+  }
+  if (parsed.managementData) mergeManagementData(parsed.managementData);
+  if (Array.isArray(parsed.recycleBin)) recycleBin = parsed.recycleBin;
+}
+
 function loadData() {
   try {
     const raw = localStorage.getItem(APP_CONFIG.storageKey);
     if (!raw) return;
-    const parsed = JSON.parse(raw);
-
-    if (parsed.company && typeof parsed.company === "object") {
-      companyState = Object.assign({}, companyState, parsed.company);
-      logoData = companyState.logoData || "";
-      stampData = companyState.stampData || "";
-      signatureData = companyState.signatureData || "";
-      watermarkData = companyState.watermarkData || "";
-      applyCompanyStateToDom();
-    }
-
-    if (Array.isArray(parsed.customers)) customers = parsed.customers;
-    if (Array.isArray(parsed.suppliers)) suppliers = parsed.suppliers;
-    if (parsed.moduleData) {
-      Object.keys(parsed.moduleData).forEach(k => {
-        if (moduleData[k] && parsed.moduleData[k]) {
-          moduleData[k] = Object.assign({}, moduleData[k], parsed.moduleData[k]);
-        } else {
-          moduleData[k] = parsed.moduleData[k];
-        }
-      });
-    }
-    if (parsed.managementData) mergeManagementData(parsed.managementData);
+    applyParsedState(JSON.parse(raw));
   } catch(e) {
     console.warn("Could not load previous session data.");
   }
@@ -2039,6 +2228,7 @@ function exportCompleteBackup() {
       suppliers,
       moduleData,
       managementData,
+      recycleBin,
       counters
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
@@ -2048,6 +2238,11 @@ function exportCompleteBackup() {
     a.download = `erp-suite-backup-${getTodayIso()}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    localStorage.setItem(APP_CONFIG.lastBackupKey, String(Date.now()));
+    idbSet(APP_CONFIG.lastBackupKey, Date.now());
+    const toast = $("erpBackupToast");
+    if (toast) toast.remove();
+    if (typeof updateShellBadges === "function") updateShellBadges();
   } catch(e) {
     alert("Backup creation failed.");
   }
@@ -2060,35 +2255,32 @@ function restoreBackupFile(file) {
     try {
       const parsed = JSON.parse(reader.result);
       if (!parsed || typeof parsed !== "object" || (!parsed.moduleData && !parsed.company && !parsed.managementData && !parsed.customers)) {
-        throw new Error("Invalid format");
+        throw new Error("Invalid ERP Suite backup structure.");
       }
-      if (parsed.company && typeof parsed.company === "object") {
-        companyState = Object.assign({}, companyState, parsed.company);
-        logoData = companyState.logoData || "";
-        stampData = companyState.stampData || "";
-        signatureData = companyState.signatureData || "";
-        watermarkData = companyState.watermarkData || "";
-      }
-      if (parsed.moduleData) {
-        Object.keys(parsed.moduleData).forEach(k => {
-          if (moduleData[k] && parsed.moduleData[k]) {
-            moduleData[k] = Object.assign({}, moduleData[k], parsed.moduleData[k]);
-          } else {
-            moduleData[k] = parsed.moduleData[k];
-          }
-        });
-      }
-      if (Array.isArray(parsed.customers)) customers = parsed.customers;
-      if (Array.isArray(parsed.suppliers)) suppliers = parsed.suppliers;
-      if (parsed.managementData) mergeManagementData(parsed.managementData);
+      const modCount = parsed.moduleData ? Object.keys(parsed.moduleData).length : 0;
+      const invCount = parsed.managementData && Array.isArray(parsed.managementData.inventory) ? parsed.managementData.inventory.length : 0;
+      const accCount = parsed.managementData && Array.isArray(parsed.managementData.accounts) ? parsed.managementData.accounts.length : 0;
+      const custCount = Array.isArray(parsed.customers) ? parsed.customers.length : 0;
+      const bDate = parsed.date ? String(parsed.date).slice(0, 10) : "Unknown date";
+      const ok = confirm(
+        `Restore Backup Confirmation:\n` +
+        `• Backup Date: ${bDate}\n` +
+        `• Document Modules: ${modCount}\n` +
+        `• Customers: ${custCount} | Inventory Items: ${invCount} | Accounts: ${accCount}\n\n` +
+        `Current unsaved data will be replaced. Continue?`
+      );
+      if (!ok) return;
+
+      applyParsedState(parsed);
       if (parsed.counters && typeof parsed.counters === "object") {
         localStorage.setItem(APP_CONFIG.countersKey, JSON.stringify(parsed.counters));
       }
       writeStorageState();
-      alert("Backup successfully restored! Reloading...");
+      localStorage.setItem(APP_CONFIG.lastBackupKey, String(Date.now()));
+      alert("Backup successfully validated & restored! Reloading...");
       location.reload();
     } catch(err) {
-      alert("Invalid backup file.");
+      alert("Invalid backup file! Please select a valid ERP Suite .json backup.");
     }
   };
   reader.readAsText(file);
@@ -2106,23 +2298,48 @@ function bindBackupControls(btnExportId, btnRestoreId, inputFileId) {
 }
 
 function handleImage(input, setter) {
-  const file = input.files[0];
+  const file = input && input.files && input.files[0];
   if (!file) return;
-  if (!file.type.startsWith("image/")) {
-    alert("Please select an image file.");
+
+  // Validate the selected file before reading it.
+  if (!file.type || !file.type.startsWith("image/")) {
+    alert("Please select a valid image file (PNG, JPG, WEBP, GIF, etc.).");
     input.value = "";
     return;
   }
-  if (file.size > 800 * 1024) {
-    alert("Please select an image under 800 KB.");
+  const maxImageSize = 5 * 1024 * 1024;
+  if (file.size > maxImageSize) {
+    alert("Image is too large. Please select an image under 5 MB.");
     input.value = "";
     return;
   }
+
   const reader = new FileReader();
   reader.onload = () => {
-    setter(reader.result);
-    updatePreview();
-    saveData();
+    if (typeof reader.result !== "string" || !reader.result.startsWith("data:image/")) {
+      alert("The selected image could not be read. Please try another image.");
+      input.value = "";
+      return;
+    }
+    try {
+      setter(reader.result);
+      updatePreview();
+      saveData();
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("Image could not be saved. Please try a smaller image.");
+    } finally {
+      // Allow selecting the same image again if needed.
+      input.value = "";
+    }
+  };
+  reader.onerror = () => {
+    console.error("Could not read selected image:", reader.error);
+    alert("Could not read this image. Please try another file.");
+    input.value = "";
+  };
+  reader.onabort = () => {
+    input.value = "";
   };
   reader.readAsDataURL(file);
 }
@@ -2758,7 +2975,8 @@ function deleteProductionJob() {
     return;
   }
   const active = getActiveProductionJob();
-  if (!confirm(`Delete Job Card ${active.jobNumber}?`)) return;
+  if (!confirm(`Move Job Card ${active.jobNumber} to Recycle Bin?`)) return;
+  moveToRecycleBin("production", `Job Card: ${active.jobNumber} (${active.productName || "Job"})`, active);
   managementData.productionJobs = managementData.productionJobs.filter(j => j.id !== active.id);
   managementData.activeProductionId = managementData.productionJobs[0].id;
   syncProductionInputsFromState();
@@ -2987,7 +3205,8 @@ function initInventoryPage() {
       $("invName").focus();
     } else if (delId) {
       const item = managementData.inventory.find(x => x.id === delId);
-      if (!item || !confirm(`Delete ${item.name}?`)) return;
+      if (!item || !confirm(`Move ${item.name} to Recycle Bin?`)) return;
+      moveToRecycleBin("inventory", `Inventory: ${item.name} (${item.sku || ""})`, item);
       managementData.inventory = managementData.inventory.filter(x => x.id !== delId);
       if (editingInvId === delId) clearInvForm();
       saveData();
@@ -3141,7 +3360,9 @@ function initAccountsPage() {
   $("accFilter").addEventListener("change", renderAccounts);
   $("accTableBody").addEventListener("click", e => {
     const delId = e.target.dataset.accDel;
-    if (!delId || !confirm("Delete this ledger entry?")) return;
+    const entry = managementData.accounts.find(x => x.id === delId);
+    if (!delId || !entry || !confirm("Move this ledger entry to Recycle Bin?")) return;
+    moveToRecycleBin("accounts", `Account (${entry.type}): ${entry.partyName || "Party"} — Rs. ${money(entry.amount)}`, entry);
     managementData.accounts = managementData.accounts.filter(x => x.id !== delId);
     saveData();
     renderAccounts();
@@ -3321,7 +3542,8 @@ function initCrmPage() {
       $("crmName").focus();
     } else if (delId) {
       const lead = managementData.crmLeads.find(x => x.id === delId);
-      if (!lead || !confirm(`Delete lead "${lead.name}"?`)) return;
+      if (!lead || !confirm(`Move lead "${lead.name}" to Recycle Bin?`)) return;
+      moveToRecycleBin("crm", `CRM Lead: ${lead.name} (${lead.dealTitle || ""})`, lead);
       managementData.crmLeads = managementData.crmLeads.filter(x => x.id !== delId);
       if (editingLeadId === delId) clearLeadForm();
       saveData();
@@ -3332,6 +3554,536 @@ function initCrmPage() {
   bindBackupControls("mgmtBackupBtn", "mgmtRestoreBtn", "mgmtRestoreFile");
   clearLeadForm();
   renderCrm();
+}
+
+// =====================================
+// PHASE 1: RECYCLE BIN, INDEXEDDB HYDRATION, PWA & ENTERPRISE SHELL
+// =====================================
+function moveToRecycleBin(sourceType, label, data) {
+  if (!Array.isArray(recycleBin)) recycleBin = [];
+  recycleBin.unshift({
+    id: "rb_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+    sourceType,
+    label,
+    deletedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
+    data
+  });
+  if (recycleBin.length > 50) recycleBin.length = 50;
+  if (typeof updateShellBadges === "function") updateShellBadges();
+}
+
+function restoreFromRecycleBin(rbId) {
+  const idx = recycleBin.findIndex(x => x.id === rbId);
+  if (idx === -1) return;
+  const entry = recycleBin[idx];
+  if (entry.sourceType === "inventory") managementData.inventory.push(entry.data);
+  else if (entry.sourceType === "accounts") managementData.accounts.push(entry.data);
+  else if (entry.sourceType === "crm") managementData.crmLeads.push(entry.data);
+  else if (entry.sourceType === "production") managementData.productionJobs.push(entry.data);
+  recycleBin.splice(idx, 1);
+  writeStorageState();
+  renderRecycleBinModal();
+  if (typeof updateShellBadges === "function") updateShellBadges();
+  if (currentModule === "inventory" && typeof renderInventory === "function") renderInventory();
+  if (currentModule === "accounts" && typeof renderAccounts === "function") renderAccounts();
+  if (currentModule === "crm" && typeof renderCrm === "function") renderCrm();
+  if (currentModule === "production" && typeof renderProductionPreview === "function") {
+    syncProductionInputsFromState();
+    renderProductionPreview();
+  }
+}
+
+function emptyRecycleBin() {
+  if (!recycleBin.length || !confirm("Permanently clear all items in Recycle Bin?")) return;
+  recycleBin = [];
+  writeStorageState();
+  renderRecycleBinModal();
+  if (typeof updateShellBadges === "function") updateShellBadges();
+}
+
+function getBackupStatusInfo() {
+  const last = Number(localStorage.getItem(APP_CONFIG.lastBackupKey) || 0);
+  const saves = Number(localStorage.getItem(APP_CONFIG.saveCountKey) || 0);
+  const daysAgo = last ? Math.floor((Date.now() - last) / (1000 * 60 * 60 * 24)) : null;
+  const due = (last && daysAgo >= 7) || (!last && saves >= 5);
+  return { last, daysAgo, saves, due };
+}
+
+function getSystemAlerts() {
+  const alerts = [];
+  const bInfo = getBackupStatusInfo();
+  if (bInfo.due) {
+    alerts.push({
+      level: "warning",
+      title: "Automatic Backup Reminder",
+      detail: bInfo.last ? `Last JSON backup was ${bInfo.daysAgo} days ago.` : "You have made changes without a recent JSON backup.",
+      actionText: "Download Backup Now",
+      actionFn: "exportCompleteBackup()"
+    });
+  }
+  const lowItems = (managementData.inventory || []).filter(i => Number(i.qty || 0) <= Number(i.reorderLevel || 0));
+  lowItems.forEach(item => {
+    alerts.push({
+      level: "danger",
+      title: `Low Stock: ${item.name}`,
+      detail: `Remaining: ${item.qty} ${item.unit || ""} (Reorder level: ${item.reorderLevel})`,
+      href: "inventory.html"
+    });
+  });
+  if (moduleData.invoice && moduleData.invoice.status && moduleData.invoice.status !== "PAID") {
+    alerts.push({
+      level: "info",
+      title: `Active Invoice ${moduleData.invoice.number || ""} is ${moduleData.invoice.status}`,
+      detail: `Client: ${moduleData.invoice.clientName || "Customer"}`,
+      href: "invoice.html"
+    });
+  }
+  return alerts;
+}
+
+function updateShellBadges() {
+  const alertCount = getSystemAlerts().length;
+  const rbCount = Array.isArray(recycleBin) ? recycleBin.length : 0;
+  const alertEl = $("erpAlertCount");
+  const rbEl = $("erpRecycleCount");
+  if (alertEl) {
+    alertEl.textContent = alertCount;
+    alertEl.classList.toggle("hidden", alertCount === 0);
+  }
+  if (rbEl) {
+    rbEl.textContent = rbCount;
+    rbEl.classList.toggle("hidden", rbCount === 0);
+  }
+}
+
+function renderRecycleBinModal() {
+  const body = $("erpRecycleBody");
+  if (!body) return;
+  if (!recycleBin.length) {
+    body.innerHTML = `<p style="color:#64748b;text-align:center;padding:20px 0;">Recycle Bin is empty.</p>`;
+    return;
+  }
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:12px;color:#64748b;">${recycleBin.length} deleted item(s)</span>
+      <button type="button" onclick="emptyRecycleBin()" class="btn-danger" style="width:auto;margin:0;padding:5px 10px;font-size:12px;">Empty Bin</button>
+    </div>
+    ${recycleBin.map(item => `
+      <div class="erp-search-item">
+        <div>
+          <strong style="font-size:13px;">${safeText(item.label)}</strong>
+          <div style="font-size:11px;color:#64748b;">Deleted: ${safeText(item.deletedAt)}</div>
+        </div>
+        <button type="button" onclick="restoreFromRecycleBin('${safeText(item.id)}')" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">♻️ Restore</button>
+      </div>
+    `).join("")}`;
+}
+
+function renderAlertsModal() {
+  const body = $("erpAlertsBody");
+  if (!body) return;
+  const alerts = getSystemAlerts();
+  if (!alerts.length) {
+    body.innerHTML = `<p style="color:#059669;text-align:center;padding:20px 0;font-weight:600;">✅ All clear! No pending alerts.</p>`;
+    return;
+  }
+  body.innerHTML = alerts.map(a => `
+    <div class="erp-search-item" style="align-items:flex-start;gap:12px;">
+      <div>
+        <strong style="font-size:13px;">${safeText(a.title)}</strong>
+        <div style="font-size:12px;color:#475569;margin-top:2px;">${safeText(a.detail)}</div>
+      </div>
+      ${a.href ? `<a href="${a.href}" style="background:#174a83;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap;">Open →</a>` : ""}
+      ${a.actionFn ? `<button type="button" onclick="${a.actionFn}" style="width:auto;margin:0;padding:5px 10px;font-size:11px;white-space:nowrap;">${safeText(a.actionText)}</button>` : ""}
+    </div>
+  `).join("");
+}
+
+function runGlobalSearch(q) {
+  const box = $("erpSearchResults");
+  if (!box) return;
+  const term = String(q || "").trim().toLowerCase();
+  const items = [];
+
+  const docMap = [
+    ["quotation", "Quotation", "quotation.html"],
+    ["invoice", "Tax Invoice", "invoice.html"],
+    ["proformaInvoice", "Proforma Invoice", "proforma-invoice.html"],
+    ["purchaseOrder", "Purchase Order", "purchase-order.html"],
+    ["deliveryChallan", "Delivery Challan", "delivery-challan.html"],
+    ["fbr", "FBR Invoice", "fbr-invoice.html"],
+    ["salary", "Salary Slip", "salary-slip.html"],
+    ["expense", "Expense Voucher", "expense-voucher.html"],
+    ["receipt", "Cash Receipt", "cash-receipt.html"],
+    ["cheque", "Cheque Print", "cheque-print.html"],
+    ["attendance", "Attendance Sheet", "attendance-sheet.html"]
+  ];
+  docMap.forEach(([key, title, href]) => {
+    const d = moduleData[key];
+    if (!d) return;
+    const text = `${title} ${d.number || ""} ${d.clientName || d.supplierName || d.empName || d.from || d.payee || ""}`.toLowerCase();
+    if (!term || text.includes(term)) {
+      items.push({
+        type: title,
+        title: `${d.number || title} — ${d.clientName || d.supplierName || d.empName || d.from || d.payee || d.dept || "Active"}`,
+        href
+      });
+    }
+  });
+
+  (managementData.inventory || []).forEach(p => {
+    if (!term || `${p.name} ${p.sku} ${p.category} ${p.warehouse || ""}`.toLowerCase().includes(term)) {
+      items.push({ type: "Inventory", title: `${p.name} (${p.sku}) — Qty: ${p.qty}`, href: "inventory.html" });
+    }
+  });
+  (customers || []).forEach(c => {
+    if (!term || `${c.name} ${c.phone || ""} ${c.address || ""}`.toLowerCase().includes(term)) {
+      items.push({ type: "Customer", title: `${c.name} (${c.phone || "No phone"})`, href: "invoice.html" });
+    }
+  });
+  (managementData.crmLeads || []).forEach(l => {
+    if (!term || `${l.name} ${l.dealTitle || ""} ${l.stage || ""}`.toLowerCase().includes(term)) {
+      items.push({ type: "CRM Lead", title: `${l.name} — ${l.dealTitle || l.stage}`, href: "crm.html" });
+    }
+  });
+  (managementData.productionJobs || []).forEach(j => {
+    if (!term || `${j.jobNumber} ${j.productName || ""} ${j.clientName || ""}`.toLowerCase().includes(term)) {
+      items.push({ type: "Production", title: `${j.jobNumber} — ${j.productName}`, href: "production.html" });
+    }
+  });
+
+  box.innerHTML = items.slice(0, 20).map(it => `
+    <a class="erp-search-item" href="${it.href}">
+      <div><strong style="font-size:13px;">${safeText(it.title)}</strong></div>
+      <span style="font-size:11px;font-weight:700;color:#174a83;background:#eff6ff;padding:3px 8px;border-radius:999px;">${safeText(it.type)}</span>
+    </a>
+  `).join("") || `<p style="color:#64748b;text-align:center;padding:16px 0;">No matching records found.</p>`;
+}
+
+function injectEnterpriseShell() {
+  if ($("erpSidebar")) return;
+  const header = document.querySelector("header.app-header");
+  if (!header) return;
+
+  const brand = header.querySelector(".brand-title");
+  if (brand) {
+    const menuBtn = document.createElement("button");
+    menuBtn.type = "button";
+    menuBtn.className = "erp-shell-btn";
+    menuBtn.innerHTML = "☰ Modules";
+    menuBtn.onclick = () => {
+      $("erpSidebar").classList.add("open");
+      $("erpSidebarBackdrop").classList.add("open");
+    };
+    brand.prepend(menuBtn);
+  }
+
+  const rightBar = header.children[1];
+  if (rightBar) {
+    const netPill = document.createElement("span");
+    netPill.id = "erpNetPill";
+    netPill.className = "erp-net-pill" + (navigator.onLine ? "" : " offline");
+    netPill.textContent = navigator.onLine ? "🟢 Online" : "🟠 Offline";
+
+    const searchBtn = document.createElement("button");
+    searchBtn.type = "button";
+    searchBtn.className = "erp-shell-btn";
+    searchBtn.innerHTML = "🔍 Search";
+    searchBtn.title = "Global Search (Ctrl+K)";
+    searchBtn.onclick = () => {
+      $("erpSearchModal").classList.add("open");
+      $("erpSearchInput").focus();
+      runGlobalSearch($("erpSearchInput").value);
+    };
+
+    const alertBtn = document.createElement("button");
+    alertBtn.type = "button";
+    alertBtn.className = "erp-shell-btn";
+    alertBtn.innerHTML = `🔔 <span class="erp-badge-count hidden" id="erpAlertCount">0</span>`;
+    alertBtn.title = "Notifications & Backup Alerts";
+    alertBtn.onclick = () => {
+      renderAlertsModal();
+      $("erpAlertsModal").classList.add("open");
+    };
+
+    const rbBtn = document.createElement("button");
+    rbBtn.type = "button";
+    rbBtn.className = "erp-shell-btn";
+    rbBtn.innerHTML = `🗑️ <span class="erp-badge-count hidden" id="erpRecycleCount">0</span>`;
+    rbBtn.title = "Recycle Bin";
+    rbBtn.onclick = () => {
+      renderRecycleBinModal();
+      $("erpRecycleModal").classList.add("open");
+    };
+
+    const installBtn = document.createElement("button");
+    installBtn.type = "button";
+    installBtn.id = "erpInstallBtn";
+    installBtn.className = "erp-shell-btn erp-install-btn hidden";
+    installBtn.innerHTML = "📲 Install App";
+    installBtn.onclick = async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      installBtn.classList.add("hidden");
+    };
+
+    rightBar.prepend(installBtn);
+    rightBar.prepend(rbBtn);
+    rightBar.prepend(alertBtn);
+    rightBar.prepend(searchBtn);
+    rightBar.prepend(netPill);
+  }
+
+  const navGroups = [
+    {
+      label: "Overview",
+      links: [["index.html", "🏠", "Executive Dashboard", "dashboard"]]
+    },
+    {
+      label: "Business Documents",
+      links: [
+        ["quotation.html", "📄", "Quotation Maker", "quotation"],
+        ["invoice.html", "🧾", "Tax Invoice", "invoice"],
+        ["proforma-invoice.html", "📋", "Proforma Invoice", "proformaInvoice"],
+        ["purchase-order.html", "📦", "Purchase Order", "purchaseOrder"],
+        ["delivery-challan.html", "🚚", "Delivery Challan", "deliveryChallan"]
+      ]
+    },
+    {
+      label: "Business Management",
+      links: [
+        ["inventory.html", "📊", "Inventory & Stock", "inventory"],
+        ["accounts.html", "💰", "Accounts & Payments", "accounts"],
+        ["fbr-invoice.html", "🇵🇰", "FBR Digital Invoice", "fbr"],
+        ["crm.html", "👥", "CRM Pipeline", "crm"],
+        ["production.html", "🏭", "Production & Job Card", "production"]
+      ]
+    },
+    {
+      label: "HR & Finance",
+      links: [
+        ["salary-slip.html", "👨‍💼", "Salary Slip", "salary"],
+        ["expense-voucher.html", "🧾", "Expense Voucher", "expense"],
+        ["cash-receipt.html", "💵", "Cash Receipt / Raseed", "receipt"],
+        ["cheque-print.html", "🏦", "Cheque Printing", "cheque"],
+        ["attendance-sheet.html", "📅", "Attendance Sheet", "attendance"]
+      ]
+    }
+  ];
+
+  const backdrop = document.createElement("div");
+  backdrop.id = "erpSidebarBackdrop";
+  backdrop.className = "erp-sidebar-backdrop";
+  backdrop.onclick = () => {
+    $("erpSidebar").classList.remove("open");
+    backdrop.classList.remove("open");
+  };
+
+  const sidebar = document.createElement("aside");
+  sidebar.id = "erpSidebar";
+  sidebar.className = "erp-sidebar";
+  sidebar.innerHTML = `
+    <div class="erp-sidebar-head">
+      <strong>🏢 ERP Suite (15 Modules)</strong>
+      <button type="button" class="erp-modal-close" id="erpCloseSidebarBtn">✕</button>
+    </div>
+    ${navGroups.map(g => `
+      <div class="erp-sidebar-group">
+        <div class="erp-sidebar-label">${g.label}</div>
+        ${g.links.map(([href, icon, title, mod]) => `
+          <a href="${href}" class="${currentModule === mod ? "active" : ""}"><span>${icon}</span><span>${title}</span></a>
+        `).join("")}
+      </div>
+    `).join("")}
+  `;
+
+  const modals = document.createElement("div");
+  modals.innerHTML = `
+    <div class="erp-modal-overlay" id="erpSearchModal">
+      <div class="erp-modal-box">
+        <div class="erp-modal-header">
+          <h3>🔍 Global Search (Invoices, Quotes, Customers, Stock)</h3>
+          <button type="button" class="erp-modal-close" onclick="document.getElementById('erpSearchModal').classList.remove('open')">✕</button>
+        </div>
+        <div class="erp-modal-body">
+          <input type="text" id="erpSearchInput" placeholder="Type customer, invoice #, product, SKU, lead..." style="margin-bottom:12px;">
+          <div id="erpSearchResults"></div>
+        </div>
+      </div>
+    </div>
+    <div class="erp-modal-overlay" id="erpAlertsModal">
+      <div class="erp-modal-box">
+        <div class="erp-modal-header">
+          <h3>🔔 System Alerts &amp; Backup Reminders</h3>
+          <button type="button" class="erp-modal-close" onclick="document.getElementById('erpAlertsModal').classList.remove('open')">✕</button>
+        </div>
+        <div class="erp-modal-body" id="erpAlertsBody"></div>
+      </div>
+    </div>
+    <div class="erp-modal-overlay" id="erpRecycleModal">
+      <div class="erp-modal-box">
+        <div class="erp-modal-header">
+          <h3>🗑️ Recycle Bin (Restore Deleted Records)</h3>
+          <button type="button" class="erp-modal-close" onclick="document.getElementById('erpRecycleModal').classList.remove('open')">✕</button>
+        </div>
+        <div class="erp-modal-body" id="erpRecycleBody"></div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(sidebar);
+  document.body.appendChild(modals);
+
+  $("erpCloseSidebarBtn").onclick = () => {
+    sidebar.classList.remove("open");
+    backdrop.classList.remove("open");
+  };
+  $("erpSearchInput").addEventListener("input", e => runGlobalSearch(e.target.value));
+  document.addEventListener("keydown", e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      $("erpSearchModal").classList.add("open");
+      $("erpSearchInput").focus();
+      runGlobalSearch($("erpSearchInput").value);
+    }
+    if (e.key === "Escape") {
+      ["erpSearchModal", "erpAlertsModal", "erpRecycleModal"].forEach(id => $(id) && $(id).classList.remove("open"));
+      sidebar.classList.remove("open");
+      backdrop.classList.remove("open");
+    }
+  });
+
+  window.addEventListener("online", () => {
+    const p = $("erpNetPill");
+    if (p) { p.className = "erp-net-pill"; p.textContent = "🟢 Online"; }
+  });
+  window.addEventListener("offline", () => {
+    const p = $("erpNetPill");
+    if (p) { p.className = "erp-net-pill offline"; p.textContent = "🟠 Offline"; }
+  });
+
+  updateShellBadges();
+
+  const bInfo = getBackupStatusInfo();
+  if (bInfo.due && !sessionStorage.getItem("erp_backup_toast_dismissed")) {
+    const toast = document.createElement("div");
+    toast.id = "erpBackupToast";
+    toast.className = "erp-toast-reminder";
+    toast.innerHTML = `
+      <div style="font-weight:800;margin-bottom:4px;">💾 Backup Reminder</div>
+      <div style="color:#cbd5e1;margin-bottom:8px;">${bInfo.last ? `Last backup was ${bInfo.daysAgo} days ago.` : "Save a JSON backup to protect your offline data."}</div>
+      <div style="display:flex;gap:8px;">
+        <button type="button" onclick="exportCompleteBackup()" style="padding:5px 10px;font-size:11px;margin:0;width:auto;">Download Backup</button>
+        <button type="button" onclick="sessionStorage.setItem('erp_backup_toast_dismissed','1');this.closest('.erp-toast-reminder').remove();" class="btn-secondary" style="padding:5px 10px;font-size:11px;margin:0;width:auto;">Later</button>
+      </div>
+    `;
+    document.body.appendChild(toast);
+  }
+}
+
+function registerPwaShell() {
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    if ($("erpInstallBtn")) $("erpInstallBtn").classList.remove("hidden");
+  });
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }
+}
+
+function renderExecutiveDashboard() {
+  const grid = $("execKpiGrid");
+  if (!grid) return;
+  const today = getTodayIso();
+  const monthPrefix = today.slice(0, 7);
+  if ($("execKpiMonth")) {
+    const [yr, mo] = monthPrefix.split("-");
+    const mn = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][Number(mo) - 1] || mo;
+    $("execKpiMonth").textContent = `${mn} ${yr}`;
+  }
+
+  let todaySales = 0;
+  let monthlyRevenue = 0;
+  let totalExpenses = 0;
+  let customerOutstanding = 0;
+
+  (managementData.accounts || []).forEach(r => {
+    const amt = Number(r.amount || 0);
+    if (r.type === "receipt") {
+      if (r.date === today) todaySales += amt;
+      if (String(r.date || "").startsWith(monthPrefix)) monthlyRevenue += amt;
+    } else if (r.type === "expense" || r.type === "payment") {
+      if (String(r.date || "").startsWith(monthPrefix)) totalExpenses += amt;
+    }
+  });
+
+  if (moduleData.invoice) {
+    const invTotal = calcDocGrandTotal(moduleData.invoice);
+    const invPaid = Number(moduleData.invoice.amountPaid || 0);
+    const invDate = moduleData.invoice.date || today;
+    if (invDate === today) todaySales += invTotal;
+    if (String(invDate).startsWith(monthPrefix) && !(managementData.accounts || []).some(a => a.refNo === moduleData.invoice.number)) {
+      monthlyRevenue += invTotal;
+    }
+    if (moduleData.invoice.status !== "PAID") {
+      customerOutstanding += Math.max(0, invTotal - invPaid);
+    }
+  }
+  if (moduleData.expense) {
+    const expDate = moduleData.expense.date || today;
+    if (String(expDate).startsWith(monthPrefix)) {
+      totalExpenses += calcDocGrandTotal(moduleData.expense);
+    }
+  }
+
+  const netProfit = monthlyRevenue - totalExpenses;
+  const lowStockCount = (managementData.inventory || []).filter(i => Number(i.qty || 0) <= Number(i.reorderLevel || 0)).length;
+
+  const cards = [
+    { label: "Today's Sales", value: "Rs. " + money(todaySales), sub: today, color: "#0284c7", bg: "#f0f9ff", href: "invoice.html" },
+    { label: "Monthly Revenue", value: "Rs. " + money(monthlyRevenue), sub: "This Month", color: "#059669", bg: "#ecfdf5", href: "accounts.html" },
+    { label: "Total Expenses", value: "Rs. " + money(totalExpenses), sub: "Vouchers & Outflow", color: "#dc2626", bg: "#fef2f2", href: "expense-voucher.html" },
+    { label: "Net Profit", value: (netProfit < 0 ? "-Rs. " : "Rs. ") + money(Math.abs(netProfit)), sub: netProfit >= 0 ? "Profitable" : "Deficit", color: netProfit >= 0 ? "#166534" : "#b91c1c", bg: netProfit >= 0 ? "#f0fdf4" : "#fef2f2", href: "accounts.html" },
+    { label: "Customer Outstanding", value: "Rs. " + money(customerOutstanding), sub: "Receivables Due", color: "#d97706", bg: "#fffbeb", href: "invoice.html" },
+    { label: "Low Stock Products", value: String(lowStockCount), sub: lowStockCount > 0 ? "Reorder Needed" : "All Stock Healthy", color: lowStockCount > 0 ? "#dc2626" : "#059669", bg: lowStockCount > 0 ? "#fef2f2" : "#ecfdf5", href: "inventory.html" }
+  ];
+
+  grid.innerHTML = cards.map(c => `
+    <a href="${c.href}" style="text-decoration:none;background:#ffffff;border:1px solid #cbd5e1;border-left:4px solid ${c.color};border-radius:10px;padding:14px 16px;box-shadow:0 2px 8px rgba(15,23,42,0.05);display:block;">
+      <div style="font-size:11.5px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">${c.label}</div>
+      <div style="font-size:20px;font-weight:900;color:${c.color};margin:6px 0 4px;">${c.value}</div>
+      <div style="font-size:11px;font-weight:600;color:#475569;background:${c.bg};display:inline-block;padding:2px 8px;border-radius:999px;">${c.sub}</div>
+    </a>
+  `).join("");
+}
+
+async function hydrateFromIndexedDb() {
+  const idbData = await idbGet(APP_CONFIG.storageKey);
+  if (idbData && typeof idbData === "object") {
+    const lsRaw = localStorage.getItem(APP_CONFIG.storageKey);
+    let lsUpdated = 0;
+    try { lsUpdated = lsRaw ? (JSON.parse(lsRaw).updatedAt || 0) : 0; } catch (e) {}
+    if (!lsRaw || (idbData.updatedAt && idbData.updatedAt > lsUpdated)) {
+      applyParsedState(idbData);
+      if ($("companyName")) {
+        syncModuleInputsToState();
+        renderItems();
+        updatePreview();
+      } else {
+        if (currentModule === "dashboard") renderExecutiveDashboard();
+        if (currentModule === "inventory" && typeof renderInventory === "function") renderInventory();
+        if (currentModule === "accounts" && typeof renderAccounts === "function") renderAccounts();
+        if (currentModule === "crm" && typeof renderCrm === "function") renderCrm();
+      }
+      updateShellBadges();
+    }
+  } else if (localStorage.getItem(APP_CONFIG.storageKey)) {
+    writeStorageState();
+  }
 }
 
 function initPage() {
@@ -3349,10 +4101,15 @@ function initPage() {
     bindEditorEvents();
   } else {
     bindBackupControls("dashBackupBtn", "dashRestoreBtn", "dashRestoreFile");
+    renderExecutiveDashboard();
     initInventoryPage();
     initAccountsPage();
     initCrmPage();
   }
+  window.addEventListener("beforeprint", () => { if ($("companyName")) recordDocumentHistory(); });
+  injectEnterpriseShell();
+  registerPwaShell();
+  hydrateFromIndexedDb();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);
