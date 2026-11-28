@@ -749,7 +749,10 @@ function updatePreview() {
   document.documentElement.style.setProperty("--primary", primaryColor);
 
   const paper = $("paper");
-  if (m.items.length >= 6) {
+  // ✅ FIX: Production module ka moduleData nahi hota (m = undefined hota hai),
+  // isliye m.items.length crash karta tha — logo/stamp/watermark apply nahi hote the.
+  // Optional chaining se safe kar diya.
+  if ((m?.items?.length ?? 0) >= 6) {
     paper.classList.add("auto-compact");
   } else {
     paper.classList.remove("auto-compact");
