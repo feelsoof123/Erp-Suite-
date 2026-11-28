@@ -2578,10 +2578,41 @@ function bindEditorEvents() {
   }
 
   if ($("factoryResetBtn")) {
-    $("factoryResetBtn").addEventListener("click", () => {
-      if (prompt("Type RESET to wipe all data:") === "RESET") {
+    $("factoryResetBtn").addEventListener("click", async () => {
+      const confirmation = prompt("Type RESET to permanently erase all ERP data from this browser:");
+      if (confirmation !== "RESET") return;
+      if (!confirm("FINAL WARNING: This will erase company details, uploaded logos/signatures, documents, customers, suppliers, inventory and all saved ERP records on this browser. Continue?")) return;
+
+      const button = $("factoryResetBtn");
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Resetting...";
+      }
+
+      try {
+        // Clear IndexedDB first: the ERP stores its primary saved state here.
+        // Keep the database itself so open connections do not block deletion.
+        const db = await openErpDb();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.storeName, "readwrite");
+          tx.objectStore(APP_CONFIG.storeName).clear();
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error || new Error("Could not clear ERP IndexedDB storage."));
+          tx.onabort = () => reject(tx.error || new Error("ERP storage reset was cancelled."));
+        });
+        db.close();
+
+        // Clear local settings, counters, backup timestamps and cached state.
         localStorage.clear();
+        alert("Factory Reset completed. The ERP will now restart with fresh default data.");
         location.reload();
+      } catch (error) {
+        console.error("Factory Reset failed:", error);
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Factory Reset";
+        }
+        alert("Factory Reset could not finish. Please close other ERP tabs/windows and try again. Details: " + (error && error.message ? error.message : "Storage access error"));
       }
     });
   }
@@ -3819,14 +3850,17 @@ function injectEnterpriseShell() {
     const installBtn = document.createElement("button");
     installBtn.type = "button";
     installBtn.id = "erpInstallBtn";
-    installBtn.className = "erp-shell-btn erp-install-btn hidden";
+    installBtn.className = "erp-shell-btn erp-install-btn";
     installBtn.innerHTML = "📲 Install App";
     installBtn.onclick = async () => {
-      if (!deferredInstallPrompt) return;
+      if (!deferredInstallPrompt) {
+        alert("App install ke liye Chrome/Edge ka menu (⋮) kholen aur 'Install app' ya 'Install this site as an app' select karein. Agar option na aaye to website HTTPS par kholen aur browser update/reload karein.");
+        return;
+      }
       deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
+      const choice = await deferredInstallPrompt.userChoice;
       deferredInstallPrompt = null;
-      installBtn.classList.add("hidden");
+      if (choice && choice.outcome === "accepted") installBtn.classList.add("hidden");
     };
 
     rightBar.prepend(installBtn);
@@ -3989,6 +4023,10 @@ function registerPwaShell() {
     e.preventDefault();
     deferredInstallPrompt = e;
     if ($("erpInstallBtn")) $("erpInstallBtn").classList.remove("hidden");
+  });
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    if ($("erpInstallBtn")) $("erpInstallBtn").classList.add("hidden");
   });
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
