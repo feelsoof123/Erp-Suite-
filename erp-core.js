@@ -290,6 +290,9 @@ const moduleData = {
   }
 };
 
+// Immutable clean templates used by Reset Active Document.
+// Keep these separate from live moduleData so user edits never alter the defaults.
+const DEFAULT_MODULE_DATA = JSON.parse(JSON.stringify(moduleData));
 
 // QUOTATION ATTACHMENTS ENGINE
 function getQuotationAttachments() {
@@ -2390,6 +2393,186 @@ window.closeOtherSuiteCategory = function(openCategory) {
   });
 };
 
+// RESET CONTROLS — delegated from document so they work on every page and
+// regardless of whether the editor-only companyName element exists.
+function showResetConfirmation({ title, message, requireText = false, confirmLabel = "Continue" }) {
+  return new Promise(resolve => {
+    const dialog = document.createElement("dialog");
+    dialog.setAttribute("aria-labelledby", "erpResetDialogTitle");
+    dialog.style.cssText = "width:min(92vw,440px);border:0;border-radius:14px;padding:22px;box-shadow:0 18px 55px rgba(0,0,0,.28);color:#172033;font:14px/1.5 Arial,sans-serif;";
+    const heading = document.createElement("h2");
+    heading.id = "erpResetDialogTitle";
+    heading.textContent = title;
+    heading.style.cssText = "margin:0 0 10px;font-size:19px;";
+    const body = document.createElement("p");
+    body.textContent = message;
+    body.style.cssText = "margin:0 0 16px;color:#475569;";
+    dialog.append(heading, body);
+
+    let input = null;
+    if (requireText) {
+      const label = document.createElement("label");
+      label.textContent = 'Type RESET to confirm:';
+      label.style.cssText = "display:block;font-weight:700;margin:0 0 6px;";
+      input = document.createElement("input");
+      input.type = "text";
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.placeholder = "RESET";
+      input.style.cssText = "box-sizing:border-box;width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:18px;";
+      dialog.append(label, input);
+    }
+
+    const actions = document.createElement("div");
+    actions.style.cssText = "display:flex;justify-content:flex-end;gap:9px;";
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.textContent = "Cancel";
+    cancel.style.cssText = "padding:9px 14px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;";
+    const confirm = document.createElement("button");
+    confirm.type = "button";
+    confirm.textContent = confirmLabel;
+    confirm.style.cssText = "padding:9px 14px;border:0;border-radius:8px;background:#b91c1c;color:#fff;font-weight:700;cursor:pointer;";
+    if (requireText) confirm.disabled = true;
+    actions.append(cancel, confirm);
+    dialog.append(actions);
+    document.body.append(dialog);
+
+    let settled = false;
+    const finish = value => {
+      if (settled) return;
+      settled = true;
+      try { dialog.close(); } catch (_) {}
+      dialog.remove();
+      resolve(value);
+    };
+    cancel.addEventListener("click", () => finish(false));
+    confirm.addEventListener("click", () => finish(!requireText || input.value.trim() === "RESET"));
+    if (input) input.addEventListener("input", () => { confirm.disabled = input.value.trim() !== "RESET"; });
+    dialog.addEventListener("cancel", event => { event.preventDefault(); finish(false); });
+    dialog.addEventListener("click", event => { if (event.target === dialog) finish(false); });
+    dialog.showModal();
+    if (input) input.focus();
+  });
+}
+
+function resetActiveDocument() {
+  if (currentModule === "production") {
+    const job = getActiveProductionJob();
+    if (!job) throw new Error("No active Job Card was found.");
+    job.bom = [{ material: "Primary Raw Material", qty: 1, unit: "Units", cost: 0 }];
+    job.notes = "";
+    syncProductionInputsFromState();
+    renderBomEditors();
+  } else {
+    const defaults = DEFAULT_MODULE_DATA[currentModule];
+    const target = moduleData[currentModule];
+    if (!defaults || !target) throw new Error("This document module does not have reset defaults.");
+    Object.keys(target).forEach(key => delete target[key]);
+    Object.assign(target, JSON.parse(JSON.stringify(defaults)));
+    syncModuleInputsToState();
+    if (currentModule === "quotation" && typeof renderQuotationAttachmentsEditor === "function") renderQuotationAttachmentsEditor();
+    if (typeof renderItems === "function") renderItems();
+  }
+  updatePreview();
+  saveData();
+}
+
+async function factoryResetErpData() {
+  // This ERP owns a dedicated IndexedDB database. Clear its object store,
+  // but remove only this application's LocalStorage keys (not other GitHub Pages apps).
+  const db = await openErpDb();
+  try {
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(APP_CONFIG.storeName, "readwrite");
+      tx.objectStore(APP_CONFIG.storeName).clear();
+      tx.oncomplete = resolve;
+      tx.onerror = () => reject(tx.error || new Error("Could not clear ERP IndexedDB storage."));
+      tx.onabort = () => reject(tx.error || new Error("ERP IndexedDB reset was aborted."));
+    });
+  } finally {
+    db.close();
+  }
+
+  [APP_CONFIG.storageKey, APP_CONFIG.countersKey, APP_CONFIG.recycleKey,
+   APP_CONFIG.lastBackupKey, APP_CONFIG.saveCountKey].forEach(key => localStorage.removeItem(key));
+
+  // Clear in-memory state as well, so a blocked/failed reload cannot leave stale data visible.
+  companyState = {
+    name: "", address: "", phone: "", email: "", website: "", brandColor: "#174a83",
+    logoData: "", stampData: "", signatureData: "", watermarkData: "", watermarkOn: true,
+    watermarkMode: "image", watermarkText: "", watermarkTextColor: "#999999",
+    watermarkTextSize: 55, watermarkOpacity: 7, stampOn: true, signatureOn: true
+  };
+  logoData = stampData = signatureData = watermarkData = "";
+  customers = [];
+  suppliers = [];
+  recycleBin = [];
+  Object.keys(moduleData).forEach(key => {
+    Object.keys(moduleData[key]).forEach(field => delete moduleData[key][field]);
+    Object.assign(moduleData[key], JSON.parse(JSON.stringify(DEFAULT_MODULE_DATA[key])));
+  });
+  managementData = createDefaultManagementData();
+}
+
+function bindResetControls() {
+  if (document.documentElement.dataset.erpResetControlsBound === "true") return;
+  document.documentElement.dataset.erpResetControlsBound = "true";
+
+  document.addEventListener("click", async event => {
+    const activeButton = event.target.closest("#resetCurrentDocBtn");
+    const factoryButton = event.target.closest("#factoryResetBtn");
+    if (!activeButton && !factoryButton) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const button = activeButton || factoryButton;
+    if (button.disabled) return;
+
+    if (activeButton) {
+      const ok = await showResetConfirmation({
+        title: "Reset Active Document?",
+        message: currentModule === "production"
+          ? "The active Job Card BOM and notes will return to their default values. Other Job Card details will remain unchanged."
+          : `All fields and line items in the active ${currentModule} document will return to their original defaults. Other documents and company records will not be affected.`,
+        confirmLabel: "Reset Document"
+      });
+      if (!ok) return;
+      try {
+        resetActiveDocument();
+        button.blur();
+        if (typeof showToast === "function") showToast("Active document reset successfully.");
+        else if ($("saveStatus")) $("saveStatus").textContent = "✓ Active document reset";
+      } catch (error) {
+        console.error("Active document reset failed:", error);
+        alert("Could not reset this document: " + (error.message || "Unknown error"));
+      }
+      return;
+    }
+
+    const ok = await showResetConfirmation({
+      title: "Factory Reset ERP?",
+      message: "This permanently clears ERP data saved by this app in this browser, including company profile, documents, customers, suppliers, inventory, accounts, CRM and production records. It does not delete files from GitHub Pages or affect other websites.",
+      requireText: true,
+      confirmLabel: "Erase All ERP Data"
+    });
+    if (!ok) return;
+
+    button.disabled = true;
+    const oldText = button.textContent;
+    button.textContent = "Resetting…";
+    try {
+      await factoryResetErpData();
+      // Replace the current page state with clean defaults after storage is cleared.
+      window.location.reload();
+    } catch (error) {
+      console.error("Factory Reset failed:", error);
+      button.disabled = false;
+      button.textContent = oldText || "Factory Reset";
+      alert("Factory Reset could not finish. Please close other ERP tabs and try again. Details: " + (error && error.message ? error.message : "Storage access error"));
+    }
+  });
+}
+
 // BIND EVENTS ON DOCUMENT PAGES
 function bindEditorEvents() {
   if (!$("companyName")) return;
@@ -2551,71 +2734,7 @@ function bindEditorEvents() {
 
   bindBackupControls("backupBtn", "restoreBtn", "restoreFile");
 
-  if ($("resetCurrentDocBtn")) {
-    $("resetCurrentDocBtn").addEventListener("click", () => {
-      if (currentModule === "production") {
-        if (confirm("Reset active Job Card BOM & notes?")) {
-          const job = getActiveProductionJob();
-          if (job) {
-            job.bom = [{ material: "Primary Raw Material", qty: 1, unit: "Units", cost: 0 }];
-            job.notes = "";
-            syncProductionInputsFromState();
-            renderBomEditors();
-            updatePreview();
-            saveData();
-          }
-        }
-        return;
-      }
-      if (confirm(`Reset active ${currentModule} document data?`)) {
-        moduleData[currentModule].items = [{ description: "Sample Product / Service", unit: "Nos", unitQty: 1, itemQty: 1, calcMode: "manual", rate: 1000 }];
-        syncModuleInputsToState();
-        renderItems();
-        updatePreview();
-        saveData();
-      }
-    });
-  }
 
-  if ($("factoryResetBtn")) {
-    $("factoryResetBtn").addEventListener("click", async () => {
-      const confirmation = prompt("Type RESET to permanently erase all ERP data from this browser:");
-      if (confirmation !== "RESET") return;
-      if (!confirm("FINAL WARNING: This will erase company details, uploaded logos/signatures, documents, customers, suppliers, inventory and all saved ERP records on this browser. Continue?")) return;
-
-      const button = $("factoryResetBtn");
-      if (button) {
-        button.disabled = true;
-        button.textContent = "Resetting...";
-      }
-
-      try {
-        // Clear IndexedDB first: the ERP stores its primary saved state here.
-        // Keep the database itself so open connections do not block deletion.
-        const db = await openErpDb();
-        await new Promise((resolve, reject) => {
-          const tx = db.transaction(APP_CONFIG.storeName, "readwrite");
-          tx.objectStore(APP_CONFIG.storeName).clear();
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error || new Error("Could not clear ERP IndexedDB storage."));
-          tx.onabort = () => reject(tx.error || new Error("ERP storage reset was cancelled."));
-        });
-        db.close();
-
-        // Clear local settings, counters, backup timestamps and cached state.
-        localStorage.clear();
-        alert("Factory Reset completed. The ERP will now restart with fresh default data.");
-        location.reload();
-      } catch (error) {
-        console.error("Factory Reset failed:", error);
-        if (button) {
-          button.disabled = false;
-          button.textContent = "Factory Reset";
-        }
-        alert("Factory Reset could not finish. Please close other ERP tabs/windows and try again. Details: " + (error && error.message ? error.message : "Storage access error"));
-      }
-    });
-  }
 }
 
 // =====================================
@@ -4125,6 +4244,7 @@ async function hydrateFromIndexedDb() {
 }
 
 function initPage() {
+  bindResetControls();
   loadData();
   normalizeAllItems();
   initCounters();
