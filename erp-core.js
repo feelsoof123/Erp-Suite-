@@ -182,6 +182,102 @@ const moduleData = {
     discount: 0,
     tax: 0,
     terms: "1. This proforma invoice is valid for 20 days.\n2. Production will commence upon confirmation of wire transfer.\n3. Freight & customs duties as per trade terms."
+  },
+  // ===== SALARY SLIP MODULE =====
+  salary: {
+    number: "",
+    month: "",
+    payDate: "",
+    empName: "Muhammad Ali",
+    empId: "EMP-001",
+    designation: "Staff",
+    dept: "General",
+    doj: "",
+    bankAc: "",
+    basic: 30000,
+    hra: 0,
+    conveyance: 0,
+    medical: 0,
+    special: 0,
+    overtime: 0,
+    taxDeduct: 0,
+    eobi: 0,
+    pessi: 0,
+    advance: 0,
+    otherDeduct: 0,
+    payMethod: "Bank Transfer",
+    items: [],
+    discount: 0,
+    tax: 0,
+    terms: "This salary slip is a confidential document. Please retain for your records."
+  },
+  // ===== EXPENSE VOUCHER MODULE =====
+  expense: {
+    number: "",
+    date: "",
+    refNo: "",
+    status: "APPROVED",
+    empName: "Muhammad Usman",
+    empId: "EMP-004",
+    dept: "Admin",
+    costCenter: "Head Office",
+    payMethod: "Cash",
+    paidTo: "",
+    approvedBy: "",
+    items: [{ description: "Office Stationery & Supplies", unit: "Lot", unitQty: 1, itemQty: 1, calcMode: "manual", rate: 2500 }],
+    discount: 0,
+    tax: 0,
+    terms: "Expenses incurred for official business purposes. All receipts attached."
+  },
+  // ===== CASH RECEIPT / RASEED MODULE =====
+  receipt: {
+    number: "",
+    date: "",
+    mode: "Cash",
+    ref: "",
+    from: "Walk-in Customer / Party",
+    phone: "",
+    address: "",
+    amount: 10000,
+    balance: 0,
+    purpose: "Payment received against goods / services.",
+    receivedBy: "Cashier",
+    items: [],
+    discount: 0,
+    tax: 0,
+    terms: "Thank you for your business. Please keep this receipt for your records."
+  },
+  // ===== CHEQUE PRINTING MODULE =====
+  cheque: {
+    number: "",
+    date: "",
+    bank: "HBL (Habib Bank Limited)",
+    payee: "Al-Noor Traders",
+    amount: 50000,
+    acPayee: true,
+    blankMode: false,
+    accountNo: "",
+    items: [],
+    discount: 0,
+    tax: 0,
+    terms: "Payment against supplier invoice / order."
+  },
+  // ===== ATTENDANCE SHEET MODULE =====
+  attendance: {
+    number: "",
+    month: "",
+    dept: "All Staff",
+    workDays: 26,
+    supervisor: "HR Manager",
+    staff: [
+      { name: "Muhammad Ali", designation: "Accountant", present: 25, absent: 1, leave: 0, late: 1, ot: 4 },
+      { name: "Usman Tariq", designation: "Sales Executive", present: 24, absent: 0, leave: 2, late: 0, ot: 2 },
+      { name: "Bilal Ahmed", designation: "Technician", present: 26, absent: 0, leave: 0, late: 2, ot: 8 }
+    ],
+    items: [],
+    discount: 0,
+    tax: 0,
+    terms: "Monthly attendance verified for payroll processing."
   }
 };
 
@@ -458,6 +554,65 @@ function initCounters() {
   if (!moduleData.purchaseOrder.number) moduleData.purchaseOrder.number = getSequenceNumber("PO");
   if (!moduleData.deliveryChallan.number) moduleData.deliveryChallan.number = getSequenceNumber("DC");
   if (!moduleData.proformaInvoice.number) moduleData.proformaInvoice.number = getSequenceNumber("PI");
+  if (moduleData.salary && !moduleData.salary.number) moduleData.salary.number = getSequenceNumber("SAL");
+  if (moduleData.expense && !moduleData.expense.number) moduleData.expense.number = getSequenceNumber("EXP");
+  if (moduleData.receipt && !moduleData.receipt.number) moduleData.receipt.number = getSequenceNumber("REC");
+  if (moduleData.cheque && !moduleData.cheque.number) moduleData.cheque.number = getSequenceNumber("CHQ");
+  if (moduleData.attendance && !moduleData.attendance.number) moduleData.attendance.number = getSequenceNumber("ATT");
+}
+
+function numberToWordsPKR(num) {
+  const n = Math.floor(Number(num) || 0);
+  if (n <= 0) return "Zero Rupees Only";
+  const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+    "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+  const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  function twoDigits(v) {
+    if (v < 20) return ones[v];
+    return tens[Math.floor(v / 10)] + (v % 10 ? " " + ones[v % 10] : "");
+  }
+  function threeDigits(v) {
+    if (v === 0) return "";
+    if (v < 100) return twoDigits(v);
+    return ones[Math.floor(v / 100)] + " Hundred" + (v % 100 ? " " + twoDigits(v % 100) : "");
+  }
+  const parts = [];
+  const crore = Math.floor(n / 10000000);
+  const lakh = Math.floor((n % 10000000) / 100000);
+  const thousand = Math.floor((n % 100000) / 1000);
+  const rest = n % 1000;
+  if (crore) parts.push(threeDigits(crore) + " Crore");
+  if (lakh) parts.push(twoDigits(lakh) + " Lac");
+  if (thousand) parts.push(twoDigits(thousand) + " Thousand");
+  if (rest) parts.push(threeDigits(rest));
+  return parts.join(" ") + " Rupees Only";
+}
+
+function renderAttendanceEditors() {
+  const m = moduleData.attendance;
+  const wrap = $("attStaffEditors");
+  if (!m || !wrap) return;
+  if (!Array.isArray(m.staff)) m.staff = [];
+  if ($("attStaffCount")) $("attStaffCount").textContent = `(${m.staff.length} Staff)`;
+  wrap.innerHTML = m.staff.map((s, i) => `
+    <div class="item-editor" style="padding:10px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <strong style="font-size:12px;color:var(--primary);">Staff #${i + 1}</strong>
+        <button type="button" class="btn-danger" data-att-remove="${i}" style="padding:2px 8px;font-size:11px;width:auto;margin:0;">✕ Remove</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;"><label>Name</label><input type="text" data-att-i="${i}" data-att-key="name" value="${safeText(s.name || "")}"></div>
+        <div style="flex:1;"><label>Designation</label><input type="text" data-att-i="${i}" data-att-key="designation" value="${safeText(s.designation || "")}"></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:4px;">
+        <div style="flex:1;"><label>Present</label><input type="number" min="0" max="31" data-att-i="${i}" data-att-key="present" value="${Number(s.present) || 0}"></div>
+        <div style="flex:1;"><label>Absent</label><input type="number" min="0" max="31" data-att-i="${i}" data-att-key="absent" value="${Number(s.absent) || 0}"></div>
+        <div style="flex:1;"><label>Leave</label><input type="number" min="0" max="31" data-att-i="${i}" data-att-key="leave" value="${Number(s.leave) || 0}"></div>
+        <div style="flex:1;"><label>Late</label><input type="number" min="0" max="31" data-att-i="${i}" data-att-key="late" value="${Number(s.late) || 0}"></div>
+        <div style="flex:1;"><label>OT (Hrs)</label><input type="number" min="0" step="any" data-att-i="${i}" data-att-key="ot" value="${Number(s.ot) || 0}"></div>
+      </div>
+    </div>
+  `).join("");
 }
 
 // SYNC FORM INPUTS WITH ACTIVE MODULE
@@ -534,6 +689,72 @@ function syncModuleInputsToState() {
     if ($("proformaCustomerPhone")) $("proformaCustomerPhone").value = m.clientPhone || "";
     if ($("proformaCustomerAddress")) $("proformaCustomerAddress").value = m.clientAddress || "";
     if ($("proformaBankDetails")) $("proformaBankDetails").value = m.bankDetails || "";
+  } else if (currentModule === "salary") {
+    if ($("salarySlipNumber")) $("salarySlipNumber").value = m.number || "";
+    if ($("salaryMonth")) $("salaryMonth").value = m.month || "";
+    if ($("salaryPayDate")) $("salaryPayDate").value = m.payDate || new Date().toISOString().slice(0, 10);
+    if ($("salaryEmpName")) $("salaryEmpName").value = m.empName || "";
+    if ($("salaryEmpId")) $("salaryEmpId").value = m.empId || "";
+    if ($("salaryDesignation")) $("salaryDesignation").value = m.designation || "";
+    if ($("salaryDept")) $("salaryDept").value = m.dept || "";
+    if ($("salaryDoj")) $("salaryDoj").value = m.doj || "";
+    if ($("salaryBankAc")) $("salaryBankAc").value = m.bankAc || "";
+    if ($("salaryBasic")) $("salaryBasic").value = m.basic ?? 30000;
+    if ($("salaryHra")) $("salaryHra").value = m.hra || 0;
+    if ($("salaryConveyance")) $("salaryConveyance").value = m.conveyance || 0;
+    if ($("salaryMedical")) $("salaryMedical").value = m.medical || 0;
+    if ($("salarySpecial")) $("salarySpecial").value = m.special || 0;
+    if ($("salaryOvertime")) $("salaryOvertime").value = m.overtime || 0;
+    if ($("salaryTaxD")) $("salaryTaxD").value = m.taxDeduct || 0;
+    if ($("salaryEobi")) $("salaryEobi").value = m.eobi || 0;
+    if ($("salaryPessi")) $("salaryPessi").value = m.pessi || 0;
+    if ($("salaryAdvance")) $("salaryAdvance").value = m.advance || 0;
+    if ($("salaryOtherDeduct")) $("salaryOtherDeduct").value = m.otherDeduct || 0;
+    if ($("salaryPayMethod")) $("salaryPayMethod").value = m.payMethod || "Bank Transfer";
+    if ($("salaryNotes")) $("salaryNotes").value = m.terms || "";
+  } else if (currentModule === "expense") {
+    if ($("expVoucherNumber")) $("expVoucherNumber").value = m.number || "";
+    if ($("expDate")) $("expDate").value = m.date || new Date().toISOString().slice(0, 10);
+    if ($("expRefNo")) $("expRefNo").value = m.refNo || "";
+    if ($("expStatus")) $("expStatus").value = m.status || "APPROVED";
+    if ($("expEmpName")) $("expEmpName").value = m.empName || "";
+    if ($("expEmpId")) $("expEmpId").value = m.empId || "";
+    if ($("expDept")) $("expDept").value = m.dept || "";
+    if ($("expCostCenter")) $("expCostCenter").value = m.costCenter || "";
+    if ($("expPayMethod")) $("expPayMethod").value = m.payMethod || "Cash";
+    if ($("expPaidTo")) $("expPaidTo").value = m.paidTo || "";
+    if ($("expApprovedBy")) $("expApprovedBy").value = m.approvedBy || "";
+  } else if (currentModule === "receipt") {
+    if ($("recNumber")) $("recNumber").value = m.number || "";
+    if ($("recDate")) $("recDate").value = m.date || new Date().toISOString().slice(0, 10);
+    if ($("recMode")) $("recMode").value = m.mode || "Cash";
+    if ($("recRef")) $("recRef").value = m.ref || "";
+    if ($("recFrom")) $("recFrom").value = m.from || "";
+    if ($("recPhone")) $("recPhone").value = m.phone || "";
+    if ($("recAddress")) $("recAddress").value = m.address || "";
+    if ($("recAmount")) $("recAmount").value = m.amount ?? 10000;
+    if ($("recBalance")) $("recBalance").value = m.balance || 0;
+    if ($("recPurpose")) $("recPurpose").value = m.purpose || "";
+    if ($("recReceivedBy")) $("recReceivedBy").value = m.receivedBy || "";
+    if ($("recNotes")) $("recNotes").value = m.terms || "";
+  } else if (currentModule === "cheque") {
+    if ($("chqNumber")) $("chqNumber").value = m.number || "";
+    if ($("chqDate")) $("chqDate").value = m.date || new Date().toISOString().slice(0, 10);
+    if ($("chqBank")) $("chqBank").value = m.bank || "HBL (Habib Bank Limited)";
+    if ($("chqPayee")) $("chqPayee").value = m.payee || "";
+    if ($("chqAmount")) $("chqAmount").value = m.amount ?? 50000;
+    if ($("chqAcPayee")) $("chqAcPayee").checked = m.acPayee !== false;
+    if ($("chqBlankMode")) $("chqBlankMode").checked = !!m.blankMode;
+    if ($("chqAccountNo")) $("chqAccountNo").value = m.accountNo || "";
+    if ($("chqMemo")) $("chqMemo").value = m.terms || "";
+  } else if (currentModule === "attendance") {
+    if ($("attNumber")) $("attNumber").value = m.number || "";
+    if ($("attMonth")) $("attMonth").value = m.month || new Date().toISOString().slice(0, 7);
+    if ($("attDept")) $("attDept").value = m.dept || "";
+    if ($("attWorkDays")) $("attWorkDays").value = m.workDays ?? 26;
+    if ($("attSupervisor")) $("attSupervisor").value = m.supervisor || "";
+    if ($("attNotes")) $("attNotes").value = m.terms || "";
+    renderAttendanceEditors();
   }
 
   if ($("discount")) $("discount").value = m.discount || 0;
@@ -614,6 +835,71 @@ function syncStateFromInputs() {
     m.clientPhone = $("proformaCustomerPhone").value;
     m.clientAddress = $("proformaCustomerAddress").value;
     m.bankDetails = $("proformaBankDetails").value;
+  } else if (currentModule === "salary") {
+    m.number = $("salarySlipNumber") ? $("salarySlipNumber").value : (m.number || "");
+    m.month = $("salaryMonth") ? $("salaryMonth").value : (m.month || "");
+    m.payDate = $("salaryPayDate") ? $("salaryPayDate").value : (m.payDate || "");
+    m.empName = $("salaryEmpName") ? $("salaryEmpName").value : (m.empName || "");
+    m.empId = $("salaryEmpId") ? $("salaryEmpId").value : (m.empId || "");
+    m.designation = $("salaryDesignation") ? $("salaryDesignation").value : (m.designation || "");
+    m.dept = $("salaryDept") ? $("salaryDept").value : (m.dept || "");
+    m.doj = $("salaryDoj") ? $("salaryDoj").value : (m.doj || "");
+    m.bankAc = $("salaryBankAc") ? $("salaryBankAc").value : (m.bankAc || "");
+    m.basic = Math.max(0, Number($("salaryBasic") ? $("salaryBasic").value : 0) || 0);
+    m.hra = Math.max(0, Number($("salaryHra") ? $("salaryHra").value : 0) || 0);
+    m.conveyance = Math.max(0, Number($("salaryConveyance") ? $("salaryConveyance").value : 0) || 0);
+    m.medical = Math.max(0, Number($("salaryMedical") ? $("salaryMedical").value : 0) || 0);
+    m.special = Math.max(0, Number($("salarySpecial") ? $("salarySpecial").value : 0) || 0);
+    m.overtime = Math.max(0, Number($("salaryOvertime") ? $("salaryOvertime").value : 0) || 0);
+    m.taxDeduct = Math.max(0, Number($("salaryTaxD") ? $("salaryTaxD").value : 0) || 0);
+    m.eobi = Math.max(0, Number($("salaryEobi") ? $("salaryEobi").value : 0) || 0);
+    m.pessi = Math.max(0, Number($("salaryPessi") ? $("salaryPessi").value : 0) || 0);
+    m.advance = Math.max(0, Number($("salaryAdvance") ? $("salaryAdvance").value : 0) || 0);
+    m.otherDeduct = Math.max(0, Number($("salaryOtherDeduct") ? $("salaryOtherDeduct").value : 0) || 0);
+    m.payMethod = $("salaryPayMethod") ? $("salaryPayMethod").value : (m.payMethod || "Bank Transfer");
+    m.terms = $("salaryNotes") ? $("salaryNotes").value : (m.terms || "");
+  } else if (currentModule === "expense") {
+    m.number = $("expVoucherNumber") ? $("expVoucherNumber").value : (m.number || "");
+    m.date = $("expDate") ? $("expDate").value : (m.date || "");
+    m.refNo = $("expRefNo") ? $("expRefNo").value : (m.refNo || "");
+    m.status = $("expStatus") ? $("expStatus").value : (m.status || "APPROVED");
+    m.empName = $("expEmpName") ? $("expEmpName").value : (m.empName || "");
+    m.empId = $("expEmpId") ? $("expEmpId").value : (m.empId || "");
+    m.dept = $("expDept") ? $("expDept").value : (m.dept || "");
+    m.costCenter = $("expCostCenter") ? $("expCostCenter").value : (m.costCenter || "");
+    m.payMethod = $("expPayMethod") ? $("expPayMethod").value : (m.payMethod || "Cash");
+    m.paidTo = $("expPaidTo") ? $("expPaidTo").value : (m.paidTo || "");
+    m.approvedBy = $("expApprovedBy") ? $("expApprovedBy").value : (m.approvedBy || "");
+  } else if (currentModule === "receipt") {
+    m.number = $("recNumber") ? $("recNumber").value : (m.number || "");
+    m.date = $("recDate") ? $("recDate").value : (m.date || "");
+    m.mode = $("recMode") ? $("recMode").value : (m.mode || "Cash");
+    m.ref = $("recRef") ? $("recRef").value : (m.ref || "");
+    m.from = $("recFrom") ? $("recFrom").value : (m.from || "");
+    m.phone = $("recPhone") ? $("recPhone").value : (m.phone || "");
+    m.address = $("recAddress") ? $("recAddress").value : (m.address || "");
+    m.amount = Math.max(0, Number($("recAmount") ? $("recAmount").value : 0) || 0);
+    m.balance = Math.max(0, Number($("recBalance") ? $("recBalance").value : 0) || 0);
+    m.purpose = $("recPurpose") ? $("recPurpose").value : (m.purpose || "");
+    m.receivedBy = $("recReceivedBy") ? $("recReceivedBy").value : (m.receivedBy || "");
+    m.terms = $("recNotes") ? $("recNotes").value : (m.terms || "");
+  } else if (currentModule === "cheque") {
+    m.number = $("chqNumber") ? $("chqNumber").value : (m.number || "");
+    m.date = $("chqDate") ? $("chqDate").value : (m.date || "");
+    m.bank = $("chqBank") ? $("chqBank").value : (m.bank || "HBL (Habib Bank Limited)");
+    m.payee = $("chqPayee") ? $("chqPayee").value : (m.payee || "");
+    m.amount = Math.max(0, Number($("chqAmount") ? $("chqAmount").value : 0) || 0);
+    m.acPayee = $("chqAcPayee") ? $("chqAcPayee").checked : true;
+    m.blankMode = $("chqBlankMode") ? $("chqBlankMode").checked : false;
+    m.accountNo = $("chqAccountNo") ? $("chqAccountNo").value : (m.accountNo || "");
+    m.terms = $("chqMemo") ? $("chqMemo").value : (m.terms || "");
+  } else if (currentModule === "attendance") {
+    m.number = $("attNumber") ? $("attNumber").value : (m.number || "");
+    m.month = $("attMonth") ? $("attMonth").value : (m.month || "");
+    m.dept = $("attDept") ? $("attDept").value : (m.dept || "");
+    m.workDays = Math.max(1, Number($("attWorkDays") ? $("attWorkDays").value : 26) || 26);
+    m.supervisor = $("attSupervisor") ? $("attSupervisor").value : (m.supervisor || "");
+    m.terms = $("attNotes") ? $("attNotes").value : (m.terms || "");
   }
 
   if ($("discount")) m.discount = Number($("discount").value) || 0;
@@ -928,6 +1214,328 @@ function updatePreview() {
           ${safeText(m.bankDetails).replace(/\n/g, '<br>')}
         </div>`;
     }
+  } else if (currentModule === "salary") {
+    // ===== SALARY SLIP RENDER =====
+    const gross = (m.basic||0)+(m.hra||0)+(m.conveyance||0)+(m.medical||0)+(m.special||0)+(m.overtime||0);
+    const totalDeduct = (m.taxDeduct||0)+(m.eobi||0)+(m.pessi||0)+(m.advance||0)+(m.otherDeduct||0);
+    const netPay = Math.max(0, gross - totalDeduct);
+
+    badgeText = "SALARY SLIP";
+    metaHtml = `
+      <div><span>Slip #:</span> <strong>${safeText(m.number || "SAL-001")}</strong></div>
+      <div><span>Month:</span> <strong>${safeText(m.month || "")}</strong></div>
+      <div><span>Pay Date:</span> <strong>${safeText(m.payDate || "")}</strong></div>
+    `;
+    clientHeader = "Employee Details";
+    clientName = m.empName || "Employee Name";
+    clientPhone = `ID: <b>${safeText(m.empId||"")}</b>${m.designation ? ` &nbsp;|&nbsp; Designation: <b>${safeText(m.designation)}</b>` : ""}`;
+    clientAddress = `${m.dept ? `Dept: <b>${safeText(m.dept)}</b>` : ""}${m.doj ? ` &nbsp;|&nbsp; DOJ: <b>${safeText(m.doj)}</b>` : ""}`;
+    bottomType = "Confidential — Employee Copy";
+    stampLabel = "Company Stamp";
+    signatureLabel = "Authorized by HR / Management";
+
+    // Earnings & Deductions Table
+    $("previewTitle").textContent = "Live Salary Slip Preview";
+    $("pDocBadge").textContent = badgeText;
+    $("pDocMetaList").innerHTML = metaHtml;
+    $("pStatusContainer").innerHTML = "";
+    $("pClientHeader").textContent = clientHeader;
+    $("pCustomerName").textContent = clientName;
+    $("pCustomerPhone").innerHTML = clientPhone;
+    $("pCustomerAddress").innerHTML = clientAddress;
+    $("pDocBottomType").textContent = bottomType;
+    $("pStampLabel").textContent = stampLabel;
+    $("pSignatureLabel").textContent = signatureLabel;
+    $("pTermsTitle") && ($("pTermsTitle").textContent = "Remarks & Payment Info");
+    $("pTerms").textContent = m.terms || "";
+    renderQuotationAttachmentsPreview();
+
+    $("previewTableHead").innerHTML = `
+      <tr>
+        <th style="width:50%;">Earnings</th>
+        <th style="width:20%;text-align:right;">Amount (Rs.)</th>
+        <th style="width:50%;border-left:2px solid #e2e8f0;">Deductions</th>
+        <th style="text-align:right;">Amount (Rs.)</th>
+      </tr>`;
+    const earningRows = [
+      ["Basic Salary", m.basic||0],
+      ["House Rent Allowance (HRA)", m.hra||0],
+      ["Conveyance / Transport", m.conveyance||0],
+      ["Medical Allowance", m.medical||0],
+      ["Performance / Special", m.special||0],
+      ["Overtime", m.overtime||0],
+    ].filter(r => r[1] > 0);
+    const deductRows = [
+      ["Income Tax / WHT", m.taxDeduct||0],
+      ["EOBI", m.eobi||0],
+      ["PESSI / Social Security", m.pessi||0],
+      ["Advance Recovery", m.advance||0],
+      ["Other Deduction", m.otherDeduct||0],
+    ].filter(r => r[1] > 0);
+    const maxRows = Math.max(earningRows.length, deductRows.length, 1);
+    let tableRows = "";
+    for (let i = 0; i < maxRows; i++) {
+      const e = earningRows[i] || ["", ""];
+      const d = deductRows[i] || ["", ""];
+      tableRows += `<tr>
+        <td>${safeText(e[0])}</td>
+        <td style="text-align:right;font-weight:600;">${e[1] !== "" ? "Rs. "+money(e[1]) : ""}</td>
+        <td style="border-left:2px solid #e2e8f0;color:#b91c1c;">${safeText(d[0])}</td>
+        <td style="text-align:right;font-weight:600;color:#b91c1c;">${d[1] !== "" ? "Rs. "+money(d[1]) : ""}</td>
+      </tr>`;
+    }
+    tableRows += `<tr style="background:#f1f5f9;font-weight:800;border-top:2px solid #cbd5e1;">
+      <td>Total Gross Earnings</td>
+      <td style="text-align:right;">Rs. ${money(gross)}</td>
+      <td style="border-left:2px solid #e2e8f0;">Total Deductions</td>
+      <td style="text-align:right;color:#b91c1c;">Rs. ${money(totalDeduct)}</td>
+    </tr>`;
+    $("previewItems").innerHTML = tableRows;
+    $("pTotalsContainer").style.display = "block";
+    $("pSubtotal").textContent = "Rs. " + money(gross);
+    $("pDiscount").textContent = "Rs. " + money(totalDeduct);
+    $("pTax") && ($("pTax").textContent = "");
+    $("pGrandTotal").textContent = "Rs. " + money(netPay);
+    $("pInvoiceBalanceRows").classList && $("pInvoiceBalanceRows").classList.remove("hidden");
+    $("pAmountPaid").textContent = m.payMethod || "Bank Transfer";
+    $("pBalanceDue").textContent = m.bankAc ? safeText(m.bankAc) : "—";
+
+    // Net Pay highlight box
+    $("pExtraInfoBox").innerHTML = `
+      <div style="background:var(--primary);color:#fff;border-radius:6px;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;margin:10px 0;break-inside:avoid;page-break-inside:avoid;">
+        <div>
+          <div style="font-size:13px;font-weight:700;opacity:0.9;">💵 NET PAY THIS MONTH</div>
+          ${m.payMethod ? `<div style="font-size:10.5px;opacity:0.7;margin-top:3px;">Payment via ${safeText(m.payMethod)}</div>` : ""}
+        </div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:-0.5px;">Rs. ${money(netPay)}</div>
+      </div>`;
+    return;
+
+  } else if (currentModule === "expense") {
+    // ===== EXPENSE VOUCHER RENDER =====
+    badgeText = "EXPENSE VOUCHER";
+    const statusColors = { APPROVED: "status-paid", PENDING: "status-partial", REJECTED: "status-unpaid" };
+    const statusLabels = { APPROVED: "✅ APPROVED", PENDING: "⏳ PENDING", REJECTED: "❌ REJECTED" };
+    statusHtml = `<span class="status-stamp-tag ${statusColors[m.status] || "status-paid"}">${statusLabels[m.status] || m.status}</span>`;
+    metaHtml = `
+      <div><span>Voucher #:</span> <strong>${safeText(m.number || "EXP-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      ${m.refNo ? `<div><span>Ref #:</span> <strong>${safeText(m.refNo)}</strong></div>` : ""}
+    `;
+    clientHeader = "Submitted By";
+    clientName = m.empName || "Employee Name";
+    clientPhone = `ID: <b>${safeText(m.empId||"")}</b>${m.dept ? ` &nbsp;|&nbsp; Dept: <b>${safeText(m.dept)}</b>` : ""}`;
+    clientAddress = m.costCenter ? `Cost Center: <b>${safeText(m.costCenter)}</b>` : "";
+    bottomType = "Official Finance Record";
+    stampLabel = "Submitted By";
+    signatureLabel = "Approved By";
+
+    if (m.approvedBy || m.payMethod || m.paidTo) {
+      extraInfoHtml = `
+        <div class="bank-info-box" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;">
+          ${m.payMethod ? `<div><strong>Payment Method:</strong> ${safeText(m.payMethod)}</div>` : ""}
+          ${m.paidTo ? `<div><strong>Paid To:</strong> ${safeText(m.paidTo)}</div>` : ""}
+          ${m.approvedBy ? `<div><strong>Approved By:</strong> ${safeText(m.approvedBy)}</div>` : ""}
+        </div>`;
+    }
+    $("pInvoiceBalanceRows") && $("pInvoiceBalanceRows").classList.remove("hidden");
+    // set after main block below
+  } else if (currentModule === "receipt") {
+    // ===== CASH RECEIPT / RASEED RENDER =====
+    const amt = Number(m.amount || 0);
+    const bal = Number(m.balance || 0);
+    $("previewTitle").textContent = "Live Cash Receipt Preview";
+    $("pDocBadge").textContent = "CASH RECEIPT";
+    $("pDocMetaList").innerHTML = `
+      <div><span>Receipt #:</span> <strong>${safeText(m.number || "REC-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      ${m.ref ? `<div><span>Ref #:</span> <strong>${safeText(m.ref)}</strong></div>` : ""}
+    `;
+    $("pStatusContainer").innerHTML = `<span class="status-stamp-tag status-paid">✅ RECEIVED</span>`;
+    $("pClientHeader").textContent = "Received With Thanks From";
+    $("pCustomerName").textContent = m.from || "Customer Name";
+    $("pCustomerPhone").innerHTML = m.phone ? `Phone: <b>${safeText(m.phone)}</b>` : "";
+    $("pCustomerAddress").innerHTML = m.address ? safeText(m.address) : "";
+    $("pDocBottomType").textContent = "Customer Payment Receipt";
+    $("pStampLabel").textContent = "Payer Signature";
+    $("pSignatureLabel").textContent = "Received By / Authorized Signature";
+    $("pTermsTitle") && ($("pTermsTitle").textContent = "Remarks & Receipt Note");
+    $("pTerms").textContent = m.terms || "";
+    renderQuotationAttachmentsPreview();
+
+    $("previewTableHead").innerHTML = `
+      <tr>
+        <th style="width:40%;">Particulars / On Account Of</th>
+        <th style="width:20%;">Payment Mode</th>
+        <th style="width:20%;">Reference #</th>
+        <th style="width:20%;text-align:right;">Amount (Rs.)</th>
+      </tr>`;
+    $("previewItems").innerHTML = `
+      <tr>
+        <td>${safeText(m.purpose || "Payment received against goods / services.")}</td>
+        <td>${safeText(m.mode || "Cash")}</td>
+        <td>${safeText(m.ref || "—")}</td>
+        <td style="text-align:right;font-weight:800;color:#059669;">Rs. ${money(amt)}</td>
+      </tr>
+      <tr style="background:#f8fafc;">
+        <td colspan="4" style="font-size:12px;"><strong>Amount in Words:</strong> ${safeText(numberToWordsPKR(amt))}</td>
+      </tr>`;
+
+    $("pExtraInfoBox").innerHTML = `
+      <div style="background:var(--primary);color:#fff;border-radius:6px;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;margin:10px 0;break-inside:avoid;page-break-inside:avoid;">
+        <div>
+          <div style="font-size:13px;font-weight:700;opacity:0.9;">💵 AMOUNT RECEIVED</div>
+          <div style="font-size:10.5px;opacity:0.8;margin-top:3px;">${safeText(numberToWordsPKR(amt))}</div>
+        </div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:-0.5px;">Rs. ${money(amt)}</div>
+      </div>`;
+
+    $("pSubtotal").textContent = "Rs. " + money(amt);
+    $("pDiscount").textContent = "Rs. " + money(bal);
+    $("pGrandTotal").textContent = "Rs. " + money(amt);
+    $("pInvoiceBalanceRows") && $("pInvoiceBalanceRows").classList.remove("hidden");
+    $("pAmountPaid").textContent = m.mode || "Cash";
+    $("pBalanceDue").textContent = m.receivedBy || "Cashier";
+    return;
+
+  } else if (currentModule === "cheque") {
+    // ===== CHEQUE PRINTING RENDER =====
+    const amt = Number(m.amount || 0);
+    const words = numberToWordsPKR(amt);
+    const fmtDate = (m.date || new Date().toISOString().slice(0, 10)).split("-").reverse().join(" / ");
+    $("previewTitle").textContent = "Live Cheque Printing Preview";
+    $("pDocBadge").textContent = "CHEQUE VOUCHER";
+    $("pDocMetaList").innerHTML = `
+      <div><span>Cheque #:</span> <strong>${safeText(m.number || "CHQ-001")}</strong></div>
+      <div><span>Date:</span> <strong>${safeText(m.date || "")}</strong></div>
+      <div><span>Bank:</span> <strong>${safeText(m.bank || "")}</strong></div>
+    `;
+    $("pStatusContainer").innerHTML = m.acPayee ? `<span class="status-stamp-tag status-paid">A/C PAYEE ONLY</span>` : `<span class="status-stamp-tag status-partial">BEARER / OPEN</span>`;
+    $("pClientHeader").textContent = "Cheque Counterfoil & Office Record";
+    $("pCustomerName").textContent = m.payee || "Payee Name";
+    $("pCustomerPhone").innerHTML = `Bank: <b>${safeText(m.bank || "")}</b>${m.accountNo ? ` &nbsp;|&nbsp; A/C: <b>${safeText(m.accountNo)}</b>` : ""}`;
+    $("pCustomerAddress").innerHTML = `Amount in Words: <b>${safeText(words)}</b>`;
+    $("pDocBottomType").textContent = "Bank Cheque Record";
+    $("pStampLabel").textContent = "Prepared By";
+    $("pSignatureLabel").textContent = "Authorized Signatory";
+    $("pTermsTitle") && ($("pTermsTitle").textContent = "Cheque Memo / Purpose");
+    $("pTerms").textContent = m.terms || "";
+    renderQuotationAttachmentsPreview();
+
+    if ($("chequeLeafContainer")) {
+      $("chequeLeafContainer").innerHTML = `
+        <div class="cheque-leaf ${m.blankMode ? "blank-print" : ""}">
+          ${m.acPayee ? `<div class="chq-ac-payee">A/C PAYEE ONLY</div>` : ""}
+          <div class="chq-top-row">
+            <div class="chq-bank-title chq-guide">${safeText(m.bank || "PAKISTAN BANK")}</div>
+            <div class="chq-date-box">${safeText(fmtDate)}</div>
+          </div>
+          <div class="chq-row">
+            <span class="chq-label chq-guide">Pay</span>
+            <div class="chq-value-line">${safeText(m.payee || "Payee Name")}</div>
+          </div>
+          <div class="chq-amount-row">
+            <div class="chq-words-box">
+              <span class="chq-label chq-guide" style="margin-right:6px;">Rupees</span>
+              ${safeText(words)}
+            </div>
+            <div class="chq-figure-box">PKR ${money(amt)}/-</div>
+          </div>
+          <div class="chq-bottom-row">
+            <div class="chq-micr chq-guide">⑈ ${safeText(m.number || "000001")} ⑈ &nbsp; ${safeText(m.accountNo || "0000-0000000-01")}</div>
+            <div class="chq-sign-line chq-guide">Authorized Signature(s)</div>
+          </div>
+        </div>`;
+    }
+    $("pExtraInfoBox").innerHTML = "";
+    $("pSubtotal").textContent = "Rs. " + money(amt);
+    $("pDiscount").textContent = m.acPayee ? "A/C Payee" : "Bearer";
+    $("pGrandTotal").textContent = "Rs. " + money(amt);
+    return;
+
+  } else if (currentModule === "attendance") {
+    // ===== ATTENDANCE SHEET RENDER =====
+    const staff = Array.isArray(m.staff) ? m.staff : [];
+    const workDays = Math.max(1, Number(m.workDays || 26));
+    let monthLabel = m.month || "";
+    if (monthLabel && monthLabel.includes("-")) {
+      const [yr, mo] = monthLabel.split("-");
+      const mn = ["January","February","March","April","May","June","July","August","September","October","November","December"][Number(mo) - 1] || mo;
+      monthLabel = `${mn} ${yr}`;
+    }
+    $("previewTitle").textContent = "Live Attendance Sheet Preview";
+    $("pDocBadge").textContent = "ATTENDANCE SHEET";
+    $("pDocMetaList").innerHTML = `
+      <div><span>Sheet #:</span> <strong>${safeText(m.number || "ATT-001")}</strong></div>
+      <div><span>Month:</span> <strong>${safeText(monthLabel || "Current Month")}</strong></div>
+      <div><span>Working Days:</span> <strong>${workDays} Days</strong></div>
+    `;
+    $("pStatusContainer").innerHTML = `<span class="status-stamp-tag status-paid">HR REGISTER</span>`;
+    $("pClientHeader").textContent = "Register Details";
+    $("pCustomerName").textContent = m.dept || "All Staff";
+    $("pCustomerPhone").innerHTML = m.supervisor ? `Supervisor / HR: <b>${safeText(m.supervisor)}</b>` : "";
+    $("pCustomerAddress").innerHTML = `Total Staff Listed: <b>${staff.length}</b>`;
+    $("pDocBottomType").textContent = "HR Attendance Register";
+    $("pStampLabel").textContent = "Prepared By (Timekeeper / HR)";
+    $("pSignatureLabel").textContent = "Approved By (Manager)";
+    $("pTermsTitle") && ($("pTermsTitle").textContent = "HR Remarks");
+    $("pTerms").textContent = m.terms || "";
+    renderQuotationAttachmentsPreview();
+
+    $("previewTableHead").innerHTML = `
+      <tr>
+        <th style="width:32px;text-align:center;">#</th>
+        <th>Employee Name</th>
+        <th>Designation</th>
+        <th style="text-align:center;">Present</th>
+        <th style="text-align:center;">Absent</th>
+        <th style="text-align:center;">Leave</th>
+        <th style="text-align:center;">Late</th>
+        <th style="text-align:center;">OT (Hrs)</th>
+        <th style="text-align:right;">Att. %</th>
+      </tr>`;
+
+    let totalPct = 0;
+    let totalPresent = 0;
+    let totalAbsent = 0;
+    let totalOt = 0;
+    $("previewItems").innerHTML = staff.length ? staff.map((s, idx) => {
+      const p = Number(s.present || 0);
+      const a = Number(s.absent || 0);
+      const l = Number(s.leave || 0);
+      const lt = Number(s.late || 0);
+      const ot = Number(s.ot || 0);
+      const pct = Math.min(100, Math.round((p / workDays) * 100));
+      totalPct += pct;
+      totalPresent += p;
+      totalAbsent += a;
+      totalOt += ot;
+      return `<tr>
+        <td style="text-align:center;">${idx + 1}</td>
+        <td style="font-weight:700;">${safeText(s.name || "Staff")}</td>
+        <td>${safeText(s.designation || "-")}</td>
+        <td style="text-align:center;color:#059669;font-weight:700;">${p}</td>
+        <td style="text-align:center;color:#dc2626;font-weight:700;">${a}</td>
+        <td style="text-align:center;">${l}</td>
+        <td style="text-align:center;">${lt}</td>
+        <td style="text-align:center;">${ot}</td>
+        <td style="text-align:right;font-weight:800;">${pct}%</td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="9" style="text-align:center;color:#64748b;">No staff added yet.</td></tr>`;
+
+    const avgPct = staff.length ? Math.round(totalPct / staff.length) : 0;
+    $("pExtraInfoBox").innerHTML = `
+      <div class="bank-info-box" style="background:#f8fafc;border-color:#cbd5e1;color:#0f172a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div><strong>Total Present Days:</strong> ${totalPresent}</div>
+        <div><strong>Total Absent Days:</strong> ${totalAbsent}</div>
+        <div><strong>Total Overtime:</strong> ${totalOt} Hrs</div>
+        <div><strong>Average Attendance:</strong> ${avgPct}%</div>
+      </div>`;
+
+    $("pSubtotal").textContent = String(staff.length);
+    $("pDiscount").textContent = workDays + " Days";
+    $("pGrandTotal").textContent = avgPct + "%";
+    return;
   }
 
   $("previewTitle").textContent = "Live " + badgeText.toLowerCase().replace(/\b\w/g, c=>c.toUpperCase()) + " Preview";
@@ -1044,6 +1652,10 @@ function updatePreview() {
     const balanceDue = Math.max(0, grandTotal - amountPaid);
     $("pAmountPaid").textContent = "Rs. " + money(amountPaid);
     $("pBalanceDue").textContent = "Rs. " + money(balanceDue);
+  } else if (currentModule === "expense") {
+    $("pInvoiceBalanceRows").classList.remove("hidden");
+    $("pAmountPaid").textContent = safeText(m.payMethod || "Cash");
+    $("pBalanceDue").textContent = safeText(m.paidTo || "—");
   } else {
     $("pInvoiceBalanceRows").classList.add("hidden");
   }
@@ -1631,6 +2243,38 @@ function bindEditorEvents() {
     });
   }
 
+  if ($("addAttStaffBtn")) {
+    $("addAttStaffBtn").addEventListener("click", () => {
+      if (!moduleData.attendance) return;
+      if (!Array.isArray(moduleData.attendance.staff)) moduleData.attendance.staff = [];
+      moduleData.attendance.staff.push({ name: "New Staff", designation: "Staff", present: 26, absent: 0, leave: 0, late: 0, ot: 0 });
+      renderAttendanceEditors();
+      updatePreview();
+      saveData();
+    });
+  }
+
+  if ($("attStaffEditors")) {
+    $("attStaffEditors").addEventListener("input", e => {
+      const i = e.target.getAttribute("data-att-i");
+      const k = e.target.getAttribute("data-att-key");
+      if (i === null || !k || !moduleData.attendance) return;
+      const row = moduleData.attendance.staff[Number(i)];
+      if (!row) return;
+      row[k] = (k === "name" || k === "designation") ? e.target.value : (Number(e.target.value) || 0);
+      updatePreview();
+      saveData();
+    });
+    $("attStaffEditors").addEventListener("click", e => {
+      const rem = e.target.getAttribute("data-att-remove");
+      if (rem === null || !moduleData.attendance) return;
+      moduleData.attendance.staff.splice(Number(rem), 1);
+      renderAttendanceEditors();
+      updatePreview();
+      saveData();
+    });
+  }
+
   if ($("addItem")) {
     $("addItem").addEventListener("click", () => {
       moduleData[currentModule].items.push({
@@ -1645,6 +2289,38 @@ function bindEditorEvents() {
         rate: 0
       });
       renderItems();
+      updatePreview();
+      saveData();
+    });
+  }
+
+  if ($("addAttStaffBtn")) {
+    $("addAttStaffBtn").addEventListener("click", () => {
+      if (!moduleData.attendance) return;
+      if (!Array.isArray(moduleData.attendance.staff)) moduleData.attendance.staff = [];
+      moduleData.attendance.staff.push({ name: "New Staff", designation: "Staff", present: 26, absent: 0, leave: 0, late: 0, ot: 0 });
+      renderAttendanceEditors();
+      updatePreview();
+      saveData();
+    });
+  }
+
+  if ($("attStaffEditors")) {
+    $("attStaffEditors").addEventListener("input", e => {
+      const i = e.target.getAttribute("data-att-i");
+      const k = e.target.getAttribute("data-att-key");
+      if (i === null || !k || !moduleData.attendance) return;
+      const row = moduleData.attendance.staff[Number(i)];
+      if (!row) return;
+      row[k] = (k === "name" || k === "designation") ? e.target.value : (Number(e.target.value) || 0);
+      updatePreview();
+      saveData();
+    });
+    $("attStaffEditors").addEventListener("click", e => {
+      const rem = e.target.getAttribute("data-att-remove");
+      if (rem === null || !moduleData.attendance) return;
+      moduleData.attendance.staff.splice(Number(rem), 1);
+      renderAttendanceEditors();
       updatePreview();
       saveData();
     });

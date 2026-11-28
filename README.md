@@ -17,7 +17,7 @@
 
 ## 📋 Overview
 
-A complete, responsive, enterprise-grade **8-in-1 Commercial Business Document System** built with pure HTML5, CSS3, and modern Vanilla JavaScript — zero frameworks, zero dependencies.
+A complete, responsive, enterprise-grade **15-in-1 Commercial Business Document, HR & Management ERP System** built with pure HTML5, CSS3, and modern Vanilla JavaScript — zero frameworks, zero dependencies.
 
 | ✅ Feature | Detail |
 |---|---|
@@ -47,6 +47,11 @@ Erp-Suite-/
 ├── 📄 inventory.html           ← Inventory / Stock Management
 ├── 📄 crm.html                 ← CRM / Leads & Customer Pipeline
 ├── 📄 accounts.html            ← Accounts / Payment Ledger
+├── 📄 salary-slip.html         ← Employee Salary Slip & Payroll
+├── 📄 expense-voucher.html     ← Business Expense Voucher & Approval
+├── 📄 cash-receipt.html        ← Cash Receipt / Payment Raseed
+├── 📄 cheque-print.html        ← Bank Cheque Printing & Counterfoil
+├── 📄 attendance-sheet.html    ← Monthly Staff Attendance Register
 │
 ├── 🎨 erp-style.css            ← Global Stylesheet (A4, Print, Responsive)
 ├── ⚙️  erp-core.js              ← Core Engine (all logic, rendering, state)
@@ -110,6 +115,15 @@ Erp-Suite-/
 | 📦 Inventory | `inventory.html` | Stock levels, SKU, reorder alerts, in/out logs |
 | 👥 CRM | `crm.html` | Leads pipeline, follow-up dates, deal values, stage tracking |
 | 💰 Accounts | `accounts.html` | Payment receipts, payment ledger, party-wise history |
+
+### 👔 9. HR & Finance Modules
+| Module | File | Description |
+|---|---|---|
+| 👨‍💼 Salary Slip | `salary-slip.html` | Employee payroll slip with earnings, deductions & net pay |
+| 🧾 Expense Voucher | `expense-voucher.html` | Business expense tracking with approval status & line items |
+| 💵 Cash Receipt | `cash-receipt.html` | Payment raseed with amount in words & balance tracking |
+| 🏦 Cheque Printing | `cheque-print.html` | Pakistani bank cheque printing with A/C Payee & counterfoil |
+| 📅 Attendance Sheet | `attendance-sheet.html` | Monthly staff attendance, leave, late & overtime register |
 
 ---
 

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheque Printing | Enterprise Business Document ERP Suite</title>
+<meta name="description" content="Print Pakistani bank cheques with exact layout alignment, A/C Payee stamp, automatic amount in words &amp; office counterfoil record.">
+<meta name="author" content="Shaiekh Fielsouf Ansari (feelsoof123)">
+<meta name="theme-color" content="#0f172a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Enterprise Business Document ERP Suite">
+<meta property="og:title" content="Cheque Printing | Enterprise Business Document ERP Suite">
+<meta property="og:description" content="Print Pakistani bank cheques with exact layout alignment, A/C Payee stamp, automatic amount in words &amp; office counterfoil record.">
+<meta property="og:url" content="https://feelsoof123.github.io/Erp-Suite-/cheque-print.html">
+<meta property="og:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cheque Printing | Enterprise Business Document ERP Suite">
+<meta name="twitter:description" content="Print Pakistani bank cheques with exact layout alignment, A/C Payee stamp &amp; automatic amount in words.">
+<meta name="twitter:image" content="https://feelsoof123.github.io/Erp-Suite-/og-image.png">
+<link rel="icon" type="image/x-icon" href="./favicon.ico?v=2">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=2">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23174a83'/%3E%3Cpath d='M28 24h44v14H28zm0 20h44v8H28zm0 15h28v8H28z' fill='%23ffffff'/%3E%3Ccircle cx='70' cy='67' r='14' fill='%23059669'/%3E%3Cpath d='M64 67l4 4 8-8' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="erp-style.css">
+<style>
+  .cheque-leaf {
+    width: 100%;
+    max-width: 680px;
+    height: 315px;
+    margin: 12px auto 18px;
+    border: 2px solid #94a3b8;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 55%, #f0fdf4 100%);
+    position: relative;
+    padding: 20px 26px;
+    box-sizing: border-box;
+    font-family: "Courier New", Courier, monospace;
+    color: #0f172a;
+    overflow: hidden;
+  }
+  .cheque-leaf.blank-print {
+    border-color: transparent !important;
+    background: #ffffff !important;
+  }
+  .cheque-leaf.blank-print .chq-guide {
+    visibility: hidden !important;
+  }
+  .chq-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+  }
+  .chq-bank-title {
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    color: #1e3a8a;
+    letter-spacing: 0.5px;
+  }
+  .chq-date-box {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    border-bottom: 1.5px solid #64748b;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.7);
+  }
+  .chq-ac-payee {
+    position: absolute;
+    top: 22px;
+    left: 220px;
+    border-top: 2px solid #0f172a;
+    border-bottom: 2px solid #0f172a;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    transform: rotate(-12deg);
+    color: #0f172a;
+  }
+  .chq-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .chq-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .chq-value-line {
+    flex: 1;
+    border-bottom: 1.5px dashed #64748b;
+    font-size: 16px;
+    font-weight: 800;
+    padding-bottom: 3px;
+    color: #0f172a;
+  }
+  .chq-amount-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .chq-words-box {
+    flex: 1;
+    font-size: 13.5px;
+    font-weight: 700;
+    line-height: 1.75;
+    border-bottom: 1.5px dashed #64748b;
+    min-height: 46px;
+  }
+  .chq-figure-box {
+    width: 195px;
+    border: 2px solid #334155;
+    background: rgba(255,255,255,0.85);
+    padding: 8px 12px;
+    font-size: 17px;
+    font-weight: 900;
+    text-align: right;
+    border-radius: 4px;
+  }
+  .chq-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 28px;
+  }
+  .chq-micr {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #475569;
+    font-weight: 700;
+  }
+  .chq-sign-line {
+    width: 210px;
+    border-top: 1.5px solid #334155;
+    text-align: center;
+    padding-top: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+  }
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="brand-title">
+    <h2><a href="index.html">Professional Business Document ERP Suite</a></h2>
+    <span class="badge-pro">Enterprise</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <a href="index.html" class="github-badge-link" title="Back to Main Dashboard">🏠 Dashboard</a>
+    <a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" class="github-badge-link">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>feelsoof123</span>
+    </a>
+    <button type="button" onclick="showAbout()" style="background:#1e293b;border:1px solid #334155;">About Developer</button>
+  </div>
+</header>
+
+<div class="mobile-view-tabs" id="mobileViewTabs">
+  <button type="button" class="mobile-tab-btn active" id="btnViewEditor" onclick="setMobileView('editor')">✏️ Edit Cheque</button>
+  <button type="button" class="mobile-tab-btn" id="btnViewPreview" onclick="setMobileView('preview')">👁️ Cheque Preview</button>
+</div>
+
+<div class="layout view-editor" id="mainLayout">
+  <aside class="editor">
+
+    <section class="panel">
+      <h3>
+        <span>Company Master Profile</span>
+        <span style="font-size:10px;color:var(--success);font-weight:600;">Shared across all pages</span>
+      </h3>
+      <label>Company / Account Holder Name</label>
+      <input id="companyName" placeholder="Your Business / Company Name">
+      <label>Company Address (Shows in Footer)</label>
+      <textarea id="companyAddress" placeholder="Street, Plaza, City, Pakistan"></textarea>
+      <label>Phone / UAN (Shows in Footer)</label>
+      <input id="companyPhone" placeholder="+92 300 1234567">
+      <label>Email (Shows in Footer)</label>
+      <input id="companyEmail" placeholder="info@company.com">
+      <label>Website (Shows in Footer)</label>
+      <input id="companyWebsite" placeholder="www.company.com">
+      <label>Company Logo (Header Left)</label>
+      <input type="file" id="logoFile" accept="image/*">
+      <label>Brand Theme Accent Color</label>
+      <input type="color" id="brandColor" value="#174a83">
+    </section>
+
+    <section class="panel module-panel" id="panel-cheque">
+      <h3><span>Cheque Details</span></h3>
+      <label>Select Pakistani Bank</label>
+      <select id="chqBank">
+        <option value="HBL (Habib Bank Limited)">HBL (Habib Bank Limited)</option>
+        <option value="Meezan Bank Limited">Meezan Bank Limited</option>
+        <option value="UBL (United Bank Limited)">UBL (United Bank Limited)</option>
+        <option value="MCB Bank Limited">MCB Bank Limited</option>
+        <option value="Allied Bank Limited (ABL)">Allied Bank Limited (ABL)</option>
+        <option value="Bank Alfalah Limited">Bank Alfalah Limited</option>
+        <option value="National Bank of Pakistan (NBP)">National Bank of Pakistan (NBP)</option>
+        <option value="Faysal Bank Limited">Faysal Bank Limited</option>
+        <option value="Askari Bank Limited">Askari Bank Limited</option>
+        <option value="Bank Al Habib Limited">Bank Al Habib Limited</option>
+      </select>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label>Cheque #</label><input id="chqNumber" placeholder="e.g. CHQ-001"></div>
+        <div style="flex:1;"><label>Cheque Date</label><input id="chqDate" type="date"></div>
+      </div>
+
+      <hr style="margin:14px 0;border:0;border-top:1px solid #e2e8f0;">
+      <label>Pay To (Payee Name)</label>
+      <input id="chqPayee" placeholder="e.g. Al-Noor Traders / Muhammad Ali">
+      <label>Amount in Figures (Rs.)</label>
+      <input id="chqAmount" type="number" min="0" step="any" value="50000">
+      <label><input type="checkbox" id="chqAcPayee" checked> Crossed Cheque (A/C PAYEE ONLY)</label>
+      <label><input type="checkbox" id="chqBlankMode"> Blank Cheque Paper Mode (Hide Bank Borders for Direct Printer)</label>
+
+      <hr style="margin:14px 0;border:0;border-top:1px solid #e2e8f0;">
+      <label>Account Number / Branch (For Counterfoil Record)</label>
+      <input id="chqAccountNo" placeholder="e.g. 0123-4567890-01">
+      <label>Purpose / Memo (For Office Record)</label>
+      <textarea id="chqMemo" placeholder="e.g. Payment against PO # PO-004"></textarea>
+    </section>
+
+    <section class="panel">
+      <h3>Official Stamp &amp; Signature</h3>
+      <label>Upload Official Stamp</label>
+      <input type="file" id="stampFile" accept="image/*">
+      <label><input type="checkbox" id="stampOn" checked> Show Stamp</label>
+      <label>Upload Authorized Signature</label>
+      <input type="file" id="signatureFile" accept="image/*">
+      <label><input type="checkbox" id="signatureOn" checked> Show Signature</label>
+    </section>
+
+    <section class="panel">
+      <h3>Watermark Settings</h3>
+      <label><input type="checkbox" id="watermarkOn" checked> Show Watermark</label>
+      <label>Watermark Type</label>
+      <select id="watermarkMode">
+        <option value="image">Image Watermark</option>
+        <option value="text">Text Watermark</option>
+      </select>
+      <div id="watermarkImageSettings">
+        <label>Upload Watermark Image</label>
+        <input type="file" id="watermarkFile" accept="image/*">
+      </div>
+      <div id="watermarkTextSettings">
+        <label>Watermark Text</label>
+        <input type="text" id="watermarkText" placeholder="Company Name">
+        <label>Text Color</label>
+        <input type="color" id="watermarkTextColor" value="#999999">
+        <label>Text Size</label>
+        <input type="number" id="watermarkTextSize" value="55" min="10" max="150">
+      </div>
+      <label>Transparency</label>
+      <input type="range" id="watermarkOpacity" min="1" max="30" value="7">
+    </section>
+
+    <section class="panel">
+      <h3>Suite Backups &amp; Resets</h3>
+      <button type="button" id="backupBtn">Download Complete ERP Backup</button>
+      <button type="button" id="restoreBtn" class="btn-secondary">Restore Backup</button>
+      <input type="file" id="restoreFile" accept=".json" hidden>
+      <button type="button" id="resetCurrentDocBtn" class="btn-secondary">Reset Active Document</button>
+      <button type="button" id="factoryResetBtn" class="btn-danger">Factory Reset</button>
+      <p id="saveStatus" style="font-size:11px;color:#059669;margin-top:10px;font-weight:600;">Auto-save active</p>
+    </section>
+  </aside>
+
+  <main class="preview-area">
+    <div class="preview-tools">
+      <div>
+        <h3 id="previewTitle">Live Cheque Printing Preview</h3>
+        <span style="font-size:12px;color:#64748b;">A4 Print Ready • Exact Cheque Alignment • Counterfoil Office Record</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button type="button" id="btnFitToggle" onclick="togglePaperFit()" class="btn-secondary" style="font-size:12px;padding:8px 12px;">📱 Fit to Screen</button>
+        <button type="button" class="print-btn" onclick="window.print()"><span>🖨️</span> Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div class="paper-viewport" id="paperViewport">
+      <div class="paper" id="paper">
+        <div class="watermark" id="watermark">
+          <img id="watermarkImage" alt="">
+          <div id="watermarkTextPreview"></div>
+        </div>
+        <div class="paper-content">
+          <div class="doc-header">
+            <div class="brand-group">
+              <img id="previewLogo" alt="Logo">
+              <div><h1 id="pCompanyName">YOUR COMPANY NAME</h1></div>
+            </div>
+            <div class="quote-badge-box">
+              <div class="quote-title-tag" id="pDocBadge">CHEQUE VOUCHER</div>
+              <div class="quote-meta-list" id="pDocMetaList"></div>
+              <div id="pStatusContainer"></div>
+            </div>
+          </div>
+
+          <div id="chequeLeafContainer"></div>
+
+          <div class="client-section">
+            <div class="client-card">
+              <h4 id="pClientHeader">Cheque Counterfoil &amp; Office Record</h4>
+              <div class="client-name" id="pCustomerName">Payee Name</div>
+              <div class="client-sub" id="pCustomerPhone"></div>
+              <div class="client-sub" id="pCustomerAddress"></div>
+            </div>
+          </div>
+
+          <div id="pExtraInfoBox"></div>
+
+          <div class="bottom-grid">
+            <div class="terms-box">
+              <h4 id="pTermsTitle">Cheque Memo / Purpose</h4>
+              <p id="pTerms"></p>
+            </div>
+            <div class="totals-box" id="pTotalsContainer">
+              <div><span>Cheque Amount</span><b id="pSubtotal">Rs. 0.00</b></div>
+              <div><span>Cheque Type</span><b id="pDiscount">A/C Payee</b></div>
+              <div class="grand"><span>Total Payable</span><b id="pGrandTotal">Rs. 0.00</b></div>
+            </div>
+          </div>
+
+          <div class="signatures">
+            <div class="sign-block" id="stampBlock">
+              <div class="sign-img-container"><img id="pStamp" alt="Stamp"></div>
+              <p id="pStampLabel">Prepared By</p>
+            </div>
+            <div class="sign-block" id="signatureBlock">
+              <div class="sign-img-container"><img id="pSignature" alt="Signature"></div>
+              <p id="pSignatureLabel">Authorized Signatory</p>
+            </div>
+          </div>
+
+          <div class="doc-footer">
+            <div class="footer-contact-row">
+              <div class="footer-item" id="fAddrWrap"><span class="icon">📍</span><span id="pAddress"></span></div>
+              <div class="footer-item" id="fPhoneWrap"><span class="icon">📞</span><span id="pContact"></span></div>
+              <div class="footer-item" id="fEmailWrap"><span class="icon">✉️</span><span id="pEmail"></span></div>
+              <div class="footer-item" id="fWebsiteWrap"><span class="icon">🌐</span><span id="pWebsite"></span></div>
+            </div>
+            <div class="footer-bottom-line">
+              <span>Cheque printing &amp; counterfoil record.</span>
+              <span id="pDocBottomType">Bank Cheque Record</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<section id="aboutSection" class="about hidden">
+  <div class="developer-card">
+    <div class="developer-top">
+      <div class="developer-avatar">SA</div>
+      <span class="developer-badge">SOFTWARE DEVELOPER</span>
+      <h2>Shaiekh Fielsouf Ansari</h2>
+      <p>Creator &amp; Owner</p>
+    </div>
+    <div class="developer-body">
+      <h3>Contact Information</h3>
+      <div class="developer-info"><span>GitHub Profile</span><strong><a href="https://github.com/feelsoof123" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:none;font-weight:700;">github.com/feelsoof123</a></strong></div>
+      <div class="developer-info"><span>Contact Number 1</span><strong>03331255512</strong></div>
+      <div class="developer-info"><span>Contact Number 2</span><strong>03111855512</strong></div>
+      <div class="developer-info"><span>WhatsApp</span><strong>03111855512</strong></div>
+      <div class="developer-info"><span>JazzCash Payment</span><strong>03000210419</strong></div>
+      <div class="developer-note">Thank you for using this Enterprise Business ERP Suite.</div>
+      <div class="developer-copyright">© 2026 Shaiekh Fielsouf Ansari. All Rights Reserved.</div>
+    </div>
+    <button type="button" onclick="hideAbout()" class="back-button">Back to Document Suite</button>
+  </div>
+</section>
+<script>window.ACTIVE_MODULE = "cheque";</script>
+<script src="erp-core.js"></script>
+</body>
+</html>
